@@ -1,0 +1,30 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+.app {
+  min-height: 100vh;
+  padding: 32px;
+  text-align: center;
+}
+
+.app-header {
+  margin-bottom: 24px;
+}
+
+.app-header h1 {
+  margin-bottom: 8px;
+  font-size: 32px;
+}
+
+.app-header p {
+  margin: 0;
+  color: #9ca3af;
+}

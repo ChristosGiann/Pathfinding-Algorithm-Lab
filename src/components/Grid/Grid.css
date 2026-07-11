@@ -1,0 +1,41 @@
+.grid {
+  display: inline-block;
+  padding: 16px;
+  background: #111827;
+  border-radius: 12px;
+}
+
+.grid-row {
+  display: flex;
+}
+
+.grid-node {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #374151;
+  background: #f9fafb;
+}
+
+.grid-node--empty {
+  background: #f9fafb;
+}
+
+.grid-node--start {
+  background: #22c55e;
+}
+
+.grid-node--end {
+  background: #ef4444;
+}
+
+.grid-node--wall {
+  background: #111827;
+}
+
+.grid-node--visited {
+  background: #60a5fa;
+}
+
+.grid-node--path {
+  background: #facc15;
+}
