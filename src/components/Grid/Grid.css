@@ -12,8 +12,15 @@
 .grid-node {
   width: 24px;
   height: 24px;
+  padding: 0;
   border: 1px solid #374151;
   background: #f9fafb;
+  cursor: pointer;
+  appearance: none;
+}
+
+.grid-node:focus {
+  outline: none;
 }
 
 .grid-node--empty {
@@ -29,7 +36,7 @@
 }
 
 .grid-node--wall {
-  background: #111827;
+  background: #020617;
 }
 
 .grid-node--visited {

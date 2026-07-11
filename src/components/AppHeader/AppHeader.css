@@ -1,0 +1,14 @@
+.app-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.app-header h1 {
+  margin-bottom: 8px;
+  font-size: 32px;
+}
+
+.app-header p {
+  margin: 0;
+  color: #9ca3af;
+}
