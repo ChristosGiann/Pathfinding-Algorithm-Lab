@@ -1,13 +1,17 @@
 import { useState } from "react";
+import "./App.css";
+
 import { AppHeader } from "./components/AppHeader/AppHeader";
+import { BackendStatus } from "./components/BackendStatus/BackendStatus";
 import { Grid } from "./components/Grid/Grid";
 import { Toolbar } from "./components/Toolbar/Toolbar";
+
 import type { Language } from "./i18n/translations";
 import { translations } from "./i18n/translations";
+
 import { clearWalls } from "./utils/clearWalls";
 import { createGrid } from "./utils/createGrid";
 import { toggleWall } from "./utils/toggleWall";
-import "./App.css";
 
 const ROWS = 20;
 const COLS = 30;
@@ -15,6 +19,7 @@ const DEFAULT_LANGUAGE: Language = "el";
 
 function App() {
   const texts = translations[DEFAULT_LANGUAGE];
+
   const [grid, setGrid] = useState(() => createGrid(ROWS, COLS));
 
   function handleNodeClick(row: number, col: number) {
@@ -32,6 +37,8 @@ function App() {
   return (
     <main className="app">
       <AppHeader texts={texts.app} />
+
+      <BackendStatus texts={texts.backendStatus} />
 
       <Toolbar
         texts={texts.toolbar}
