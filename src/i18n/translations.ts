@@ -6,6 +6,12 @@ export const translations = {
         "Οπτικοποίησε, δοκίμασε και σύγκρινε αλγορίθμους εύρεσης διαδρομής σε πλέγμα.",
     },
 
+    backendStatus: {
+      loading: "Έλεγχος σύνδεσης με το backend...",
+      online: "Το backend είναι διαθέσιμο",
+      offline: "Δεν είναι δυνατή η σύνδεση με το backend",
+    },
+
     toolbar: {
       ariaLabel: "Εργαλεία αλγορίθμων",
       algorithmLabel: "Αλγόριθμος",
@@ -36,6 +42,12 @@ export const translations = {
       title: "Pathfinding Algorithm Lab",
       subtitle:
         "Visualize, test and compare pathfinding algorithms on a grid.",
+    },
+
+    backendStatus: {
+      loading: "Checking backend connection...",
+      online: "Backend is available",
+      offline: "Unable to connect to the backend",
     },
 
     toolbar: {
