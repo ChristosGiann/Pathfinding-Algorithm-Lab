@@ -1,7 +1,11 @@
+import type { Algorithm } from "../types/algorithm";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 if (!API_BASE_URL) {
-  throw new Error("Δεν έχει οριστεί το VITE_API_BASE_URL.");
+  throw new Error(
+    "Δεν έχει οριστεί το VITE_API_BASE_URL.",
+  );
 }
 
 export interface BackendHealthResponse {
@@ -12,7 +16,10 @@ async function apiRequest<T>(
   path: string,
   options?: RequestInit,
 ): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, options);
+  const response = await fetch(
+    `${API_BASE_URL}${path}`,
+    options,
+  );
 
   if (!response.ok) {
     throw new Error(
@@ -24,5 +31,13 @@ async function apiRequest<T>(
 }
 
 export function getBackendHealth(): Promise<BackendHealthResponse> {
-  return apiRequest<BackendHealthResponse>("/api/health/");
+  return apiRequest<BackendHealthResponse>(
+    "/api/health/",
+  );
+}
+
+export function getAlgorithms(): Promise<Algorithm[]> {
+  return apiRequest<Algorithm[]>(
+    "/api/algorithms/",
+  );
 }

@@ -1,9 +1,9 @@
 export const translations = {
   el: {
     app: {
-      title: "Εργαστήριο Αλγορίθμων Διαδρομής",
+      title: "Εργαστήριο Αλγορίθμων",
       subtitle:
-        "Οπτικοποίησε, δοκίμασε και σύγκρινε αλγορίθμους εύρεσης διαδρομής σε πλέγμα.",
+        "Οπτικοποίησε, δοκίμασε και σύγκρινε αλγορίθμους.",
     },
 
     backendStatus: {
@@ -35,13 +35,32 @@ export const translations = {
       normal: "Κανονικά",
       fast: "Γρήγορα",
     },
+
+    algorithmLibrary: {
+      eyebrow: "Sorting algorithms",
+      title: "Βιβλιοθήκη Αλγορίθμων",
+      description:
+        "Εξερεύνησε τους διαθέσιμους αλγορίθμους ταξινόμησης, τις πολυπλοκότητές τους και τις υλοποιήσεις που μπορούν να χρησιμοποιηθούν στα πειράματα.",
+      loading: "Φόρτωση αλγορίθμων...",
+      error:
+        "Δεν ήταν δυνατή η φόρτωση των αλγορίθμων.",
+      retry: "Νέα προσπάθεια",
+      empty: "Δεν υπάρχουν διαθέσιμοι αλγόριθμοι.",
+      problem: "Πρόβλημα",
+      bestCase: "Καλύτερη περίπτωση",
+      averageCase: "Μέση περίπτωση",
+      worstCase: "Χειρότερη περίπτωση",
+      spaceComplexity: "Χωρική πολυπλοκότητα",
+      implementations: "Υλοποιήσεις",
+      reference: "αναφοράς",
+    },
   },
 
   en: {
     app: {
-      title: "Pathfinding Algorithm Lab",
+      title: "Algorithm Lab",
       subtitle:
-        "Visualize, test and compare pathfinding algorithms on a grid.",
+        "Visualize, test and compare algorithms.",
     },
 
     backendStatus: {
@@ -72,6 +91,24 @@ export const translations = {
       slow: "Slow",
       normal: "Normal",
       fast: "Fast",
+    },
+
+    algorithmLibrary: {
+      eyebrow: "Sorting algorithms",
+      title: "Algorithm Library",
+      description:
+        "Explore the available sorting algorithms, their complexity characteristics and the implementations that can be used in experiments.",
+      loading: "Loading algorithms...",
+      error: "Unable to load the algorithms.",
+      retry: "Try again",
+      empty: "No algorithms are currently available.",
+      problem: "Problem",
+      bestCase: "Best case",
+      averageCase: "Average case",
+      worstCase: "Worst case",
+      spaceComplexity: "Space complexity",
+      implementations: "Implementations",
+      reference: "reference",
     },
   },
 } as const;
