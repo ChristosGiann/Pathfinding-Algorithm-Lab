@@ -50,6 +50,26 @@ class Algorithm(models.Model):
         blank=True,
     )
 
+    best_case_complexity = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+
+    average_case_complexity = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+
+    worst_case_complexity = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+
+    space_complexity = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
