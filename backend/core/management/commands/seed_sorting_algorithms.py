@@ -12,6 +12,10 @@ SORTING_ALGORITHMS = [
             "A simple sorting algorithm that repeatedly compares "
             "and swaps adjacent elements."
         ),
+        "best_case_complexity": "O(n)",
+        "average_case_complexity": "O(n^2)",
+        "worst_case_complexity": "O(n^2)",
+        "space_complexity": "O(1)",
         "registry_key": "sorting.bubble_sort",
     },
     {
@@ -21,6 +25,10 @@ SORTING_ALGORITHMS = [
             "A sorting algorithm that repeatedly selects the smallest "
             "remaining element."
         ),
+        "best_case_complexity": "O(n^2)",
+        "average_case_complexity": "O(n^2)",
+        "worst_case_complexity": "O(n^2)",
+        "space_complexity": "O(1)",
         "registry_key": "sorting.selection_sort",
     },
     {
@@ -30,6 +38,10 @@ SORTING_ALGORITHMS = [
             "A sorting algorithm that builds the sorted result "
             "one element at a time."
         ),
+        "best_case_complexity": "O(n)",
+        "average_case_complexity": "O(n^2)",
+        "worst_case_complexity": "O(n^2)",
+        "space_complexity": "O(1)",
         "registry_key": "sorting.insertion_sort",
     },
     {
@@ -39,6 +51,10 @@ SORTING_ALGORITHMS = [
             "A divide-and-conquer sorting algorithm that splits, sorts "
             "and merges collections."
         ),
+        "best_case_complexity": "O(n log n)",
+        "average_case_complexity": "O(n log n)",
+        "worst_case_complexity": "O(n log n)",
+        "space_complexity": "O(n)",
         "registry_key": "sorting.merge_sort",
     },
     {
@@ -48,6 +64,10 @@ SORTING_ALGORITHMS = [
             "A divide-and-conquer sorting algorithm that partitions "
             "elements around a pivot."
         ),
+        "best_case_complexity": "O(n log n)",
+        "average_case_complexity": "O(n log n)",
+        "worst_case_complexity": "O(n^2)",
+        "space_complexity": "O(log n) avg / O(n) worst",
         "registry_key": "sorting.quick_sort",
     },
 ]
@@ -79,6 +99,18 @@ class Command(BaseCommand):
                 defaults={
                     "name": algorithm_data["name"],
                     "description": algorithm_data["description"],
+                    "best_case_complexity": (
+                        algorithm_data["best_case_complexity"]
+                    ),
+                    "average_case_complexity": (
+                        algorithm_data["average_case_complexity"]
+                    ),
+                    "worst_case_complexity": (
+                        algorithm_data["worst_case_complexity"]
+                    ),
+                    "space_complexity": (
+                        algorithm_data["space_complexity"]
+                    ),
                 },
             )
 
