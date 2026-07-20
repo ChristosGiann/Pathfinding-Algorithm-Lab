@@ -1,6 +1,8 @@
 import { useState } from "react";
+
 import "./App.css";
 
+import { AlgorithmLibrary } from "./components/AlgorithmLibrary/AlgorithmLibrary";
 import { AppHeader } from "./components/AppHeader/AppHeader";
 import { BackendStatus } from "./components/BackendStatus/BackendStatus";
 import { Grid } from "./components/Grid/Grid";
@@ -20,10 +22,17 @@ const DEFAULT_LANGUAGE: Language = "el";
 function App() {
   const texts = translations[DEFAULT_LANGUAGE];
 
-  const [grid, setGrid] = useState(() => createGrid(ROWS, COLS));
+  const [grid, setGrid] = useState(() =>
+    createGrid(ROWS, COLS),
+  );
 
-  function handleNodeClick(row: number, col: number) {
-    setGrid((currentGrid) => toggleWall(currentGrid, row, col));
+  function handleNodeClick(
+    row: number,
+    col: number,
+  ) {
+    setGrid((currentGrid) =>
+      toggleWall(currentGrid, row, col),
+    );
   }
 
   function handleResetGrid() {
@@ -31,11 +40,13 @@ function App() {
   }
 
   function handleClearWalls() {
-    setGrid((currentGrid) => clearWalls(currentGrid));
+    setGrid((currentGrid) =>
+      clearWalls(currentGrid),
+    );
   }
 
   return (
-    <main className="app">
+    <main>
       <AppHeader texts={texts.app} />
 
       <BackendStatus texts={texts.backendStatus} />
@@ -48,7 +59,14 @@ function App() {
         onClearWalls={handleClearWalls}
       />
 
-      <Grid grid={grid} onNodeClick={handleNodeClick} />
+      <Grid
+        grid={grid}
+        onNodeClick={handleNodeClick}
+      />
+
+      <AlgorithmLibrary
+        texts={texts.algorithmLibrary}
+      />
     </main>
   );
 }
