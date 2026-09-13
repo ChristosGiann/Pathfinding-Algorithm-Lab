@@ -5,14 +5,15 @@ Last verified: **2026-09-13**
 ## Current phase
 
 Algorithm Evaluation Lab MVP. The Algorithm Library is implemented and merged.
-Dataset generation is the next feature; it has not been implemented yet.
+Issue #17 is implemented and tested locally on `codex/17-dataset-generators`.
+Review and integration into dev are pending; no push or merge has been performed.
 
 ## Git state
 
 - Issue #16 is closed; PR #27 merged the library into `main` at `49f7fd1`.
 - `dev` was created from that `origin/main` commit.
 - Fixes (`9e1582b`) and documentation (`b1a6908`) have been merged into `dev`.
-- Current working branch: `dev`; `main` has not received these follow-up changes.
+- Integration branch: `dev`; `main` has not received these follow-up changes.
 - Only `main` and `dev` are permanent. Delete issue branches after merging to dev.
 - Promote `dev` to `main` only on explicit user request.
 
@@ -42,8 +43,8 @@ registry resolution remain planned work.
 ## Verification
 
 Latest frontend checks on 2026-09-13: lint, build, and diff whitespace checks passed.
-Backend baseline verified earlier in this session: six tests passed, Django checks
-passed, and no model changes requiring migrations were detected.
+Backend verification after Issue #17: 17 tests passed (6 existing and 11 new),
+Django checks passed, and no migrations are required.
 
 Browser scenarios verified against the real local backend:
 
@@ -73,5 +74,5 @@ The live issue specifies Random, Sorted, Reversed, and Nearly Sorted datasets;
 sizes; and independent input copies for benchmark runs.
 
 Few Unique Values appears in the imported plan but is a proposed extension.
-The custom size limit and exact generator semantics remain design decisions for
-Issue #17. No new dataset endpoint contract has been finalized.
+The local implementation supports sizes 1 through 100,000 with the semantics
+in [Datasets](DATASETS.md). The future runner must use `copy_for_run()`. No new dataset endpoint contract has been finalized.

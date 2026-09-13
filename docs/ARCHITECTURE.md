@@ -305,3 +305,9 @@ does not automatically reload the Algorithm Library; its retry button does that.
 Greek and English translation structures already exist.
 
 Default language is currently Greek. A language switcher is lower priority than the evaluation MVP.
+
+## Dataset utility (Issue #17, local implementation)
+
+`backend/core/datasets/generators.py` has no Django or database dependencies.
+A frozen `Dataset` retains type, size, seed and tuple values. `copy_for_run()`
+provides independent mutable inputs. See [Datasets](DATASETS.md).

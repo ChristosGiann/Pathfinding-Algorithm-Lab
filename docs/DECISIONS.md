@@ -246,3 +246,13 @@ Default language is currently Greek.
 ### Reason
 
 The structure already exists and makes a future language selector straightforward.
+
+## ADR-013 — Controlled permutations and immutable sources
+
+**Status:** Implemented locally for Issue #17
+
+Use permutations of `range(size)` to isolate input ordering across dataset types.
+Use private seeded randomness and frozen tuple values with fresh copies per run.
+Limit generation to 100,000 items; benchmark execution needs separate limits.
+Nearly sorted uses disjoint adjacent swaps for roughly 1% of the input length.
+See [Datasets](DATASETS.md) for the complete contract.
