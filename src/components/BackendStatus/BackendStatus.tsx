@@ -4,6 +4,9 @@ import "./BackendStatus.css";
 
 type ConnectionStatus = "loading" | "online" | "offline";
 
+const HEALTH_CHECK_INTERVAL_MS = 5_000;
+const HEALTH_CHECK_TIMEOUT_MS = 5_000;
+
 interface BackendStatusTexts {
   loading: string;
   online: string;
@@ -19,10 +22,19 @@ export function BackendStatus({ texts }: BackendStatusProps) {
 
   useEffect(() => {
     let isActive = true;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+    let requestTimer: ReturnType<typeof setTimeout> | undefined;
+    let controller: AbortController | undefined;
 
     async function checkBackendHealth() {
+      controller = new AbortController();
+      const requestController = controller;
+      requestTimer = setTimeout(() => {
+        requestController.abort();
+      }, HEALTH_CHECK_TIMEOUT_MS);
+
       try {
-        const response = await getBackendHealth();
+        const response = await getBackendHealth(requestController.signal);
 
         if (isActive) {
           setStatus(response.status === "ok" ? "online" : "offline");
@@ -31,6 +43,14 @@ export function BackendStatus({ texts }: BackendStatusProps) {
         if (isActive) {
           setStatus("offline");
         }
+      } finally {
+        clearTimeout(requestTimer);
+
+        if (isActive) {
+          retryTimer = setTimeout(() => {
+            void checkBackendHealth();
+          }, HEALTH_CHECK_INTERVAL_MS);
+        }
       }
     }
 
@@ -38,6 +58,9 @@ export function BackendStatus({ texts }: BackendStatusProps) {
 
     return () => {
       isActive = false;
+      clearTimeout(retryTimer);
+      clearTimeout(requestTimer);
+      controller?.abort();
     };
   }, []);
 
