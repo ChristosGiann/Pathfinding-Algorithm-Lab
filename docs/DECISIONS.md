@@ -256,3 +256,14 @@ Use private seeded randomness and frozen tuple values with fresh copies per run.
 Limit generation to 100,000 items; benchmark execution needs separate limits.
 Nearly sorted uses disjoint adjacent swaps for roughly 1% of the input length.
 See [Datasets](DATASETS.md) for the complete contract.
+
+## ADR-014 — Bounded synchronous Bubble Sort benchmark
+
+**Status:** Implemented locally for Issue #18
+
+Use a fixed trusted Bubble Sort, ten runs, perf_counter_ns and a 1000-item cap.
+Copying and correctness checks stay outside timing. The first endpoint directly
+imports built-in code without accepting arbitrary execution targets; general
+registry integration waits for multiple executable implementations. Return
+results without persistence until #19. This matches the narrower live issue
+rather than implementing the broader planned benchmark engine prematurely.

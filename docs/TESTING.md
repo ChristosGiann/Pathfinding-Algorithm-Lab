@@ -9,7 +9,7 @@ Testing should protect the evaluation pipeline without becoming unnecessary main
 Current verified state:
 
 ```text
-17 tests
+25 tests
 ```
 
 Run with:
@@ -18,10 +18,10 @@ Run with:
 python backend\manage.py test core
 ```
 
-Latest verified result after local Dataset Generators implementation:
+Latest verified result after local Bubble Sort benchmark implementation:
 
 ```text
-Ran 17 tests
+Ran 25 tests
 OK
 ```
 
@@ -216,3 +216,9 @@ git diff --check
 Eleven tests in `backend/core/datasets/tests.py` cover reproducibility, ordering,
 contents, size limits, validation, global RNG isolation and independent copies.
 They use `SimpleTestCase` without a database. See [Datasets](DATASETS.md).
+
+## Benchmark verification
+
+Eight new tests cover Bubble Sort, timing boundaries, fresh inputs, correctness
+failures, stats, API bounds and validation. The suite now contains 25 tests.
+See [Benchmarks](BENCHMARKS.md) for browser scenarios and measurement limits.

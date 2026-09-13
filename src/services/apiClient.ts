@@ -1,4 +1,5 @@
 import type { Algorithm } from "../types/algorithm";
+import type { BenchmarkRequest, BenchmarkResult } from "../types/benchmark";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -41,4 +42,13 @@ export function getAlgorithms(): Promise<Algorithm[]> {
   return apiRequest<Algorithm[]>(
     "/api/algorithms/",
   );
+}
+
+export function runBubbleSortBenchmark(input: BenchmarkRequest, signal?: AbortSignal): Promise<BenchmarkResult> {
+  return apiRequest<BenchmarkResult>("/api/benchmarks/bubble-sort/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+    signal,
+  });
 }

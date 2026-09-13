@@ -5,8 +5,10 @@ Last verified: **2026-09-13**
 ## Current phase
 
 Algorithm Evaluation Lab MVP. The Algorithm Library is implemented and merged.
-Issue #17 is implemented and tested locally on `codex/17-dataset-generators`.
-Review and integration into dev are pending; no push or merge has been performed.
+Issue #17 was merged into dev via PR #28 and closed with a completion comment.
+Issue #18 is implemented locally on `codex/18-bubble-sort-benchmark`: trusted
+Bubble Sort, ten timed runs, API and frontend result card. Review/push/merge
+remain pending for #18. See [Benchmarks](BENCHMARKS.md).
 
 ## Git state
 
@@ -28,8 +30,8 @@ Review and integration into dev are pending; no push or merge has been performed
 - Filtering of active built-in implementations; private registry keys.
 - Algorithm Library cards, loading/error/empty states and retry button.
 
-Seeded implementation records are metadata. Executable sorting functions and
-registry resolution remain planned work.
+Seeded implementation records are metadata. Bubble Sort is executable locally for #18; other sorters and
+database registry resolution remain planned work.
 
 ## Follow-up fixes
 
@@ -43,7 +45,7 @@ registry resolution remain planned work.
 ## Verification
 
 Latest frontend checks on 2026-09-13: lint, build, and diff whitespace checks passed.
-Backend verification after Issue #17: 17 tests passed (6 existing and 11 new),
+Backend verification after Issue #18: 25 tests passed (17 existing and 8 new benchmark tests),
 Django checks passed, and no migrations are required.
 
 Browser scenarios verified against the real local backend:
@@ -61,8 +63,8 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 ## Next
 
 1. Start issue work from an updated `dev`; integrate completed work back into `dev`.
-2. Issue #17: Dataset Generators.
-3. Issue #18: Benchmark Runner.
+2. Review and integrate Issue #18 into dev.
+3. Continue with Issue #19 after integration.
 4. Issue #19: Experiment Model and API.
 5. Issue #20: Results Dashboard.
 6. Issue #21: MVP Integration Review.
