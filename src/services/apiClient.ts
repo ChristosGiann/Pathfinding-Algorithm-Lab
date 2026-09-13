@@ -30,9 +30,10 @@ async function apiRequest<T>(
   return response.json() as Promise<T>;
 }
 
-export function getBackendHealth(): Promise<BackendHealthResponse> {
+export function getBackendHealth(signal?: AbortSignal): Promise<BackendHealthResponse> {
   return apiRequest<BackendHealthResponse>(
     "/api/health/",
+    { signal, cache: "no-store" },
   );
 }
 
