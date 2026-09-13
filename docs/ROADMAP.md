@@ -89,7 +89,7 @@ Promotion to `main` awaits explicit user instruction. See [Progress](PROGRESS.md
 
 ## Phase 4 β€” Issue #17: Dataset Generators
 
-Status: **Next**
+Status: **Implemented locally; review and dev integration pending**
 
 Initial dataset types:
 
@@ -103,7 +103,7 @@ Issue #17 acceptance sizes:
 - 10
 - 100
 - 1,000
-- custom size with an explicit upper bound (to be chosen during implementation)
+- custom size from 1 through 100,000
 
 Requirements:
 

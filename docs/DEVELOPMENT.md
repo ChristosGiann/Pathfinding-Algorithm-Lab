@@ -256,3 +256,12 @@ When a feature changes:
 - important technical choice -> update `DECISIONS.md`
 
 Documentation should ideally change in the same PR as the code it describes.
+
+## GitHub communication
+
+For every PR, add a detailed description and a conversation comment explaining
+the problem, implementation choices, acceptance criteria, validation and remaining
+limitations. Before closing a completed issue, post a completion comment linking
+the merged PR and explaining how its criteria were satisfied. Distinguish tested
+behavior from future integration work. Target dev; promote to main only on
+explicit user instruction.

@@ -59,7 +59,7 @@ Latest completed feature:
 
 Next:
 
-- #17 Dataset Generators
+- #17 Dataset Generators: implemented locally; review and dev integration pending
 - #18 Benchmark Runner
 - #19 Experiment Model + API
 - #20 Results Dashboard
@@ -132,6 +132,7 @@ See [docs/API.md](docs/API.md).
 - [Decisions](docs/DECISIONS.md)
 - [API](docs/API.md)
 - [Testing](docs/TESTING.md)
+- [Dataset generators](docs/DATASETS.md)
 
 ## Documentation rule
 

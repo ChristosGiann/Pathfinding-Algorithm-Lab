@@ -9,7 +9,7 @@ Testing should protect the evaluation pipeline without becoming unnecessary main
 Current verified state:
 
 ```text
-6 tests
+17 tests
 ```
 
 Run with:
@@ -18,10 +18,10 @@ Run with:
 python backend\manage.py test core
 ```
 
-Latest verified result during the Algorithms API work:
+Latest verified result after local Dataset Generators implementation:
 
 ```text
-Ran 6 tests
+Ran 17 tests
 OK
 ```
 
@@ -210,3 +210,9 @@ git diff --check
 - Every reliable bug should be considered for a regression test.
 - Every new public API contract should have API coverage.
 - New pure benchmark/data logic should have focused unit tests.
+
+## Dataset tests
+
+Eleven tests in `backend/core/datasets/tests.py` cover reproducibility, ordering,
+contents, size limits, validation, global RNG isolation and independent copies.
+They use `SimpleTestCase` without a database. See [Datasets](DATASETS.md).
