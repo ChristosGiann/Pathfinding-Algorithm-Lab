@@ -4,27 +4,27 @@
 
 ```text
 Algorithm Library
-        ↓
+        β†“
 Dataset Generators
-        ↓
+        β†“
 Benchmark Runner
-        ↓
+        β†“
 Experiment API
-        ↓
+        β†“
 Results Dashboard
-        ↓
+        β†“
 MVP Integration
-        ↓
+        β†“
 Advanced Comparison
-        ↓
+        β†“
 Visualization
-        ↓
+        β†“
 Additional Algorithm Families
 ```
 
 The evaluation pipeline is the priority. Infrastructure should be added only when it solves a real requirement.
 
-## Phase 0 — Foundation
+## Phase 0 β€” Foundation
 
 Status: **Completed**
 
@@ -37,7 +37,7 @@ Status: **Completed**
 - base pathfinding grid
 - i18n structure
 
-## Phase 1 — Algorithm domain
+## Phase 1 β€” Algorithm domain
 
 Status: **Completed**
 
@@ -54,7 +54,7 @@ Status: **Completed**
 - migrations
 - Django admin support
 
-## Phase 2 — Algorithms API
+## Phase 2 β€” Algorithms API
 
 Status: **Completed**
 
@@ -64,7 +64,7 @@ Status: **Completed**
 - private `registry_key`
 - backend automated tests
 
-## Phase 3 — Issue #16: Algorithm Library
+## Phase 3 β€” Issue #16: Algorithm Library
 
 Status: **Merged through PR #27; Issue #16 closed**
 
@@ -84,10 +84,10 @@ Implemented:
 - integration into `App.tsx`
 
 Follow-up fixes for retry cleanup, lint scope, and backend health polling were
-committed locally as `9e1582b`. Publication of these fixes and the documentation
-is still pending. See [Progress](PROGRESS.md).
+committed as `9e1582b` and merged into `dev` with the documentation.
+Promotion to `main` awaits explicit user instruction. See [Progress](PROGRESS.md).
 
-## Phase 4 — Issue #17: Dataset Generators
+## Phase 4 β€” Issue #17: Dataset Generators
 
 Status: **Next**
 
@@ -114,7 +114,7 @@ Requirements:
 Few Unique Values and larger preset sizes were suggested in the imported plan.
 They remain possible extensions, not part of Issue #17's current scope.
 
-## Phase 5 — Issue #18: Benchmark Runner
+## Phase 5 β€” Issue #18: Benchmark Runner
 
 Status: **Planned**
 
@@ -133,7 +133,7 @@ Later possibilities:
 - iterations
 - memory usage
 
-## Phase 6 — Issue #19: Experiment Model + API
+## Phase 6 β€” Issue #19: Experiment Model + API
 
 Status: **Planned**
 
@@ -159,7 +159,7 @@ Later:
 - standard deviation
 - percentiles
 
-## Phase 7 — Issue #20: Results Dashboard
+## Phase 7 β€” Issue #20: Results Dashboard
 
 Status: **Planned**
 
@@ -171,7 +171,7 @@ Frontend goals:
 - compare input sizes,
 - show theoretical complexity next to measured behavior.
 
-## Phase 8 — Issue #21: MVP Integration Review
+## Phase 8 β€” Issue #21: MVP Integration Review
 
 Status: **Planned**
 
@@ -179,15 +179,15 @@ End-to-end flow:
 
 ```text
 Select algorithm(s)
-    ↓
+    β†“
 Generate dataset
-    ↓
+    β†“
 Run benchmark
-    ↓
+    β†“
 Store results
-    ↓
+    β†“
 Retrieve results
-    ↓
+    β†“
 Display comparison
 ```
 
@@ -201,7 +201,7 @@ Review:
 - documentation
 - data correctness
 
-## Phase 9 — Visualization
+## Phase 9 β€” Visualization
 
 Status: **Future**
 
@@ -217,7 +217,7 @@ Sorting visualizations may show comparisons, swaps, active indices, and sorted r
 
 The existing pathfinding grid can later support graph algorithms.
 
-## Phase 10 — Additional algorithm families
+## Phase 10 β€” Additional algorithm families
 
 Possible order:
 
@@ -227,7 +227,7 @@ Possible order:
 4. String matching
 5. Trees
 
-## Phase 11 — Advanced features
+## Phase 11 β€” Advanced features
 
 Possible future features:
 

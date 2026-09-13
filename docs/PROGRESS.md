@@ -9,16 +9,12 @@ Dataset generation is the next feature; it has not been implemented yet.
 
 ## Git state
 
-- Issue #16 is closed as completed.
-- PR #27 merged the Algorithm Library into `main` at `49f7fd1`.
-- After `git fetch origin`, `origin/main` points to that merge commit.
-- The local `main` branch still points to `a94fc88`; fetch does not move it.
-- Current working branch: `feature-16-algorithm-library`.
-- Follow-up fixes are committed locally as `9e1582b`.
-- Relative to `origin/main`, this branch contains the follow-up fix commit and
-  lacks the PR #27 merge commit. Before those fixes, the file trees were identical.
-- The imported and updated documentation is being recorded in a separate local
-  commit. Fixes and documentation have not been pushed or merged into `main`.
+- Issue #16 is closed; PR #27 merged the library into `main` at `49f7fd1`.
+- `dev` was created from that `origin/main` commit.
+- Fixes (`9e1582b`) and documentation (`b1a6908`) have been merged into `dev`.
+- Current working branch: `dev`; `main` has not received these follow-up changes.
+- Only `main` and `dev` are permanent. Delete issue branches after merging to dev.
+- Promote `dev` to `main` only on explicit user request.
 
 ## Completed functionality
 
@@ -63,7 +59,7 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 
 ## Next
 
-1. Publish/integrate the local fixes and documentation through the Git workflow.
+1. Start issue work from an updated `dev`; integrate completed work back into `dev`.
 2. Issue #17: Dataset Generators.
 3. Issue #18: Benchmark Runner.
 4. Issue #19: Experiment Model and API.

@@ -132,7 +132,7 @@ curl.exe http://127.0.0.1:8000/api/algorithms/
 ```text
 Issue
   ↓
-Update main
+Update dev
   ↓
 Create feature branch
   ↓
@@ -148,16 +148,18 @@ Commit
   ↓
 Push
   ↓
-Pull Request
+Pull Request targeting dev
   ↓
-Merge
+Merge into dev
+  ↓
+Delete merged issue branch
 ```
 
 Example:
 
 ```powershell
-git switch main
-git pull origin main
+git switch dev
+git pull --ff-only origin dev
 git switch -c codex/17-dataset-generators
 ```
 
@@ -182,10 +184,12 @@ Fix:
 codex/fix-<short-description>
 ```
 
-Existing branches retain their legacy `feature-*` names. Check for uncommitted
+Only `main` and `dev` are permanent branches. Issue branches exist while work
+is active and are deleted locally and remotely after their commits are merged.
+Update `main` from `dev` only when the user explicitly requests it. Check for uncommitted
 changes before switching branches. `git fetch origin` updates remote-tracking
 references without merging changes into the current branch. Compare with
-`git rev-list --left-right --count HEAD...origin/main` before integration.
+`git rev-list --left-right --count HEAD...origin/dev` before integration.
 
 ## Commit examples
 
@@ -236,7 +240,8 @@ A feature is done when applicable items are satisfied:
 - meaningful commit,
 - branch pushed,
 - PR opened,
-- PR merged to `main`.
+- PR merged to `dev`,
+- merged issue branch deleted locally and remotely.
 
 ## Documentation workflow
 

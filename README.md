@@ -52,10 +52,10 @@ Implemented:
 
 Latest completed feature:
 
-- Issue #16 — Algorithm Library
+- Issue #16 β€” Algorithm Library
 - merged to `main` through PR #27; Issue #16 is closed
-- follow-up retry, lint, and backend status fixes committed locally as `9e1582b`
-- follow-up fixes and documentation are not yet published to GitHub
+- follow-up retry, lint, and backend status fixes (`9e1582b`) integrated into `dev`
+- follow-up fixes and documentation are on `dev`; promotion to `main` requires explicit user instruction
 
 Next:
 
