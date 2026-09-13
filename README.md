@@ -59,8 +59,8 @@ Latest completed feature:
 
 Next:
 
-- #17 Dataset Generators: implemented locally; review and dev integration pending
-- #18 Benchmark Runner
+- #17 Dataset Generators: merged into dev through PR #28; issue closed
+- #18 First Bubble Sort benchmark: implemented locally; review pending
 - #19 Experiment Model + API
 - #20 Results Dashboard
 - #21 MVP Integration Review
@@ -118,6 +118,7 @@ VITE_API_BASE_URL=http://127.0.0.1:8000
 ```text
 GET /api/health/
 GET /api/algorithms/
+POST /api/benchmarks/bubble-sort/
 ```
 
 See [docs/API.md](docs/API.md).
@@ -133,6 +134,7 @@ See [docs/API.md](docs/API.md).
 - [API](docs/API.md)
 - [Testing](docs/TESTING.md)
 - [Dataset generators](docs/DATASETS.md)
+- [First benchmark](docs/BENCHMARKS.md)
 
 ## Documentation rule
 

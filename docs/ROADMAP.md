@@ -89,7 +89,7 @@ Promotion to `main` awaits explicit user instruction. See [Progress](PROGRESS.md
 
 ## Phase 4 β€” Issue #17: Dataset Generators
 
-Status: **Implemented locally; review and dev integration pending**
+Status: **Merged into dev through PR #28; Issue #17 closed**
 
 Initial dataset types:
 

@@ -311,3 +311,10 @@ Default language is currently Greek. A language switcher is lower priority than 
 `backend/core/datasets/generators.py` has no Django or database dependencies.
 A frozen `Dataset` retains type, size, seed and tuple values. `copy_for_run()`
 provides independent mutable inputs. See [Datasets](DATASETS.md).
+
+## First benchmark vertical slice (local #18)
+
+React Benchmark form -> centralized API client -> benchmark request serializer
+-> pure runner -> dataset copies -> trusted Bubble Sort -> correctness and timing
+summary -> result card. The endpoint has no persistence or registry lookup.
+See [Benchmarks](BENCHMARKS.md).

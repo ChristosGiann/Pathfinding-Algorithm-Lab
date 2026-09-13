@@ -1,0 +1,28 @@
+export const benchmarkTexts = {
+  el: {
+    title: "Πρώτο πείραμα ταξινόμησης",
+    description: "Τρέξε τον Bubble Sort 10 φορές στα ίδια δεδομένα και σύγκρινε τους χρόνους του.",
+    algorithm: "Αλγόριθμος", dataset: "Δεδομένα", size: "Πλήθος στοιχείων",
+    seed: "Seed", hint: "1–1.000 στοιχεία · Ίδιο seed, ίδια δεδομένα.",
+    run: "Εκτέλεση benchmark", running: "Εκτέλεση 10 μετρήσεων…",
+    error: "Η εκτέλεση απέτυχε. Έλεγξε τη σύνδεση και δοκίμασε ξανά.",
+    invalid: "Δώσε ακέραιο μέγεθος 1–1.000 και ακέραιο seed από −2147483648 έως 2147483647.",
+    result: "Αποτέλεσμα Bubble Sort", correct: "Σωστή ταξινόμηση και στις 10 εκτελέσεις",
+    incorrect: "Αποτυχία ελέγχου ορθότητας", median: "Διάμεσος", min: "Ελάχιστος", max: "Μέγιστος",
+    note: "Χρόνοι σε ms, μόνο για την ταξινόμηση. Δεν περιλαμβάνονται δημιουργία/αντιγραφή δεδομένων, έλεγχος ορθότητας ή επικοινωνία με τον server. Τα αποτελέσματα δεν αποθηκεύονται.",
+    runs: "Εκτελέσεις", types: { random: "Τυχαία", sorted: "Ταξινομημένα", reversed: "Αντίστροφα", nearly_sorted: "Σχεδόν ταξινομημένα" },
+  },
+  en: {
+    title: "First sorting experiment",
+    description: "Run Bubble Sort 10 times on identical input and inspect its execution times.",
+    algorithm: "Algorithm", dataset: "Dataset", size: "Input size",
+    seed: "Seed", hint: "1–1,000 items · Same seed, same input.",
+    run: "Run benchmark", running: "Running 10 measurements…",
+    error: "The run failed. Check the connection and try again.",
+    invalid: "Use an integer size from 1 to 1,000 and an integer seed from −2147483648 to 2147483647.",
+    result: "Bubble Sort result", correct: "Correct sorting in all 10 runs",
+    incorrect: "Correctness check failed", median: "Median", min: "Minimum", max: "Maximum",
+    note: "Times in ms, sorting only. Dataset generation/copying, correctness checks and server communication are excluded. Results are not saved.",
+    runs: "Runs", types: { random: "Random", sorted: "Sorted", reversed: "Reversed", nearly_sorted: "Nearly sorted" },
+  },
+} as const;

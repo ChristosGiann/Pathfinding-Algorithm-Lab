@@ -104,6 +104,13 @@ src/types/algorithm.ts
 getAlgorithms()
 ```
 
+## POST /api/benchmarks/bubble-sort/
+
+Implemented locally for Issue #18. Accepts size (1–1000), optional seed and
+dataset_type. Runs trusted Bubble Sort ten times and returns correctness plus
+median/min/max and individual times in ns. See [Benchmark contract](BENCHMARKS.md)
+for full validation and response semantics.
+
 # Planned API
 
 The exact contracts below are not finalized.
