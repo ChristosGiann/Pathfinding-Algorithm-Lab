@@ -67,7 +67,7 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 3. Continue with Issue #19 after integration.
 4. Issue #19: Experiment Model and API.
 5. Issue #20: Results Dashboard.
-6. Issue #21: MVP Integration Review.
+6. Issue #21: Personal Implementation Review (live issue scope).
 
 ## Scope alignment for Issue #17
 
@@ -78,3 +78,17 @@ sizes; and independent input copies for benchmark runs.
 Few Unique Values appears in the imported plan but is a proposed extension.
 The local implementation supports sizes 1 through 100,000 with the semantics
 in [Datasets](DATASETS.md). The future runner must use `copy_for_run()`. No new dataset endpoint contract has been finalized.
+
+
+## Issue #21 — 2026-09-22
+
+Implemented on `codex/21-implementation-review` from dev for a separate PR.
+Adds review persistence, strict GET/PUT API, Greek editable form and eight new
+backend tests (33 total on this branch). Lint/build and migration checks pass.
+Browser verification covered save, refresh, update, offline load/save errors,
+retry, and separate review data per implementation. See
+[Implementation reviews](IMPLEMENTATION_REVIEWS.md).
+
+PR #30 (#19) and PR #31 (#20) remain open and are not included in this branch.
+The earlier association of #21 with MVP Integration Review was corrected to the
+live GitHub issue. No merge or issue closure is performed in this step.

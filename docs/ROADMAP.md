@@ -171,9 +171,19 @@ Frontend goals:
 - compare input sizes,
 - show theoretical complexity next to measured behavior.
 
-## Phase 8 β€” Issue #21: MVP Integration Review
+## Phase 8 — Issue #21: Personal Implementation Review
 
-Status: **Planned**
+Status: **Implemented on a separate branch; PR review pending**
+
+The live issue #21 requests subjective ratings and notes per implementation.
+The earlier mapping to MVP Integration Review was stale. Six optional 1–5
+ratings, strengths, weaknesses, use cases and notes are persisted via GET/PUT
+and edited through a Greek form in the Algorithm Library.
+See [Implementation reviews](IMPLEMENTATION_REVIEWS.md) for the single-user scope.
+
+## Future milestone — MVP Integration Review
+
+Status: **Planned; not the scope of Issue #21**
 
 End-to-end flow:
 

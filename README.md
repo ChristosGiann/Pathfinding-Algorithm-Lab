@@ -63,7 +63,7 @@ Next:
 - #18 First Bubble Sort benchmark: implemented locally; review pending
 - #19 Experiment Model + API
 - #20 Results Dashboard
-- #21 MVP Integration Review
+- #21 Personal Implementation Review (see [review guide](docs/IMPLEMENTATION_REVIEWS.md))
 
 ## Quick start
 
