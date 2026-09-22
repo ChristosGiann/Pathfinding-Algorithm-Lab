@@ -111,6 +111,17 @@ dataset_type. Runs trusted Bubble Sort ten times and returns correctness plus
 median/min/max and individual times in ns. See [Benchmark contract](BENCHMARKS.md)
 for full validation and response semantics.
 
+## Experiment definition API
+
+Implemented locally for Issue #19:
+
+- `POST /api/experiments/`: create a draft, HTTP 201.
+- `GET /api/experiments/<id>/`: retrieve saved configuration, HTTP 200/404.
+
+See [Experiments](EXPERIMENTS.md) for validation, relationships, status and full
+request/response semantics. Catalogue implementation objects now expose an `id`
+for selection; internal registry keys remain private.
+
 # Planned API
 
 The exact contracts below are not finalized.
@@ -137,20 +148,10 @@ a proposed extension, outside that issue's current acceptance criteria.
 
 No endpoint path is final yet.
 
-## Experiment API
+## Experiment execution API
 
-Status: **Planned**
-
-Expected responsibilities:
-
-- create an experiment,
-- choose algorithms/implementations,
-- choose dataset configuration,
-- choose run count,
-- execute or trigger benchmarking,
-- return stored experiment metadata.
-
-No endpoint path or payload is final yet.
+Status: **Planned**. Creating saved definitions is implemented; scheduling and
+executing an experiment remain separate future work.
 
 ## Results API
 

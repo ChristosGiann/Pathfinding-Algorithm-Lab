@@ -1,14 +1,12 @@
 # Project Progress
 
-Last verified: **2026-09-13**
+Last verified: **2026-09-22**
 
 ## Current phase
 
-Algorithm Evaluation Lab MVP. The Algorithm Library is implemented and merged.
-Issue #17 was merged into dev via PR #28 and closed with a completion comment.
-Issue #18 is implemented locally on `codex/18-bubble-sort-benchmark`: trusted
-Bubble Sort, ten timed runs, API and frontend result card. Review/push/merge
-remain pending for #18. See [Benchmarks](BENCHMARKS.md).
+Issue #17 merged through PR #28 and Issue #18 through PR #29 into dev; both closed.
+Issue #19 is implemented locally on `codex/19-experiment-model-api` with models,
+atomic create/read API and validation. No commit, push or merge yet for #19.
 
 ## Git state
 
@@ -30,7 +28,7 @@ remain pending for #18. See [Benchmarks](BENCHMARKS.md).
 - Filtering of active built-in implementations; private registry keys.
 - Algorithm Library cards, loading/error/empty states and retry button.
 
-Seeded implementation records are metadata. Bubble Sort is executable locally for #18; other sorters and
+Seeded implementation records are metadata. Bubble Sort is executable since #18; other sorters and
 database registry resolution remain planned work.
 
 ## Follow-up fixes
@@ -46,7 +44,7 @@ database registry resolution remain planned work.
 
 Latest frontend checks on 2026-09-13: lint, build, and diff whitespace checks passed.
 Backend verification after Issue #18: 25 tests passed (17 existing and 8 new benchmark tests),
-Django checks passed, and no migrations are required.
+Those earlier changes needed no migrations; #19 adds migration 0003.
 
 Browser scenarios verified against the real local backend:
 
@@ -62,12 +60,17 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 
 ## Next
 
-1. Start issue work from an updated `dev`; integrate completed work back into `dev`.
-2. Review and integrate Issue #18 into dev.
-3. Continue with Issue #19 after integration.
-4. Issue #19: Experiment Model and API.
-5. Issue #20: Results Dashboard.
-6. Issue #21: MVP Integration Review.
+1. Review/integrate Issue #19 into dev.
+2. Inspect the live Issue #20 before implementation.
+3. Issue #21: MVP Integration Review.
+
+## Issue #19 verification
+
+36 backend tests pass (25 existing + 11 new). Migration 0003 applied locally;
+Django checks and migration dry-run passed. Actual HTTP POST returned 201 and
+GET returned 200 with matching stored implementations and datasets. A local draft
+named `Issue 19 API verification` (ID 1) remains available for inspection.
+See [Experiments](EXPERIMENTS.md). No new experiment UI or execution is included.
 
 ## Scope alignment for Issue #17
 

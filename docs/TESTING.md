@@ -9,7 +9,7 @@ Testing should protect the evaluation pipeline without becoming unnecessary main
 Current verified state:
 
 ```text
-25 tests
+36 tests
 ```
 
 Run with:
@@ -18,10 +18,10 @@ Run with:
 python backend\manage.py test core
 ```
 
-Latest verified result after local Bubble Sort benchmark implementation:
+Latest verified result after local Experiment Model/API implementation:
 
 ```text
-Ran 25 tests
+Ran 36 tests
 OK
 ```
 
@@ -220,5 +220,12 @@ They use `SimpleTestCase` without a database. See [Datasets](DATASETS.md).
 ## Benchmark verification
 
 Eight new tests cover Bubble Sort, timing boundaries, fresh inputs, correctness
-failures, stats, API bounds and validation. The suite now contains 25 tests.
+failures, stats, API bounds and validation. The suite now contains 36 tests.
 See [Benchmarks](BENCHMARKS.md) for browser scenarios and measurement limits.
+
+## Experiment tests
+
+Eleven new tests cover relationship persistence, defaults, catalogue IDs, bounds,
+invalid inputs, atomic rollback, draft creation without execution, status DB
+constraint and unsupported mutation methods. Real HTTP create/read was also
+verified locally. See [Experiments](EXPERIMENTS.md).

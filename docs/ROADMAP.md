@@ -133,31 +133,14 @@ Later possibilities:
 - iterations
 - memory usage
 
-## Phase 6 β€” Issue #19: Experiment Model + API
+## Phase 6 — Issue #19: Experiment Model + API
 
-Status: **Planned**
+Status: **Implemented locally; review/integration pending**
 
-An experiment should describe:
-
-```text
-Algorithm(s)
-Dataset type
-Input size
-Number of runs
-Execution results
-```
-
-Initial statistics:
-
-- mean
-- min
-- max
-- median
-
-Later:
-
-- standard deviation
-- percentiles
+Experiment definitions store selected implementations and owned dataset
+configurations. Create and retrieve APIs, draft default, five model statuses,
+validation and atomic persistence are implemented. Execution, lifecycle transitions
+and stored timing results are separate future work. See [Experiments](EXPERIMENTS.md).
 
 ## Phase 7 β€” Issue #20: Results Dashboard
 
