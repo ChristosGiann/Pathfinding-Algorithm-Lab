@@ -1,5 +1,11 @@
 export const benchmarkTexts = {
   el: {
+    dashboard: "Αποτελέσματα μετρήσεων", implementation: "Υλοποίηση", status: "Ορθότητα / κατάσταση",
+    emptyResults: "Εκτέλεσε ένα benchmark για να εμφανιστούν αποτελέσματα.",
+    clearResults: "Καθαρισμός αποτελεσμάτων", sessionResults: "Οι τελευταίες 20 προσπάθειες αυτής της συνεδρίας",
+    chart: "Χρόνος ταξινόμησης ανά μέτρηση", chartNote: "Μπλε μπάρα: διάμεσος · Μαύρη γραμμή: ελάχιστος–μέγιστος. Κοινή γραμμική κλίμακα από το μηδέν. Οι ακριβείς τιμές βρίσκονται στον πίνακα.",
+    comparisonNote: "Διαθέσιμη υλοποίηση: Bubble Sort σε Python. Σύγκρινε μόνο ίδια δεδομένα, μέγεθος και seed στο ίδιο περιβάλλον. Οι χρόνοι επηρεάζονται από το φορτίο του συστήματος και δεν αναδεικνύουν απόλυτο νικητή. Τα experiments δεν παράγουν ακόμη αποτελέσματα.",
+    timeout: "Η αναμονή απάντησης ξεπέρασε τα 30 δευτερόλεπτα. Ο server μπορεί να συνεχίζει την εκτέλεση. Δοκίμασε ξανά.",
     title: "Πρώτο πείραμα ταξινόμησης",
     description: "Τρέξε τον Bubble Sort 10 φορές στα ίδια δεδομένα και σύγκρινε τους χρόνους του.",
     algorithm: "Αλγόριθμος", dataset: "Δεδομένα", size: "Πλήθος στοιχείων",
@@ -13,6 +19,12 @@ export const benchmarkTexts = {
     runs: "Εκτελέσεις", types: { random: "Τυχαία", sorted: "Ταξινομημένα", reversed: "Αντίστροφα", nearly_sorted: "Σχεδόν ταξινομημένα" },
   },
   en: {
+    dashboard: "Measurement results", implementation: "Implementation", status: "Correctness / status",
+    emptyResults: "Run a benchmark to see results.",
+    clearResults: "Clear results", sessionResults: "The latest 20 attempts in this session",
+    chart: "Sorting time per measurement", chartNote: "Blue bar: median · Black line: minimum–maximum. Shared linear scale starting at zero. Exact values are in the table.",
+    comparisonNote: "Available implementation: Bubble Sort in Python. Compare only identical datasets, sizes and seeds in the same environment. System load affects timings; there is no absolute winner. Experiments do not produce results yet.",
+    timeout: "No response within 30 seconds. The server may still be running. Try again.",
     title: "First sorting experiment",
     description: "Run Bubble Sort 10 times on identical input and inspect its execution times.",
     algorithm: "Algorithm", dataset: "Dataset", size: "Input size",

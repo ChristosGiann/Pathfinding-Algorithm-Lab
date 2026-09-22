@@ -222,3 +222,8 @@ They use `SimpleTestCase` without a database. See [Datasets](DATASETS.md).
 Eight new tests cover Bubble Sort, timing boundaries, fresh inputs, correctness
 failures, stats, API bounds and validation. The suite now contains 25 tests.
 See [Benchmarks](BENCHMARKS.md) for browser scenarios and measurement limits.
+
+## Results dashboard (#20)
+
+Run `npm test` for the four rendering regression tests; requires Node 22.15+.
+See [Results dashboard](RESULTS_DASHBOARD.md) for browser scenarios and limits.
