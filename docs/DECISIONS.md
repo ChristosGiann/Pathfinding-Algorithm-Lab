@@ -267,3 +267,14 @@ imports built-in code without accepting arbitrary execution targets; general
 registry integration waits for multiple executable implementations. Return
 results without persistence until #19. This matches the narrower live issue
 rather than implementing the broader planned benchmark engine prematurely.
+
+## ADR-015 — Persist draft definitions separately from execution
+
+**Status:** Implemented locally for #19
+
+Experiments own dataset configurations and reference active built-in sorting
+implementations. Creation is atomic and always draft; API clients cannot set
+execution status. This avoids claiming execution has occurred when saving
+configuration. Dataset limits match generation (100,000); actual execution
+must apply runner limits separately. Catalogue references are live, not code
+version snapshots. See [Experiments](EXPERIMENTS.md) for limitations.

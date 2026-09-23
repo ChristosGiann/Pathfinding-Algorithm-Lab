@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Problem(models.Model):
@@ -169,3 +170,53 @@ class AlgorithmImplementation(models.Model):
 
     def __str__(self):
         return f"{self.algorithm.name} — {self.name}"
+
+
+class Experiment(models.Model):
+    class Status(models.TextChoices):
+        DRAFT = "draft", "Draft"
+        PENDING = "pending", "Pending"
+        RUNNING = "running", "Running"
+        COMPLETED = "completed", "Completed"
+        FAILED = "failed", "Failed"
+
+    name = models.CharField(max_length=200)
+    implementations = models.ManyToManyField(
+        AlgorithmImplementation, related_name="experiments",
+    )
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+        constraints = [models.CheckConstraint(
+            condition=models.Q(status__in=["draft", "pending", "running", "completed", "failed"]),
+            name="experiment_valid_status",
+        )]
+
+    def __str__(self):
+        return self.name
+
+
+class DatasetDefinition(models.Model):
+    """Configuration owned by one experiment, not a stored generated array."""
+
+    class Kind(models.TextChoices):
+        RANDOM = "random", "Random"
+        SORTED = "sorted", "Sorted"
+        REVERSED = "reversed", "Reversed"
+        NEARLY_SORTED = "nearly_sorted", "Nearly sorted"
+
+    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, related_name="datasets")
+    dataset_type = models.CharField(max_length=20, choices=Kind.choices)
+    size = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(100_000)])
+    seed = models.IntegerField(default=42, validators=[MinValueValidator(-(2**31)), MaxValueValidator(2**31 - 1)])
+
+    class Meta:
+        ordering = ["pk"]
+        constraints = [
+            models.CheckConstraint(condition=models.Q(size__gte=1, size__lte=100_000), name="dataset_valid_size"),
+            models.CheckConstraint(condition=models.Q(seed__gte=-(2**31), seed__lte=2**31 - 1), name="dataset_valid_seed"),
+            models.CheckConstraint(condition=models.Q(dataset_type__in=["random", "sorted", "reversed", "nearly_sorted"]), name="dataset_valid_type"),
+        ]

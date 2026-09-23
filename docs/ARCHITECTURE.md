@@ -318,3 +318,11 @@ React Benchmark form -> centralized API client -> benchmark request serializer
 -> pure runner -> dataset copies -> trusted Bubble Sort -> correctness and timing
 summary -> result card. The endpoint has no persistence or registry lookup.
 See [Benchmarks](BENCHMARKS.md).
+
+## Experiment definitions (#19, local)
+
+Experiment selects implementations through a many-to-many relation and owns
+DatasetDefinition rows through a foreign key. API validation precedes atomic
+creation of all records. Status is server-owned and defaults to draft.
+Read uses prefetching for implementations, algorithms and datasets. No execution
+is triggered. See [Experiments](EXPERIMENTS.md).
