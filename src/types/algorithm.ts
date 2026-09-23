@@ -3,6 +3,7 @@ export type AlgorithmImplementationSourceType =
   | "custom";
 
 export interface AlgorithmImplementation {
+  id: number;
   name: string;
   slug: string;
   language: string;

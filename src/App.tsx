@@ -5,6 +5,7 @@ import "./App.css";
 import { AlgorithmLibrary } from "./components/AlgorithmLibrary/AlgorithmLibrary";
 import { AppHeader } from "./components/AppHeader/AppHeader";
 import { BackendStatus } from "./components/BackendStatus/BackendStatus";
+import { Benchmark } from "./components/Benchmark/Benchmark";
 import { Grid } from "./components/Grid/Grid";
 import { Toolbar } from "./components/Toolbar/Toolbar";
 
@@ -50,6 +51,7 @@ function App() {
       <AppHeader texts={texts.app} />
 
       <BackendStatus texts={texts.backendStatus} />
+      <Benchmark language={DEFAULT_LANGUAGE} />
 
       <Toolbar
         texts={texts.toolbar}

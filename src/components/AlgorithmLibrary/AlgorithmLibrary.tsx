@@ -1,11 +1,11 @@
 import {
-  useCallback,
   useEffect,
   useState,
 } from "react";
 
 import { getAlgorithms } from "../../services/apiClient";
 import type { Algorithm } from "../../types/algorithm";
+import { ImplementationReview } from "../ImplementationReview/ImplementationReview";
 
 import "./AlgorithmLibrary.css";
 
@@ -42,22 +42,37 @@ export function AlgorithmLibrary({
   const [status, setStatus] =
     useState<RequestStatus>("loading");
 
-  const loadAlgorithms = useCallback(async () => {
-    setStatus("loading");
-
-    try {
-      const response = await getAlgorithms();
-
-      setAlgorithms(response);
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
-  }, []);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
+    let isActive = true;
+
+    async function loadAlgorithms() {
+      try {
+        const response = await getAlgorithms();
+
+        if (isActive) {
+          setAlgorithms(response);
+          setStatus("success");
+        }
+      } catch {
+        if (isActive) {
+          setStatus("error");
+        }
+      }
+    }
+
     void loadAlgorithms();
-  }, [loadAlgorithms]);
+
+    return () => {
+      isActive = false;
+    };
+  }, [retryCount]);
+
+  function handleRetry() {
+    setStatus("loading");
+    setRetryCount((currentCount) => currentCount + 1);
+  }
 
   return (
     <section
@@ -105,9 +120,7 @@ export function AlgorithmLibrary({
           <button
             type="button"
             className="algorithm-library__retry-button"
-            onClick={() => {
-              void loadAlgorithms();
-            }}
+            onClick={handleRetry}
           >
             {texts.retry}
           </button>
@@ -205,6 +218,9 @@ export function AlgorithmLibrary({
                     )}
                   </div>
                 </footer>
+                {algorithm.implementations.map(implementation => <ImplementationReview
+                  key={implementation.id} implementationId={implementation.id}
+                  name={`${algorithm.name} · ${implementation.name}`} />)}
               </article>
             ))}
           </div>

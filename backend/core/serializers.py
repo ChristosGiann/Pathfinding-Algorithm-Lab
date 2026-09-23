@@ -8,6 +8,7 @@ class AlgorithmImplementationSerializer(serializers.ModelSerializer):
         model = AlgorithmImplementation
 
         fields = (
+            "id",
             "name",
             "slug",
             "language",
