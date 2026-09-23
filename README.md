@@ -61,9 +61,9 @@ Next:
 
 - #17 Dataset Generators: merged into dev through PR #28; issue closed
 - #18 First Bubble Sort benchmark: merged into dev through PR #29; issue closed
-- #19 Experiment Model + API: implemented locally; review pending
-- #20 Results Dashboard
-- #21 Personal Implementation Review (see [review guide](docs/IMPLEMENTATION_REVIEWS.md))
+- #19 Experiment Model + API: merged into dev through PR #30; issue closed
+- #20 Results Dashboard: merged into dev through PR #31; issue closed
+- #21 Personal Implementation Review: merged into dev through PR #32; issue closed (see [review guide](docs/IMPLEMENTATION_REVIEWS.md))
 
 ## Quick start
 
@@ -93,7 +93,7 @@ python backend\manage.py runserver
 Tests:
 
 ```powershell
-python backend\manage.py test core
+python backend\manage.py test core reviews
 ```
 
 ### Frontend
@@ -121,6 +121,8 @@ GET /api/algorithms/
 POST /api/benchmarks/bubble-sort/
 POST /api/experiments/
 GET /api/experiments/<id>/
+GET /api/implementations/<id>/review/
+PUT /api/implementations/<id>/review/
 ```
 
 See [docs/API.md](docs/API.md).
@@ -144,3 +146,9 @@ See [docs/API.md](docs/API.md).
 The files under `docs/` are the project's source of truth for design, roadmap, progress, and technical decisions.
 
 When a feature changes the architecture or roadmap, the corresponding documentation should be updated in the same Pull Request.
+
+## Permanent branches
+
+`main` and `dev` are permanent. Never delete `dev`, locally or on GitHub,
+including after merging it into `main`. Only completed temporary issue branches
+are deleted. Promotion from dev to main requires explicit user instruction.

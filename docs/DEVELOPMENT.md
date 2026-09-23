@@ -184,7 +184,8 @@ Fix:
 codex/fix-<short-description>
 ```
 
-Only `main` and `dev` are permanent branches. Issue branches exist while work
+Only `main` and `dev` are permanent branches. **Never delete `dev`, locally or
+remotely, including after merging a dev-to-main PR.** Issue branches exist while work
 is active and are deleted locally and remotely after their commits are merged.
 Update `main` from `dev` only when the user explicitly requests it. Check for uncommitted
 changes before switching branches. `git fetch origin` updates remote-tracking

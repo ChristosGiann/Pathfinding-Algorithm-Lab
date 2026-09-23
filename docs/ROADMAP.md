@@ -85,7 +85,7 @@ Implemented:
 
 Follow-up fixes for retry cleanup, lint scope, and backend health polling were
 committed as `9e1582b` and merged into `dev` with the documentation.
-Promotion to `main` awaits explicit user instruction. See [Progress](PROGRESS.md).
+Promotion to `main` is authorized on 2026-09-23. See [Progress](PROGRESS.md).
 
 ## Phase 4 β€” Issue #17: Dataset Generators
 
@@ -116,7 +116,7 @@ They remain possible extensions, not part of Issue #17's current scope.
 
 ## Phase 5 β€” Issue #18: Benchmark Runner
 
-Status: **Planned**
+Status: **Merged into dev through PR #29; Issue #18 closed**
 
 Initial measurements:
 
@@ -135,7 +135,7 @@ Later possibilities:
 
 ## Phase 6 — Issue #19: Experiment Model + API
 
-Status: **Implemented locally; review/integration pending**
+Status: **Merged into dev through PR #30; Issue #19 closed**
 
 Experiment definitions store selected implementations and owned dataset
 configurations. Create and retrieve APIs, draft default, five model statuses,
@@ -144,19 +144,16 @@ and stored timing results are separate future work. See [Experiments](EXPERIMENT
 
 ## Phase 7 β€” Issue #20: Results Dashboard
 
-Status: **Planned**
+Status: **Merged into dev through PR #31; Issue #20 closed**
 
-Frontend goals:
-
-- inspect experiment results,
-- compare algorithms,
-- display execution-time charts,
-- compare input sizes,
-- show theoretical complexity next to measured behavior.
+Implemented: a session results table, median/min/max chart, correctness and
+error/timeout states for the Bubble Sort benchmark. History is not persisted.
+Experiment execution/results and comparisons between implementations remain
+future work. See [Results dashboard](RESULTS_DASHBOARD.md).
 
 ## Phase 8 — Issue #21: Personal Implementation Review
 
-Status: **Implemented on a separate branch; PR review pending**
+Status: **Merged into dev through PR #32; Issue #21 closed**
 
 The live issue #21 requests subjective ratings and notes per implementation.
 The earlier mapping to MVP Integration Review was stale. Six optional 1–5

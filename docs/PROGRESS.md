@@ -6,15 +6,17 @@ Last verified: **2026-09-23**
 
 Issue #17 merged through PR #28 and Issue #18 through PR #29 into dev; both closed.
 Issues #19 and #20 were merged into dev via PR #30 and PR #31 and closed.
-PR #32 adds personal implementation reviews and now includes updated dev for integration checks.
+Issue #21 was merged through PR #32 into dev and closed.
+Issues #17–#21 are integrated; this snapshot prepares their promotion to main.
 
 ## Git state
 
 - Issue #16 is closed; PR #27 merged the library into `main` at `49f7fd1`.
 - `dev` was created from that `origin/main` commit.
 - Fixes (`9e1582b`) and documentation (`b1a6908`) have been merged into `dev`.
-- Integration branch: `dev`; `main` has not received these follow-up changes.
-- Only `main` and `dev` are permanent. Delete issue branches after merging to dev.
+- Integration branch: `dev`; promotion to `main` is explicitly authorized on 2026-09-23.
+- `main` and `dev` are permanent. Never delete `dev`, locally or remotely,
+  including after a dev-to-main PR. Delete only merged temporary issue branches.
 - Promote `dev` to `main` only on explicit user request.
 
 ## Completed functionality
@@ -42,9 +44,10 @@ database registry resolution remain planned work.
 
 ## Verification
 
-Latest frontend checks on 2026-09-13: lint, build, and diff whitespace checks passed.
-Backend verification after Issue #18: 25 tests passed (17 existing and 8 new benchmark tests),
-Those earlier changes needed no migrations; #19 adds migration 0003.
+Integration verification on 2026-09-23: 44 backend tests and 4 frontend rendering
+tests passed, along with lint, build, Django checks and migration consistency.
+Core migration 0003 and reviews migration 0001 are applied locally.
+The documentation refresh changes no application code.
 
 Browser scenarios verified against the real local backend:
 
@@ -60,9 +63,9 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 
 ## Next
 
-1. Verify and integrate PR #32 (Issue #21: Personal Implementation Review).
-2. Continue with Issue #22: custom Python validation, after checking its live scope.
-3. Promote dev to main only on explicit user request.
+1. Promote this integrated snapshot from dev to main as authorized.
+2. Continue with Issue #22: custom Python validation; implementation has not started.
+3. Keep dev permanently for subsequent issue branches.
 
 ## Issue #19 verification
 
@@ -85,20 +88,19 @@ in [Datasets](DATASETS.md). The future runner must use `copy_for_run()`. No new 
 
 ## Issue #21 — 2026-09-22
 
-Implemented on `codex/21-implementation-review` from dev for a separate PR.
+Merged into dev through PR #32; Issue #21 closed.
 Adds review persistence, strict GET/PUT API, Greek editable form and eight new
-backend tests (33 total on this branch). Lint/build and migration checks pass.
+backend tests (44 total with experiments integrated). Lint/build and migration checks pass.
 Browser verification covered save, refresh, update, offline load/save errors,
 retry, and separate review data per implementation. See
 [Implementation reviews](IMPLEMENTATION_REVIEWS.md).
 
-PR #30 (#19) and PR #31 (#20) are merged into dev and included in this branch.
+PR #30 (#19), PR #31 (#20) and PR #32 (#21) are merged into dev.
 The earlier association of #21 with MVP Integration Review was corrected to the
-live GitHub issue. No merge or issue closure is performed in this step.
+live GitHub issue. All three completed temporary branches have been deleted.
 
 ## Issue #20 dashboard
 
 Merged into dev through PR #31; Issue #20 closed.
 See [Results dashboard](RESULTS_DASHBOARD.md) for scope, validation and limitations.
-PR #30 for #19 was merged into dev. The #20 branch now includes updated dev;
-both experiment and dashboard testing sections are retained for integration.
+Both experiment and dashboard testing sections are retained in the integrated documentation.

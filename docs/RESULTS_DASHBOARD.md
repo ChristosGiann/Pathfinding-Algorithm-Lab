@@ -13,7 +13,7 @@ The range is observed min–max, not a confidence interval.
 
 Only the existing trusted Bubble Sort Python endpoint is executable. There is no
 experiment execution/results endpoint yet, and no multi-implementation comparison
-or persistent results history. This branch starts from dev independently of PR #30.
+or persistent results history. PR #31 was integrated into dev after PR #30.
 
 Requests have a 30-second client response deadline. A timeout is shown separately
 from a network/HTTP error, preserves earlier rows and enables retry. Aborting the

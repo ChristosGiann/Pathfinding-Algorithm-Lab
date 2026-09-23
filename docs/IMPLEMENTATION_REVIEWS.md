@@ -56,8 +56,7 @@ are not versioned source-code snapshots and do not affect benchmark metrics.
 
 The separate Django app keeps subjective reviews separate from the algorithm
 catalogue and experiment definitions. Its initial migration depends on core 0002,
-so it does not create competing core migration leaves with PR #30. This branch is
-based on dev, without merging PR #30 or #31.
+so it does not create competing core migration leaves with PR #30. PR #32 was integrated into dev after PR #30 and #31.
 
 Apply `python manage.py migrate` from backend before starting the updated server.
 Restart a server started with --noreload after updating code. No npm dependency

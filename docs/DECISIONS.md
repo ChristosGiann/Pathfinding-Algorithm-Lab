@@ -249,7 +249,7 @@ The structure already exists and makes a future language selector straightforwar
 
 ## ADR-013 — Controlled permutations and immutable sources
 
-**Status:** Implemented locally for Issue #17
+**Status:** Implemented; merged through PR #28
 
 Use permutations of `range(size)` to isolate input ordering across dataset types.
 Use private seeded randomness and frozen tuple values with fresh copies per run.
@@ -259,18 +259,18 @@ See [Datasets](DATASETS.md) for the complete contract.
 
 ## ADR-014 — Bounded synchronous Bubble Sort benchmark
 
-**Status:** Implemented locally for Issue #18
+**Status:** Implemented; merged through PR #29
 
 Use a fixed trusted Bubble Sort, ten runs, perf_counter_ns and a 1000-item cap.
 Copying and correctness checks stay outside timing. The first endpoint directly
 imports built-in code without accepting arbitrary execution targets; general
 registry integration waits for multiple executable implementations. Return
-results without persistence until #19. This matches the narrower live issue
+results without persistence; #19 stores draft definitions only. This matches the narrower live issue
 rather than implementing the broader planned benchmark engine prematurely.
 
 ## ADR-015 — Persist draft definitions separately from execution
 
-**Status:** Implemented locally for #19
+**Status:** Implemented; merged through PR #30
 
 Experiments own dataset configurations and reference active built-in sorting
 implementations. Creation is atomic and always draft; API clients cannot set
