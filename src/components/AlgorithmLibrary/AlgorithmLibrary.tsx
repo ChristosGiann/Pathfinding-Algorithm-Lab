@@ -5,6 +5,7 @@ import {
 
 import { getAlgorithms } from "../../services/apiClient";
 import type { Algorithm } from "../../types/algorithm";
+import { ImplementationReview } from "../ImplementationReview/ImplementationReview";
 
 import "./AlgorithmLibrary.css";
 
@@ -217,6 +218,9 @@ export function AlgorithmLibrary({
                     )}
                   </div>
                 </footer>
+                {algorithm.implementations.map(implementation => <ImplementationReview
+                  key={implementation.id} implementationId={implementation.id}
+                  name={`${algorithm.name} · ${implementation.name}`} />)}
               </article>
             ))}
           </div>

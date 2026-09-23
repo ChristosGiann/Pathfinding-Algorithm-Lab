@@ -220,8 +220,14 @@ They use `SimpleTestCase` without a database. See [Datasets](DATASETS.md).
 ## Benchmark verification
 
 Eight new tests cover Bubble Sort, timing boundaries, fresh inputs, correctness
-failures, stats, API bounds and validation. The suite now contains 36 tests.
+failures, stats, API bounds and validation. The integrated core/reviews suite contains 44 tests.
 See [Benchmarks](BENCHMARKS.md) for browser scenarios and measurement limits.
+
+## Implementation reviews (#21)
+
+Run `manage.py test core reviews` from backend (44 tests with the integrated experiment API).
+The [review guide](IMPLEMENTATION_REVIEWS.md) records the API contract, browser
+save/refresh/update scenarios and verification limitations.
 
 ## Results dashboard (#20)
 

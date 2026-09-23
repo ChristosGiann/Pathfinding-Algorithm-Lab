@@ -1,12 +1,12 @@
 # Project Progress
 
-Last verified: **2026-09-22**
+Last verified: **2026-09-23**
 
 ## Current phase
 
 Issue #17 merged through PR #28 and Issue #18 through PR #29 into dev; both closed.
-Issue #19 is implemented locally on `codex/19-experiment-model-api` with models,
-atomic create/read API and validation. No commit, push or merge yet for #19.
+Issues #19 and #20 were merged into dev via PR #30 and PR #31 and closed.
+PR #32 adds personal implementation reviews and now includes updated dev for integration checks.
 
 ## Git state
 
@@ -60,9 +60,9 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 
 ## Next
 
-1. Review/integrate Issue #19 into dev.
-2. Inspect the live Issue #20 before implementation.
-3. Issue #21: MVP Integration Review.
+1. Verify and integrate PR #32 (Issue #21: Personal Implementation Review).
+2. Continue with Issue #22: custom Python validation, after checking its live scope.
+3. Promote dev to main only on explicit user request.
 
 ## Issue #19 verification
 
@@ -82,9 +82,23 @@ Few Unique Values appears in the imported plan but is a proposed extension.
 The local implementation supports sizes 1 through 100,000 with the semantics
 in [Datasets](DATASETS.md). The future runner must use `copy_for_run()`. No new dataset endpoint contract has been finalized.
 
+
+## Issue #21 — 2026-09-22
+
+Implemented on `codex/21-implementation-review` from dev for a separate PR.
+Adds review persistence, strict GET/PUT API, Greek editable form and eight new
+backend tests (33 total on this branch). Lint/build and migration checks pass.
+Browser verification covered save, refresh, update, offline load/save errors,
+retry, and separate review data per implementation. See
+[Implementation reviews](IMPLEMENTATION_REVIEWS.md).
+
+PR #30 (#19) and PR #31 (#20) are merged into dev and included in this branch.
+The earlier association of #21 with MVP Integration Review was corrected to the
+live GitHub issue. No merge or issue closure is performed in this step.
+
 ## Issue #20 dashboard
 
-Implemented on `codex/20-results-dashboard`, based on dev, for PR review.
+Merged into dev through PR #31; Issue #20 closed.
 See [Results dashboard](RESULTS_DASHBOARD.md) for scope, validation and limitations.
 PR #30 for #19 was merged into dev. The #20 branch now includes updated dev;
 both experiment and dashboard testing sections are retained for integration.
