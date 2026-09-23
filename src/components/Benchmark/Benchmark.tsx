@@ -3,7 +3,9 @@ import type { FormEvent } from "react";
 import type { Language } from "../../i18n/translations";
 import { benchmarkTexts } from "../../i18n/benchmark";
 import { runBubbleSortBenchmark } from "../../services/apiClient";
-import type { BenchmarkResult, DatasetType } from "../../types/benchmark";
+import type { DatasetType } from "../../types/benchmark";
+import { ResultsDashboard } from "./ResultsDashboard";
+import type { ResultEntry } from "./ResultsDashboard";
 import "./Benchmark.css";
 
 export function Benchmark({ language }: { language: Language }) {
@@ -12,8 +14,9 @@ export function Benchmark({ language }: { language: Language }) {
   const [seed, setSeed] = useState("42");
   const [datasetType, setDatasetType] = useState<DatasetType>("random");
   const [running, setRunning] = useState(false);
-  const [error, setError] = useState<"invalid" | "error" | null>(null);
-  const [result, setResult] = useState<BenchmarkResult | null>(null);
+  const [error, setError] = useState<"invalid" | "error" | "timeout" | null>(null);
+  const [entries, setEntries] = useState<ResultEntry[]>([]);
+  const nextId = useRef(1);
   const activeRequest = useRef<AbortController | null>(null);
 
   useEffect(() => () => activeRequest.current?.abort(), []);
@@ -23,7 +26,6 @@ export function Benchmark({ language }: { language: Language }) {
     if (activeRequest.current) return;
     const inputSize = Number(size);
     const inputSeed = Number(seed);
-    setResult(null);
     if (!size.trim() || !seed.trim() || !Number.isInteger(inputSize) || inputSize < 1 || inputSize > 1000 ||
       !Number.isInteger(inputSeed) || inputSeed < -2147483648 || inputSeed > 2147483647) {
       setError("invalid");
@@ -31,20 +33,27 @@ export function Benchmark({ language }: { language: Language }) {
     }
     const controller = new AbortController();
     activeRequest.current = controller;
+    const input = { size: inputSize, seed: inputSeed, dataset_type: datasetType };
+    const id = nextId.current++;
+    const timeout = AbortSignal.timeout(30_000);
+    const signal = AbortSignal.any([controller.signal, timeout]);
+    const append = (entry: ResultEntry) => setEntries(previous => [...previous, entry].slice(-20));
     setRunning(true);
     setError(null);
     try {
-      const response = await runBubbleSortBenchmark({ size: inputSize, seed: inputSeed, dataset_type: datasetType }, controller.signal);
-      if (!controller.signal.aborted) setResult(response);
+      const response = await runBubbleSortBenchmark(input, signal);
+      if (!controller.signal.aborted) append({ id, input, status: "completed", result: response });
     } catch {
-      if (!controller.signal.aborted) setError("error");
+      if (!controller.signal.aborted) {
+        const status = timeout.aborted ? "timeout" : "error";
+        setError(status);
+        append({ id, input, status });
+      }
     } finally {
       activeRequest.current = null;
       if (!controller.signal.aborted) setRunning(false);
     }
   }
-
-  const formatTime = (ns: number) => (ns / 1_000_000).toLocaleString(language, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
 
   return (
     <section className="benchmark" aria-labelledby="benchmark-title">
@@ -62,16 +71,8 @@ export function Benchmark({ language }: { language: Language }) {
         </fieldset>
         <p className="benchmark__hint">{texts.hint}</p>
       </form>
-      {running && <p role="status">{texts.running}</p>}
       {error && <p role="alert">{texts[error]}</p>}
-      {result && <article className="benchmark__result" aria-label={texts.result} aria-live="polite">
-        <h3>{texts.result}</h3>
-        <p className={result.correct ? "benchmark__correct" : "benchmark__incorrect"}>{result.correct ? texts.correct : texts.incorrect}</p>
-        <p>{texts.types[result.dataset_type]} · {texts.size}: {result.size} · Seed: {result.seed} · {texts.runs}: {result.runs}</p>
-        <dl>{([["median", result.median_ns], ["min", result.min_ns], ["max", result.max_ns]] as const).map(([label, value]) =>
-          <div key={label}><dt>{texts[label]}</dt><dd>{formatTime(value)} ms</dd></div>)}</dl>
-        <p className="benchmark__hint">{texts.note}</p>
-      </article>}
+      <ResultsDashboard entries={entries} running={running} language={language} onClear={() => setEntries([])} />
     </section>
   );
 }

@@ -6,9 +6,6 @@
 .benchmark button { background: #1d4ed8; color: white; cursor: pointer; }
 .benchmark :disabled { cursor: default; opacity: .65; }
 .benchmark :focus-visible { outline: 3px solid #60a5fa; outline-offset: 3px; }
-.benchmark__result { margin-top: 20px; padding: 20px; background: white; border: 1px solid #cbd5e1; border-radius: 12px; }
-.benchmark__result dl { display: flex; flex-wrap: wrap; gap: 24px; }
-.benchmark__result dd { margin: 6px 0 0; font-size: 1.35rem; font-variant-numeric: tabular-nums; }
 .benchmark__correct { color: #166534; font-weight: 600; }
 .benchmark__incorrect, .benchmark [role="alert"] { color: #b91c1c; }
 .benchmark__hint { color: #475569; line-height: 1.6; font-size: .9rem; }

@@ -81,3 +81,10 @@ sizes; and independent input copies for benchmark runs.
 Few Unique Values appears in the imported plan but is a proposed extension.
 The local implementation supports sizes 1 through 100,000 with the semantics
 in [Datasets](DATASETS.md). The future runner must use `copy_for_run()`. No new dataset endpoint contract has been finalized.
+
+## Issue #20 dashboard
+
+Implemented on `codex/20-results-dashboard`, based on dev, for PR review.
+See [Results dashboard](RESULTS_DASHBOARD.md) for scope, validation and limitations.
+PR #30 for #19 was merged into dev. The #20 branch now includes updated dev;
+both experiment and dashboard testing sections are retained for integration.
