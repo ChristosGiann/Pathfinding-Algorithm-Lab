@@ -145,7 +145,17 @@ See [docs/API.md](docs/API.md).
 
 The files under `docs/` are the project's source of truth for design, roadmap, progress, and technical decisions.
 
-When a feature changes the architecture or roadmap, the corresponding documentation should be updated in the same Pull Request.
+Documentation is versioned with the code. Feature branches start from `dev` and
+must update any affected Markdown files in the same Pull Request as the code.
+Those documentation changes then flow automatically with the merge into `dev`
+and later into `main`.
+
+Before a `dev` -> `main` promotion, the integrated documentation must describe
+the current `dev` state. After promotion, `main` is synchronized back into
+permanent `dev` before the next issue branch is created.
+
+The Pull Request template includes a documentation checklist so this is reviewed
+for every change.
 
 ## Permanent branches
 
