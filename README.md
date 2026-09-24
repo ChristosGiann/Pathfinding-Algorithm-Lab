@@ -50,20 +50,18 @@ Implemented:
 - backend API tests
 - Algorithm Library frontend implementation
 
-Latest completed feature:
+Latest integrated milestone:
 
-- Issue #16 β€” Algorithm Library
-- merged to `main` through PR #27; Issue #16 is closed
-- follow-up retry, lint, and backend status fixes (`9e1582b`) integrated into `dev`
-- follow-up fixes and documentation are on `dev`; promotion to `main` requires explicit user instruction
+- Issues #17–#21 were merged into `dev` through PRs #28–#32
+- the integrated `dev` snapshot was promoted to `main` through PR #33 on 2026-09-23
+- `main` now contains reproducible datasets, the Bubble Sort benchmark, experiment definitions, the results dashboard, and implementation reviews
+- `main` and `dev` remain permanent branches
 
 Next:
 
-- #17 Dataset Generators: merged into dev through PR #28; issue closed
-- #18 First Bubble Sort benchmark: merged into dev through PR #29; issue closed
-- #19 Experiment Model + API: merged into dev through PR #30; issue closed
-- #20 Results Dashboard: merged into dev through PR #31; issue closed
-- #21 Personal Implementation Review: merged into dev through PR #32; issue closed (see [review guide](docs/IMPLEMENTATION_REVIEWS.md))
+- #22 Custom Python implementation validation: open; implementation has not started
+- #12 Portfolio-ready README: open
+- #11 Greek / English language selector: open but not an MVP blocker
 
 ## Quick start
 
@@ -140,6 +138,8 @@ See [docs/API.md](docs/API.md).
 - [Dataset generators](docs/DATASETS.md)
 - [First benchmark](docs/BENCHMARKS.md)
 - [Experiment definitions](docs/EXPERIMENTS.md)
+- [Results dashboard](docs/RESULTS_DASHBOARD.md)
+- [Implementation reviews](docs/IMPLEMENTATION_REVIEWS.md)
 
 ## Documentation rule
 
