@@ -1,22 +1,21 @@
 # Project Progress
 
-Last verified: **2026-09-23**
+Last verified: **2026-09-24**
 
 ## Current phase
 
-Issue #17 merged through PR #28 and Issue #18 through PR #29 into dev; both closed.
-Issues #19 and #20 were merged into dev via PR #30 and PR #31 and closed.
-Issue #21 was merged through PR #32 into dev and closed.
-Issues #17–#21 are integrated; this snapshot prepares their promotion to main.
+Issues #17–#21 are completed and closed.
+They were integrated into `dev` through PRs #28–#32 and promoted together to `main` through PR #33 on 2026-09-23.
+The current production/reference snapshot on `main` therefore includes datasets, the first Bubble Sort benchmark, experiment definitions, the results dashboard, and implementation reviews.
 
 ## Git state
 
-- Issue #16 is closed; PR #27 merged the library into `main` at `49f7fd1`.
-- `dev` was created from that `origin/main` commit.
-- Fixes (`9e1582b`) and documentation (`b1a6908`) have been merged into `dev`.
-- Integration branch: `dev`; promotion to `main` is explicitly authorized on 2026-09-23.
+- Issue #16 is closed; PR #27 merged the Algorithm Library into `main`.
+- Issues #17–#21 were merged into `dev` through PRs #28–#32.
+- PR #33 promoted that integrated `dev` snapshot to `main` on 2026-09-23.
 - `main` and `dev` are permanent. Never delete `dev`, locally or remotely,
   including after a dev-to-main PR. Delete only merged temporary issue branches.
+- New issue branches should continue to start from `dev`.
 - Promote `dev` to `main` only on explicit user request.
 
 ## Completed functionality
@@ -63,9 +62,9 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 
 ## Next
 
-1. Promote this integrated snapshot from dev to main as authorized.
-2. Continue with Issue #22: custom Python validation; implementation has not started.
-3. Keep dev permanently for subsequent issue branches.
+1. Continue with Issue #22: custom Python validation; implementation has not started.
+2. Keep `dev` as the permanent integration branch for subsequent issue branches.
+3. Keep documentation synchronized in the same PR whenever feature status, API contracts, architecture, or roadmap change.
 
 ## Issue #19 verification
 
@@ -88,19 +87,19 @@ in [Datasets](DATASETS.md). The future runner must use `copy_for_run()`. No new 
 
 ## Issue #21 — 2026-09-22
 
-Merged into dev through PR #32; Issue #21 closed.
+Merged into `dev` through PR #32, then promoted to `main` through PR #33; Issue #21 closed.
 Adds review persistence, strict GET/PUT API, Greek editable form and eight new
 backend tests (44 total with experiments integrated). Lint/build and migration checks pass.
 Browser verification covered save, refresh, update, offline load/save errors,
 retry, and separate review data per implementation. See
 [Implementation reviews](IMPLEMENTATION_REVIEWS.md).
 
-PR #30 (#19), PR #31 (#20) and PR #32 (#21) are merged into dev.
+PR #30 (#19), PR #31 (#20) and PR #32 (#21) were merged into `dev` and are now present on `main` through PR #33.
 The earlier association of #21 with MVP Integration Review was corrected to the
 live GitHub issue. All three completed temporary branches have been deleted.
 
 ## Issue #20 dashboard
 
-Merged into dev through PR #31; Issue #20 closed.
+Merged into `dev` through PR #31, then promoted to `main` through PR #33; Issue #20 closed.
 See [Results dashboard](RESULTS_DASHBOARD.md) for scope, validation and limitations.
 Both experiment and dashboard testing sections are retained in the integrated documentation.
