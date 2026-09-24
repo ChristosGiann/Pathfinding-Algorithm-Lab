@@ -4,27 +4,27 @@
 
 ```text
 Algorithm Library
-        β†“
+        ↓
 Dataset Generators
-        β†“
+        ↓
 Benchmark Runner
-        β†“
+        ↓
 Experiment API
-        β†“
+        ↓
 Results Dashboard
-        β†“
+        ↓
 MVP Integration
-        β†“
+        ↓
 Advanced Comparison
-        β†“
+        ↓
 Visualization
-        β†“
+        ↓
 Additional Algorithm Families
 ```
 
 The evaluation pipeline is the priority. Infrastructure should be added only when it solves a real requirement.
 
-## Phase 0 β€” Foundation
+## Phase 0 — Foundation
 
 Status: **Completed**
 
@@ -37,7 +37,7 @@ Status: **Completed**
 - base pathfinding grid
 - i18n structure
 
-## Phase 1 β€” Algorithm domain
+## Phase 1 — Algorithm domain
 
 Status: **Completed**
 
@@ -54,7 +54,7 @@ Status: **Completed**
 - migrations
 - Django admin support
 
-## Phase 2 β€” Algorithms API
+## Phase 2 — Algorithms API
 
 Status: **Completed**
 
@@ -64,7 +64,7 @@ Status: **Completed**
 - private `registry_key`
 - backend automated tests
 
-## Phase 3 β€” Issue #16: Algorithm Library
+## Phase 3 — Issue #16: Algorithm Library
 
 Status: **Merged through PR #27; Issue #16 closed**
 
@@ -84,12 +84,12 @@ Implemented:
 - integration into `App.tsx`
 
 Follow-up fixes for retry cleanup, lint scope, and backend health polling were
-committed as `9e1582b` and merged into `dev` with the documentation.
-Promotion to `main` is authorized on 2026-09-23. See [Progress](PROGRESS.md).
+committed as `9e1582b`, integrated into `dev`, and promoted to `main` with
+the combined snapshot through PR #33 on 2026-09-23. See [Progress](PROGRESS.md).
 
-## Phase 4 β€” Issue #17: Dataset Generators
+## Phase 4 — Issue #17: Dataset Generators
 
-Status: **Merged into dev through PR #28; Issue #17 closed**
+Status: **Merged through PR #28 and promoted to main through PR #33; Issue #17 closed**
 
 Initial dataset types:
 
@@ -114,9 +114,9 @@ Requirements:
 Few Unique Values and larger preset sizes were suggested in the imported plan.
 They remain possible extensions, not part of Issue #17's current scope.
 
-## Phase 5 β€” Issue #18: Benchmark Runner
+## Phase 5 — Issue #18: Benchmark Runner
 
-Status: **Merged into dev through PR #29; Issue #18 closed**
+Status: **Merged through PR #29 and promoted to main through PR #33; Issue #18 closed**
 
 Initial measurements:
 
@@ -135,16 +135,16 @@ Later possibilities:
 
 ## Phase 6 — Issue #19: Experiment Model + API
 
-Status: **Merged into dev through PR #30; Issue #19 closed**
+Status: **Merged through PR #30 and promoted to main through PR #33; Issue #19 closed**
 
 Experiment definitions store selected implementations and owned dataset
 configurations. Create and retrieve APIs, draft default, five model statuses,
 validation and atomic persistence are implemented. Execution, lifecycle transitions
 and stored timing results are separate future work. See [Experiments](EXPERIMENTS.md).
 
-## Phase 7 β€” Issue #20: Results Dashboard
+## Phase 7 — Issue #20: Results Dashboard
 
-Status: **Merged into dev through PR #31; Issue #20 closed**
+Status: **Merged through PR #31 and promoted to main through PR #33; Issue #20 closed**
 
 Implemented: a session results table, median/min/max chart, correctness and
 error/timeout states for the Bubble Sort benchmark. History is not persisted.
@@ -153,13 +153,27 @@ future work. See [Results dashboard](RESULTS_DASHBOARD.md).
 
 ## Phase 8 — Issue #21: Personal Implementation Review
 
-Status: **Merged into dev through PR #32; Issue #21 closed**
+Status: **Merged through PR #32 and promoted to main through PR #33; Issue #21 closed**
 
 The live issue #21 requests subjective ratings and notes per implementation.
 The earlier mapping to MVP Integration Review was stale. Six optional 1–5
 ratings, strengths, weaknesses, use cases and notes are persisted via GET/PUT
 and edited through a Greek form in the Algorithm Library.
 See [Implementation reviews](IMPLEMENTATION_REVIEWS.md) for the single-user scope.
+
+## Current next issue — #22: Custom Python implementation validation
+
+Status: **Open; implementation not started**
+
+Planned scope:
+
+- accept Python source code for a local custom implementation,
+- validate syntax,
+- require a `solve(values)` function,
+- enforce a source-size limit,
+- return structured validation errors,
+- use timeout protection where local subprocess execution is introduced,
+- keep arbitrary custom-code execution local-development-only until a real sandbox exists.
 
 ## Future milestone — MVP Integration Review
 
@@ -169,15 +183,15 @@ End-to-end flow:
 
 ```text
 Select algorithm(s)
-    β†“
+    ↓
 Generate dataset
-    β†“
+    ↓
 Run benchmark
-    β†“
+    ↓
 Store results
-    β†“
+    ↓
 Retrieve results
-    β†“
+    ↓
 Display comparison
 ```
 
@@ -191,7 +205,7 @@ Review:
 - documentation
 - data correctness
 
-## Phase 9 β€” Visualization
+## Phase 9 — Visualization
 
 Status: **Future**
 
@@ -207,7 +221,7 @@ Sorting visualizations may show comparisons, swaps, active indices, and sorted r
 
 The existing pathfinding grid can later support graph algorithms.
 
-## Phase 10 β€” Additional algorithm families
+## Phase 10 — Additional algorithm families
 
 Possible order:
 
@@ -217,7 +231,7 @@ Possible order:
 4. String matching
 5. Trees
 
-## Phase 11 β€” Advanced features
+## Phase 11 — Advanced features
 
 Possible future features:
 
