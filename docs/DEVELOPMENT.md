@@ -237,7 +237,7 @@ A feature is done when applicable items are satisfied:
 - manual flow works,
 - no obvious browser-console errors,
 - diff reviewed,
-- docs updated if needed,
+- relevant docs updated in the same branch/PR,
 - meaningful commit,
 - branch pushed,
 - PR opened,
@@ -246,17 +246,59 @@ A feature is done when applicable items are satisfied:
 
 ## Documentation workflow
 
+Documentation is versioned exactly like source code. Every branch contains its own
+snapshot of the Markdown files. Do not maintain separate manual copies for `dev`
+and `main`.
+
+The required flow is:
+
+```text
+dev
+  ↓
+issue / feature branch
+  ├── code
+  ├── tests
+  └── relevant documentation updates
+          ↓
+        PR to dev
+          ↓
+        merge
+          ↓
+        dev now contains code + docs
+          ↓
+  dev-to-main promotion
+          ↓
+        main receives the same code + docs
+```
+
 When a feature changes:
 
 - architecture -> update `ARCHITECTURE.md`
 - project scope -> update `PROJECT.md`
-- roadmap order -> update `ROADMAP.md`
-- current state -> update `PROGRESS.md`
-- API contract -> update `API.md`
-- testing strategy -> update `TESTING.md`
+- roadmap or milestone state -> update `ROADMAP.md`
+- current implementation state -> update `PROGRESS.md`
+- public API contract -> update `API.md`
+- testing strategy or coverage -> update `TESTING.md`
 - important technical choice -> update `DECISIONS.md`
+- setup, commands, or workflow -> update `DEVELOPMENT.md`
+- public project summary -> update `README.md` when useful
 
-Documentation should ideally change in the same PR as the code it describes.
+Relevant documentation must be updated in the same issue branch and Pull Request
+as the code it describes. A merge then carries those Markdown changes automatically
+into `dev`, and a later `dev` -> `main` merge carries the same documentation
+into `main`.
+
+Do not edit `main` separately just to duplicate documentation already present in
+`dev`. If a post-merge status statement becomes stale because the promotion
+itself changed the state (for example, "promotion to main pending"), create a small
+documentation reconciliation PR through the normal `branch -> dev -> main` flow.
+
+Before promoting `dev` to `main`, verify that `PROGRESS.md`, `ROADMAP.md`,
+and `README.md` describe the integrated `dev` snapshot accurately.
+
+After a `dev` -> `main` merge, synchronize `main` back into permanent `dev`
+before starting the next issue branch. This keeps future issue branches based on
+the latest shared Git history even when GitHub created a merge commit on `main`.
 
 ## GitHub communication
 
