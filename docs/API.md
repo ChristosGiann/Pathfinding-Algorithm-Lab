@@ -173,3 +173,25 @@ No endpoint path or payload is final yet.
 4. Keep frontend types aligned with API responses.
 5. Add API tests for new endpoints.
 6. Update this document in the same PR when a public contract changes.
+
+## Custom Python static validation (#22)
+
+`POST /api/implementations/validate-python/` accepts only JSON `{ "source": "def solve(values):\n    return sorted(values)" }`.
+There is no execution flag. No submitted code is executed or persisted.
+
+A valid request returns HTTP 200 with a domain result, including source errors:
+
+```json
+{"valid": true, "stage": "static", "errors": []}
+```
+
+```json
+{"valid": false, "stage": "static", "errors": [{"code": "missing_solve", "message": "Χρειάζεται μία συνάρτηση def solve(values): στο κύριο επίπεδο του αρχείου.", "line": null, "column": null}]}
+```
+
+Malformed JSON, missing/extra fields and non-string source return HTTP 400 with
+`invalid_request` in the same envelope. Unsupported methods return 405 and
+unsupported content types 415 using DRF transport errors. Source is limited to
+32,768 UTF-8 bytes. Syntax positions are 1-based when available. A successful
+result checks syntax/declaration only, not correctness or safety.
+See [Custom Python](CUSTOM_PYTHON.md) for the signature and local CLI contract.

@@ -59,7 +59,7 @@ Latest integrated milestone:
 
 Next:
 
-- #22 Custom Python implementation validation: open; implementation has not started
+- #22 Custom Python validation is implemented in this feature snapshot: Greek editor, static API and explicit local CLI smoke execution; see [scope and limits](docs/CUSTOM_PYTHON.md)
 - #12 Portfolio-ready README: open
 - #11 Greek / English language selector: open but not an MVP blocker
 
@@ -121,6 +121,7 @@ POST /api/experiments/
 GET /api/experiments/<id>/
 GET /api/implementations/<id>/review/
 PUT /api/implementations/<id>/review/
+POST /api/implementations/validate-python/
 ```
 
 See [docs/API.md](docs/API.md).
@@ -140,6 +141,7 @@ See [docs/API.md](docs/API.md).
 - [Experiment definitions](docs/EXPERIMENTS.md)
 - [Results dashboard](docs/RESULTS_DASHBOARD.md)
 - [Implementation reviews](docs/IMPLEMENTATION_REVIEWS.md)
+- [Custom Python validation](docs/CUSTOM_PYTHON.md)
 
 ## Documentation rule
 

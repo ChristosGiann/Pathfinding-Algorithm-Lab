@@ -161,19 +161,23 @@ ratings, strengths, weaknesses, use cases and notes are persisted via GET/PUT
 and edited through a Greek form in the Algorithm Library.
 See [Implementation reviews](IMPLEMENTATION_REVIEWS.md) for the single-user scope.
 
-## Current next issue — #22: Custom Python implementation validation
+## Issue #22: Custom Python implementation validation
 
-Status: **Open; implementation not started**
+Status: **Implemented in this feature snapshot**
 
-Planned scope:
+Delivered scope:
 
 - accept Python source code for a local custom implementation,
 - validate syntax,
 - require a `solve(values)` function,
 - enforce a source-size limit,
 - return structured validation errors,
-- use timeout protection where local subprocess execution is introduced,
+- provide explicit local CLI execution with a 2-second subprocess timeout,
 - keep arbitrary custom-code execution local-development-only until a real sandbox exists.
+
+The HTTP API performs static checks only. Execution requires the local CLI flag;
+custom-code persistence and benchmark integration remain future work.
+See [Custom Python](CUSTOM_PYTHON.md).
 
 ## Future milestone — MVP Integration Review
 

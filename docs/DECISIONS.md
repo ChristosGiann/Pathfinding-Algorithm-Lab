@@ -278,3 +278,16 @@ execution status. This avoids claiming execution has occurred when saving
 configuration. Dataset limits match generation (100,000); actual execution
 must apply runner limits separately. Catalogue references are live, not code
 version snapshots. See [Experiments](EXPERIMENTS.md) for limitations.
+
+## ADR-016 — Separate static validation from local custom-code execution
+
+**Status:** Implemented in Issue #22 feature snapshot
+
+Expose only syntax/declaration validation over HTTP. Require an explicit
+`--run-local` management-command flag to execute developer-owned Python in a
+separate process with a 2-second timeout. Apply a 32,768-byte UTF-8 source cap
+and return structured Greek errors. This enables initial contract feedback
+without introducing a public arbitrary-code execution endpoint. A subprocess
+is not a sandbox; public execution requires separate isolation work.
+Finite sorting smoke cases provide feedback, not a correctness/security proof.
+See [Custom Python](CUSTOM_PYTHON.md).
