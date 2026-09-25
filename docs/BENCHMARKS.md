@@ -1,6 +1,6 @@
 # First built-in benchmark — Issue #18
 
-Implemented locally on `codex/18-bubble-sort-benchmark`; not yet published.
+Merged into dev through PR #29 and promoted to main through PR #33.
 
 ## API
 
@@ -55,7 +55,8 @@ allow another attempt. The result card retains the submitted configuration and
 shows times in milliseconds, converting from API nanoseconds. Greek and English
 texts are provided; the application currently defaults to Greek.
 
-Results are ephemeral: no experiment history or persistence until Issue #19.
+Results are ephemeral: no persisted timing results or benchmark history.
+Issue #19 stores experiment definitions only; execution/results persistence is future work.
 Ten runs are synchronous and size is capped at 1000 because Bubble Sort is
 quadratic. This is a local MVP, not an unrestricted public benchmarking service.
 There is no warm-up exclusion or guaranteed reproducible timing: machine load

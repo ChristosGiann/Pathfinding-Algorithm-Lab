@@ -240,3 +240,15 @@ Eleven new tests cover relationship persistence, defaults, catalogue IDs, bounds
 invalid inputs, atomic rollback, draft creation without execution, status DB
 constraint and unsupported mutation methods. Real HTTP create/read was also
 verified locally. See [Experiments](EXPERIMENTS.md).
+
+## Έλεγχος τεκμηρίωσης #12 — 2026-09-25
+
+Στο dev-based branch του README πέρασαν 44 backend tests, 4 frontend tests,
+ESLint, production build, Django check και migration dry-run. Ελέγχθηκαν τα
+relative links, τα explicit anchors και το screenshot του README. Έγινε
+πραγματικό browser benchmark με Random/100/42 και επιβεβαιώθηκε η εμφάνιση
+αποτελεσμάτων και της Algorithm Library. Το screenshot ελέγχθηκε οπτικά.
+Δεν αλλάζει application code και δεν προστέθηκαν νέα tests. Οι εντολές checks
+επαληθεύτηκαν στο υπάρχον local environment· δεν έγινε clean-machine reinstall.
+Το #22 δεν έχει ενσωματωθεί σε αυτό το branch, άρα το δικό του test count (60)
+δεν αφορά αυτό το snapshot.

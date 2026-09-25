@@ -62,9 +62,18 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 
 ## Next
 
-1. Continue with Issue #22: custom Python validation; implementation has not started.
+1. Review Issue #22: custom Python validation is implemented in separate PR #38,
+   which has not been integrated into this dev-based snapshot.
 2. Keep `dev` as the permanent integration branch for subsequent issue branches.
 3. Keep documentation synchronized in the same PR whenever feature status, API contracts, architecture, or roadmap change.
+
+## Issue #12 — Portfolio README, 2026-09-25
+
+Το παρόν feature snapshot ανανεώνει το README στα Ελληνικά με αγγλικούς technical
+terms: σημερινά features, διάκριση benchmarking/visualization, vertical slice,
+setup, πραγματικό screenshot, roadmap και MVP limitations. Δεν αλλάζει application
+code. Το #22 παραμένει ξεχωριστό pending PR και δεν εμφανίζεται ως integrated.
+Η προτίμηση για ελληνικά PR descriptions/comments καταγράφεται στο DEVELOPMENT.
 
 ## Issue #19 verification
 

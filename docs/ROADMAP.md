@@ -163,7 +163,7 @@ See [Implementation reviews](IMPLEMENTATION_REVIEWS.md) for the single-user scop
 
 ## Current next issue — #22: Custom Python implementation validation
 
-Status: **Open; implementation not started**
+Status: **Implemented in separate PR #38; pending integration into dev**
 
 Planned scope:
 
@@ -246,6 +246,12 @@ Possible future features:
 - AI-assisted result explanation
 
 These are outside the first MVP.
+
+## Issue #12 — Portfolio-ready README
+
+Το README έχει ανανεωθεί στο παρόν feature snapshot με setup frontend/backend,
+πραγματικό screenshot, τεχνική ροή, roadmap και σαφή MVP limitations. Το public
+demo URL θα προστεθεί μετά από deploy. Το #11 (language selector) παραμένει ανοιχτό.
 
 ## Lower-priority backlog
 
