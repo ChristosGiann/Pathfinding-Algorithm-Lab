@@ -6,6 +6,7 @@ import { AlgorithmLibrary } from "./components/AlgorithmLibrary/AlgorithmLibrary
 import { AppHeader } from "./components/AppHeader/AppHeader";
 import { BackendStatus } from "./components/BackendStatus/BackendStatus";
 import { Benchmark } from "./components/Benchmark/Benchmark";
+import { CustomPython } from "./components/CustomPython/CustomPython";
 import { Grid } from "./components/Grid/Grid";
 import { Toolbar } from "./components/Toolbar/Toolbar";
 
@@ -52,6 +53,7 @@ function App() {
 
       <BackendStatus texts={texts.backendStatus} />
       <Benchmark language={DEFAULT_LANGUAGE} />
+      <CustomPython language={DEFAULT_LANGUAGE} />
 
       <Toolbar
         texts={texts.toolbar}

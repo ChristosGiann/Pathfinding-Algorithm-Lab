@@ -87,7 +87,7 @@ python backend\manage.py check
 ## Backend tests
 
 ```powershell
-python backend\manage.py test core
+python backend\manage.py test core reviews
 ```
 
 ## Frontend
@@ -211,7 +211,7 @@ Recommended checks:
 npm run lint
 npm run build
 python backend\manage.py check
-python backend\manage.py test core
+python backend\manage.py test core reviews
 python backend\manage.py makemigrations --check --dry-run
 git diff --check
 git status -sb
@@ -311,3 +311,10 @@ limitations. Before closing a completed issue, post a completion comment linking
 the merged PR and explaining how its criteria were satisfied. Distinguish tested
 behavior from future integration work. Target dev; promote to main only on
 explicit user instruction.
+
+## Custom Python checks
+
+Use `python backend\manage.py validate_custom_python .\example.py` for static
+validation of a UTF-8 file. Add `--run-local` only to execute your own trusted
+code locally with a 2-second timeout. The browser never executes custom code.
+See [Custom Python](CUSTOM_PYTHON.md) for examples and the lack of a sandbox.

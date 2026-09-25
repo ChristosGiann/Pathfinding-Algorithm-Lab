@@ -1,6 +1,6 @@
 # Project Progress
 
-Last verified: **2026-09-24**
+Last verified: **2026-09-25**
 
 ## Current phase
 
@@ -46,7 +46,7 @@ database registry resolution remain planned work.
 Integration verification on 2026-09-23: 44 backend tests and 4 frontend rendering
 tests passed, along with lint, build, Django checks and migration consistency.
 Core migration 0003 and reviews migration 0001 are applied locally.
-The documentation refresh changes no application code.
+Issue #22 adds static custom Python validation and an explicit developer-only local runner; see the verification section below.
 
 Browser scenarios verified against the real local backend:
 
@@ -62,8 +62,7 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 
 ## Next
 
-1. Review Issue #22: custom Python validation is implemented in separate PR #38,
-   which has not been integrated into this dev-based snapshot.
+1. Continue with the remaining backlog (language selector #11); #22 is integrated through PR #38 and the #12 documentation is included in this snapshot.
 2. Keep `dev` as the permanent integration branch for subsequent issue branches.
 3. Keep documentation synchronized in the same PR whenever feature status, API contracts, architecture, or roadmap change.
 
@@ -72,7 +71,7 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 Το παρόν feature snapshot ανανεώνει το README στα Ελληνικά με αγγλικούς technical
 terms: σημερινά features, διάκριση benchmarking/visualization, vertical slice,
 setup, πραγματικό screenshot, roadmap και MVP limitations. Δεν αλλάζει application
-code. Το #22 παραμένει ξεχωριστό pending PR και δεν εμφανίζεται ως integrated.
+code. Το #22 ενσωματώθηκε μέσω PR #38 και η τεκμηρίωση συμφιλιώθηκε στο PR #39.
 Η προτίμηση για ελληνικά PR descriptions/comments καταγράφεται στο DEVELOPMENT.
 
 ## Issue #19 verification
@@ -112,3 +111,12 @@ live GitHub issue. All three completed temporary branches have been deleted.
 Merged into `dev` through PR #31, then promoted to `main` through PR #33; Issue #20 closed.
 See [Results dashboard](RESULTS_DASHBOARD.md) for scope, validation and limitations.
 Both experiment and dashboard testing sections are retained in the integrated documentation.
+
+## Issue #22 — 2026-09-25
+
+Integrated through PR #38: Greek source editor, static-only validation
+API, 32,768-byte limit, solve(values) contract, structured errors and explicit
+local CLI execution with a 2-second subprocess timeout. No persistence, public
+execution or custom benchmarks. All 60 backend tests and 4 frontend tests pass;
+lint/build, Django checks and migration dry-run pass. No migrations required.
+See [Custom Python](CUSTOM_PYTHON.md) for scope and verification limits.

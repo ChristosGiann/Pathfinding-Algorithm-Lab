@@ -15,7 +15,7 @@ Current verified state:
 Run with:
 
 ```powershell
-python backend\manage.py test core
+python backend\manage.py test core reviews
 ```
 
 Latest verified result after local Experiment Model/API implementation:
@@ -62,7 +62,7 @@ Django tests use a temporary test database.
 Running:
 
 ```powershell
-python backend\manage.py test core
+python backend\manage.py test core reviews
 ```
 
 does not modify the normal development SQLite database.
@@ -200,7 +200,7 @@ Recommended:
 npm run lint
 npm run build
 python backend\manage.py check
-python backend\manage.py test core
+python backend\manage.py test core reviews
 python backend\manage.py makemigrations --check --dry-run
 git diff --check
 ```
@@ -220,12 +220,12 @@ They use `SimpleTestCase` without a database. See [Datasets](DATASETS.md).
 ## Benchmark verification
 
 Eight new tests cover Bubble Sort, timing boundaries, fresh inputs, correctness
-failures, stats, API bounds and validation. The integrated core/reviews suite contains 44 tests.
+failures, stats, API bounds and validation. The suite contained 44 tests before #22; the current integrated suite has 60.
 See [Benchmarks](BENCHMARKS.md) for browser scenarios and measurement limits.
 
 ## Implementation reviews (#21)
 
-Run `manage.py test core reviews` from backend (44 tests with the integrated experiment API).
+Run `manage.py test core reviews` from backend (60 tests including custom Python validation).
 The [review guide](IMPLEMENTATION_REVIEWS.md) records the API contract, browser
 save/refresh/update scenarios and verification limitations.
 
@@ -250,5 +250,29 @@ relative links, τα explicit anchors και το screenshot του README. Έγ
 αποτελεσμάτων και της Algorithm Library. Το screenshot ελέγχθηκε οπτικά.
 Δεν αλλάζει application code και δεν προστέθηκαν νέα tests. Οι εντολές checks
 επαληθεύτηκαν στο υπάρχον local environment· δεν έγινε clean-machine reinstall.
-Το #22 δεν έχει ενσωματωθεί σε αυτό το branch, άρα το δικό του test count (60)
-δεν αφορά αυτό το snapshot.
+Οι 44 έλεγχοι αφορούσαν το αρχικό branch του README πριν το integration του #22.
+Το συνδυασμένο snapshot περιλαμβάνει 60 backend tests και τις δύο ενότητες τεκμηρίωσης.
+
+## Custom Python validation (#22)
+
+On 2026-09-25, `manage.py test core reviews` passed all 60 tests (16 new).
+Coverage includes UTF-8 boundary sizes, strict solve signatures, syntax positions,
+no execution by the API, malformed requests, returning/in-place sorting,
+incorrect output, runtime errors, explicit CLI opt-in, and real infinite loops
+at module load and function call terminated by the 2-second timeout.
+The four existing frontend tests, lint/build, Django checks and migration dry-run passed.
+
+Browser verification against the real local backend covered valid code, missing
+solve, syntax errors with Greek messages and positions, and disabled submission
+above the byte limit. No browser console errors were observed. A direct CLI
+check returned exit 0 for valid code and exit 1 with `timeout` for an infinite
+loop. Infinite-loop behavior was also checked by real automated subprocess tests;
+the UI is static-only.
+No new automated frontend interaction suite, delayed-response/unmount test or
+adversarial sandbox audit is claimed. See [Custom Python](CUSTOM_PYTHON.md).
+
+## Integration PR #38 + #39 — 2026-09-25
+
+Μετά το merge του dev στο README branch και την επίλυση των τεσσάρων docs
+conflicts, πέρασαν ξανά 60 backend tests, 4 frontend tests, lint/build, Django
+check και migration dry-run. Διατηρήθηκαν και οι δύο ενότητες τεκμηρίωσης.

@@ -18,9 +18,10 @@
 | Results dashboard | Πίνακας και chart για τις τελευταίες 20 προσπάθειες της τρέχουσας συνεδρίας, μαζί με error/timeout states. |
 | Experiment API | Δημιουργία και ανάκτηση αποθηκευμένων draft definitions: implementations και dataset configurations. Δεν εκτελεί ακόμη experiments. |
 | Implementation reviews | Προσωπικές βαθμολογίες και σημειώσεις ανά implementation, με αποθήκευση και επεξεργασία. |
+| Custom Python validation | Ελληνική φόρμα για syntax/solve(values)/size checks χωρίς εκτέλεση. Ρητή τοπική CLI εκτέλεση δικού μας κώδικα με timeout 2 δευτερολέπτων. |
 | Pathfinding foundation | Grid, walls και clear/reset controls. Τα algorithm execution/animation controls παραμένουν ανενεργά. |
 
-Τα #17–#21 έχουν ενσωματωθεί μέσω των PR #28–#32 και προωθηθεί στη main με το PR #33. Το [#22 — custom Python validation](https://github.com/ChristosGiann/Pathfinding-Algorithm-Lab/pull/38) υλοποιείται σε ξεχωριστό PR και δεν περιλαμβάνεται σε αυτό το snapshot του dev.
+Τα #17–#21 έχουν ενσωματωθεί μέσω των PR #28–#32 και προωθηθεί στη main με το PR #33. Το [#22 — custom Python validation](https://github.com/ChristosGiann/Pathfinding-Algorithm-Lab/pull/38) έχει ενσωματωθεί στο dev μέσω του PR #38. Η main παραμένει στο προηγούμενο snapshot μέχρι την επόμενη ρητά εγκεκριμένη προώθηση.
 
 ## Benchmarking και visualization
 
@@ -30,7 +31,7 @@
 
 ## Screenshots και demo
 
-Πραγματικό screenshot από το local app στις 2026-09-25: Bubble Sort με Random dataset, size 100, seed 42, αποτέλεσμα 10 εκτελέσεων και Algorithm Library. Οι τιμές είναι ενδεικτικές μιας εκτέλεσης και δεν αποτελούν performance εγγύηση.
+Πραγματικό screenshot από το local app στις 2026-09-25: Bubble Sort με Random dataset, size 100, seed 42, αποτέλεσμα 10 εκτελέσεων και Algorithm Library. Το screenshot προέρχεται από το snapshot πριν από το #22 και δεν δείχνει τη νέα φόρμα validation. Οι τιμές είναι ενδεικτικές μιας εκτέλεσης και δεν αποτελούν performance εγγύηση.
 
 <details>
 <summary>Προβολή εφαρμογής: benchmark, results dashboard και Algorithm Library</summary>
@@ -161,7 +162,7 @@ npm run build
 git diff --check
 ```
 
-Το integrated snapshot έχει 44 backend tests και 4 frontend rendering tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
+Το integrated snapshot έχει 60 backend tests και 4 frontend rendering tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
 
 ## Περιορισμοί MVP
 
@@ -171,7 +172,7 @@ git diff --check
 - Τα reviews είναι κοινά ανά implementation στο single-user local MVP, χωρίς account isolation.
 - Το pathfinding grid είναι foundation· BFS/DFS execution και animation παραμένουν μελλοντικά.
 - Υπάρχει i18n δομή, αλλά όχι ακόμη language selector (#11).
-- **Custom code execution δεν είναι public-safe χωρίς πραγματικό sandbox**, όπως κατάλληλα περιορισμένο Docker environment. Ένα subprocess και ένα timeout δεν αποτελούν sandbox. Το pending PR #38 προσθέτει static validation και ρητή developer-only CLI εκτέλεση, όχι ασφαλή δημόσια εκτέλεση.
+- **Custom code execution δεν είναι public-safe χωρίς πραγματικό sandbox**, όπως κατάλληλα περιορισμένο Docker environment. Ένα subprocess και ένα timeout δεν αποτελούν sandbox. Το PR #38 προσθέτει static validation και ρητή developer-only CLI εκτέλεση, όχι ασφαλή δημόσια εκτέλεση.
 - Το local setup δεν αποτελεί production deployment configuration.
 
 ## Roadmap
@@ -179,8 +180,8 @@ git diff --check
 | Κατάσταση | Επόμενα βήματα |
 | --- | --- |
 | Υλοποιημένα | Algorithm Library, datasets, Bubble Sort benchmark, draft experiments, results dashboard και reviews (#16–#21). |
-| Σε review | Custom Python validation (#22 / PR #38), εκτός αυτού του branch. |
-| Τρέχουσα τεκμηρίωση | Portfolio-ready README (#12), με πραγματικό screenshot, setup και scope. |
+| Υλοποιημένο στο dev | Custom Python validation (#22 / PR #38). |
+| Τρέχουσα τεκμηρίωση | Portfolio-ready README (#12 / PR #39), με πραγματικό screenshot, setup και scope. |
 | Επόμενη λειτουργική επέκταση | Language selector (#11) και σχεδιασμός της πλήρους MVP integration: πολλαπλές εκτελέσιμες implementations, αποθήκευση αποτελεσμάτων και comparison. |
 | Μελλοντικά | Sorting visualization, searching, graph/pathfinding και άλλες algorithm families. |
 
@@ -203,3 +204,5 @@ git diff --check
 - [Datasets](docs/DATASETS.md) · [Benchmarks](docs/BENCHMARKS.md)
 - [Experiments](docs/EXPERIMENTS.md) · [Results dashboard](docs/RESULTS_DASHBOARD.md)
 - [Implementation reviews](docs/IMPLEMENTATION_REVIEWS.md)
+
+- [Custom Python validation και τοπική εκτέλεση](docs/CUSTOM_PYTHON.md)

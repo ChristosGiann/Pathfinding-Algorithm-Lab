@@ -1,6 +1,7 @@
 import type { Algorithm } from "../types/algorithm";
 import type { BenchmarkRequest, BenchmarkResult } from "../types/benchmark";
 import type { ImplementationReview, ReviewInput } from "../types/review";
+import type { PythonValidationResult } from "../types/customPython";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -12,6 +13,13 @@ if (!API_BASE_URL) {
 
 export interface BackendHealthResponse {
   status: "ok";
+}
+
+export function validatePythonSource(source: string, signal: AbortSignal): Promise<PythonValidationResult> {
+  return apiRequest<PythonValidationResult>("/api/implementations/validate-python/", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ source }), signal,
+  });
 }
 
 async function apiRequest<T>(
