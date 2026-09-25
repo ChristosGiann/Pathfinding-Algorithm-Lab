@@ -302,6 +302,9 @@ the latest shared Git history even when GitHub created a merge commit on `main`.
 
 ## GitHub communication
 
+Write PR descriptions and GitHub comments in Greek, keeping established technical
+terms, code identifiers and commands in English.
+
 For every PR, add a detailed description and a conversation comment explaining
 the problem, implementation choices, acceptance criteria, validation and remaining
 limitations. Before closing a completed issue, post a completion comment linking

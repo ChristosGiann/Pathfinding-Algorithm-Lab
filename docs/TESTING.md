@@ -220,12 +220,12 @@ They use `SimpleTestCase` without a database. See [Datasets](DATASETS.md).
 ## Benchmark verification
 
 Eight new tests cover Bubble Sort, timing boundaries, fresh inputs, correctness
-failures, stats, API bounds and validation. The integrated core/reviews suite contains 44 tests.
+failures, stats, API bounds and validation. The suite contained 44 tests before #22; the current integrated suite has 60.
 See [Benchmarks](BENCHMARKS.md) for browser scenarios and measurement limits.
 
 ## Implementation reviews (#21)
 
-Run `manage.py test core reviews` from backend (44 tests with the integrated experiment API).
+Run `manage.py test core reviews` from backend (60 tests including custom Python validation).
 The [review guide](IMPLEMENTATION_REVIEWS.md) records the API contract, browser
 save/refresh/update scenarios and verification limitations.
 
@@ -240,6 +240,18 @@ Eleven new tests cover relationship persistence, defaults, catalogue IDs, bounds
 invalid inputs, atomic rollback, draft creation without execution, status DB
 constraint and unsupported mutation methods. Real HTTP create/read was also
 verified locally. See [Experiments](EXPERIMENTS.md).
+
+## Έλεγχος τεκμηρίωσης #12 — 2026-09-25
+
+Στο dev-based branch του README πέρασαν 44 backend tests, 4 frontend tests,
+ESLint, production build, Django check και migration dry-run. Ελέγχθηκαν τα
+relative links, τα explicit anchors και το screenshot του README. Έγινε
+πραγματικό browser benchmark με Random/100/42 και επιβεβαιώθηκε η εμφάνιση
+αποτελεσμάτων και της Algorithm Library. Το screenshot ελέγχθηκε οπτικά.
+Δεν αλλάζει application code και δεν προστέθηκαν νέα tests. Οι εντολές checks
+επαληθεύτηκαν στο υπάρχον local environment· δεν έγινε clean-machine reinstall.
+Οι 44 έλεγχοι αφορούσαν το αρχικό branch του README πριν το integration του #22.
+Το συνδυασμένο snapshot περιλαμβάνει 60 backend tests και τις δύο ενότητες τεκμηρίωσης.
 
 ## Custom Python validation (#22)
 
@@ -258,3 +270,9 @@ loop. Infinite-loop behavior was also checked by real automated subprocess tests
 the UI is static-only.
 No new automated frontend interaction suite, delayed-response/unmount test or
 adversarial sandbox audit is claimed. See [Custom Python](CUSTOM_PYTHON.md).
+
+## Integration PR #38 + #39 — 2026-09-25
+
+Μετά το merge του dev στο README branch και την επίλυση των τεσσάρων docs
+conflicts, πέρασαν ξανά 60 backend tests, 4 frontend tests, lint/build, Django
+check και migration dry-run. Διατηρήθηκαν και οι δύο ενότητες τεκμηρίωσης.

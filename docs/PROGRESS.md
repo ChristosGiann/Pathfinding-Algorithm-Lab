@@ -62,9 +62,17 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 
 ## Next
 
-1. Review and integrate Issue #22: custom Python validation is implemented in this feature snapshot.
+1. Continue with the remaining backlog (language selector #11); #22 is integrated through PR #38 and the #12 documentation is included in this snapshot.
 2. Keep `dev` as the permanent integration branch for subsequent issue branches.
 3. Keep documentation synchronized in the same PR whenever feature status, API contracts, architecture, or roadmap change.
+
+## Issue #12 — Portfolio README, 2026-09-25
+
+Το παρόν feature snapshot ανανεώνει το README στα Ελληνικά με αγγλικούς technical
+terms: σημερινά features, διάκριση benchmarking/visualization, vertical slice,
+setup, πραγματικό screenshot, roadmap και MVP limitations. Δεν αλλάζει application
+code. Το #22 ενσωματώθηκε μέσω PR #38 και η τεκμηρίωση συμφιλιώθηκε στο PR #39.
+Η προτίμηση για ελληνικά PR descriptions/comments καταγράφεται στο DEVELOPMENT.
 
 ## Issue #19 verification
 
@@ -106,7 +114,7 @@ Both experiment and dashboard testing sections are retained in the integrated do
 
 ## Issue #22 — 2026-09-25
 
-Implemented in this feature snapshot: Greek source editor, static-only validation
+Integrated through PR #38: Greek source editor, static-only validation
 API, 32,768-byte limit, solve(values) contract, structured errors and explicit
 local CLI execution with a 2-second subprocess timeout. No persistence, public
 execution or custom benchmarks. All 60 backend tests and 4 frontend tests pass;
