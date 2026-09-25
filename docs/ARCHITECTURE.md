@@ -326,3 +326,12 @@ DatasetDefinition rows through a foreign key. API validation precedes atomic
 creation of all records. Status is server-owned and defaults to draft.
 Read uses prefetching for implementations, algorithms and datasets. No execution
 is triggered. See [Experiments](EXPERIMENTS.md).
+
+## Custom Python validation (#22)
+
+React CustomPython editor -> centralized API client -> static validation API ->
+AST parse/compile and signature checks -> structured result. This path never
+executes or saves submitted code. The separate developer CLI opts into a child
+Python process for finite correctness smoke cases with a timeout. The API does
+not import the runner. There is no sandbox, database model or benchmark integration.
+See [Custom Python](CUSTOM_PYTHON.md).

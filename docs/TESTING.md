@@ -15,7 +15,7 @@ Current verified state:
 Run with:
 
 ```powershell
-python backend\manage.py test core
+python backend\manage.py test core reviews
 ```
 
 Latest verified result after local Experiment Model/API implementation:
@@ -62,7 +62,7 @@ Django tests use a temporary test database.
 Running:
 
 ```powershell
-python backend\manage.py test core
+python backend\manage.py test core reviews
 ```
 
 does not modify the normal development SQLite database.
@@ -200,7 +200,7 @@ Recommended:
 npm run lint
 npm run build
 python backend\manage.py check
-python backend\manage.py test core
+python backend\manage.py test core reviews
 python backend\manage.py makemigrations --check --dry-run
 git diff --check
 ```
@@ -240,3 +240,21 @@ Eleven new tests cover relationship persistence, defaults, catalogue IDs, bounds
 invalid inputs, atomic rollback, draft creation without execution, status DB
 constraint and unsupported mutation methods. Real HTTP create/read was also
 verified locally. See [Experiments](EXPERIMENTS.md).
+
+## Custom Python validation (#22)
+
+On 2026-09-25, `manage.py test core reviews` passed all 60 tests (16 new).
+Coverage includes UTF-8 boundary sizes, strict solve signatures, syntax positions,
+no execution by the API, malformed requests, returning/in-place sorting,
+incorrect output, runtime errors, explicit CLI opt-in, and real infinite loops
+at module load and function call terminated by the 2-second timeout.
+The four existing frontend tests, lint/build, Django checks and migration dry-run passed.
+
+Browser verification against the real local backend covered valid code, missing
+solve, syntax errors with Greek messages and positions, and disabled submission
+above the byte limit. No browser console errors were observed. A direct CLI
+check returned exit 0 for valid code and exit 1 with `timeout` for an infinite
+loop. Infinite-loop behavior was also checked by real automated subprocess tests;
+the UI is static-only.
+No new automated frontend interaction suite, delayed-response/unmount test or
+adversarial sandbox audit is claimed. See [Custom Python](CUSTOM_PYTHON.md).
