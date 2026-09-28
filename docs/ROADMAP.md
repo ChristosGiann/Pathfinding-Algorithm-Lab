@@ -272,3 +272,10 @@ These should not interrupt the evaluation pipeline unless they become blockers.
 Υλοποιημένο στο παρόν feature snapshot: κοινή επιλογή γλώσσας στο header,
 μεταφράσεις UI σε όλες τις ενότητες και διατήρηση drafts/results. Δεν περιλαμβάνει
 αυτόματη μετάφραση δεδομένων ή αποθήκευση προτίμησης. Βλ. [Language](LANGUAGE.md).
+
+## Issue #41 — Πρώτο βήμα sorting MVP integration
+
+Στο παρόν feature snapshot: δεύτερος trusted sorter (Insertion Sort), κοινός runner,
+selector και ταυτότητα algorithm σε session results. Αναμένει review/merge στο dev.
+Επόμενα βήματα: σύνδεση experiment execution, persistence αποτελεσμάτων και retrieval.
+Αυτόματη σύγκριση πολλών implementations παραμένει ξεχωριστό βήμα.

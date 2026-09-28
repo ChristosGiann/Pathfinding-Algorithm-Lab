@@ -63,8 +63,8 @@ export function saveImplementationReview(id: number, input: ReviewInput, signal:
   });
 }
 
-export function runBubbleSortBenchmark(input: BenchmarkRequest, signal?: AbortSignal): Promise<BenchmarkResult> {
-  return apiRequest<BenchmarkResult>("/api/benchmarks/bubble-sort/", {
+export function runSortingBenchmark(input: BenchmarkRequest, signal?: AbortSignal): Promise<BenchmarkResult> {
+  return apiRequest<BenchmarkResult>("/api/benchmarks/sorting/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),

@@ -28,7 +28,7 @@ export function ResultsDashboard({ entries, running, language, onClear }: {
           <thead><tr>{["#", texts.implementation, texts.dataset, texts.size, texts.seed, texts.runs,
             texts.status, `${texts.median} (ms)`, `${texts.min} (ms)`, `${texts.max} (ms)`].map(label => <th key={label} scope="col">{label}</th>)}</tr></thead>
           <tbody>{entries.map(entry => <tr key={entry.id}>
-            <th scope="row">{entry.id}</th><td>{texts.implementationName}</td>
+            <th scope="row">{entry.id}</th><td>{texts.algorithms[entry.input.algorithm]} · Python</td>
             <td>{texts.types[entry.input.dataset_type]}</td><td>{entry.input.size}</td><td>{entry.input.seed}</td>
             <td>{entry.status === "completed" ? entry.result.runs : "—"}</td>
             <td className={entry.status === "completed" && entry.result.correct ? "benchmark__correct" : "benchmark__incorrect"}>
@@ -41,7 +41,7 @@ export function ResultsDashboard({ entries, running, language, onClear }: {
         <figcaption>{texts.chart}</figcaption>
         <p className="benchmark__hint">{texts.chartNote} · 0–{format(max)} ms</p>
         {measured.map(entry => <div key={entry.id} className="results__plot">
-          <span>#{entry.id} · {entry.input.size} · {texts.types[entry.input.dataset_type]}</span>
+          <span>#{entry.id} · {texts.algorithms[entry.input.algorithm]} · {entry.input.size} · {texts.types[entry.input.dataset_type]}</span>
           <div className="results__track" aria-hidden="true">
             <div className="results__bar" style={{ width: `${max ? entry.result.median_ns / max * 100 : 0}%` }} />
             <div className="results__range" style={{ left: `${max ? entry.result.min_ns / max * 100 : 0}%`, width: `${max ? (entry.result.max_ns - entry.result.min_ns) / max * 100 : 0}%` }} />

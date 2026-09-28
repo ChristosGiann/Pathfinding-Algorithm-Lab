@@ -199,3 +199,12 @@ See [Custom Python](CUSTOM_PYTHON.md) for the signature and local CLI contract.
 Το #11 δεν αλλάζει το API contract: τα Python validation messages παραμένουν
 ελληνικά. Το frontend μεταφράζει τους stable error codes στην επιλεγμένη UI
 γλώσσα. Δεν αποστέλλεται language preference στο backend.
+
+## POST /api/benchmarks/sorting/ — #41
+
+JSON: `{"algorithm":"insertion-sort","size":100,"seed":42,"dataset_type":"random"}`.
+Υποχρεωτικό algorithm: `bubble-sort` ή `insertion-sort`. Η απόκριση περιλαμβάνει το
+επιλεγμένο algorithm και τα ίδια metrics με το Bubble endpoint. Ίδιο strict validation,
+10 runs, όριο 1–1000, POST-only, χωρίς database access. Άγνωστο/missing algorithm ή
+άγνωστα fields επιστρέφουν 400 πριν εκτελεστεί runner. Το αρχικό Bubble endpoint
+διατηρεί το contract του. Βλ. [Benchmarks](BENCHMARKS.md).

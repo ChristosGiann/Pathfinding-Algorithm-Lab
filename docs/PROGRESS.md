@@ -29,8 +29,8 @@ The current production/reference snapshot on `main` therefore includes datasets,
 - Filtering of active built-in implementations; private registry keys.
 - Algorithm Library cards, loading/error/empty states and retry button.
 
-Seeded implementation records are metadata. Bubble Sort is executable since #18; other sorters and
-database registry resolution remain planned work.
+Seeded implementation records are metadata. Bubble Sort (#18) and Insertion Sort (#41)
+are executable through a fixed code allowlist. Other sorters and database registry resolution remain planned work.
 
 ## Follow-up fixes
 
@@ -128,3 +128,11 @@ reviews, grid accessibility labels και custom validation errors. Default el,
 χωρίς persistence της επιλογής. Τα drafts/results παραμένουν κατά την αλλαγή.
 Προστέθηκαν πέντε frontend regression tests (εννέα συνολικά).
 Βλ. [Language](LANGUAGE.md) για το contract και τα όρια.
+
+## Issue #41 — Sorting selection
+
+Στο παρόν feature snapshot προστέθηκε Insertion Sort, κοινός trusted runner και
+POST `/api/benchmarks/sorting/`. Ο selector και κάθε αποτέλεσμα κρατούν την ταυτότητα
+algorithm σε el/en. Το παλιό Bubble endpoint παραμένει συμβατό. Δεν αλλάζουν models.
+Τα #11/#12/#22 έχουν ενσωματωθεί στο dev μέσω PR #40/#39/#38 και έκλεισαν.
+Το #41 αναμένει review/merge. Το main παραμένει στο προηγούμενο promoted snapshot.

@@ -287,3 +287,15 @@ draft. Το draft δεν αποθηκεύτηκε στη βάση. Το document
 γλώσσα και το refresh επιστρέφει στο el. Δεν παρατηρήθηκαν console errors.
 Δεν έγινε ξεχωριστό delayed-request ή offline end-to-end σενάριο κατά την
 αλλαγή γλώσσας. Τα tests rendering δεν υποκαθιστούν τα browser interaction checks.
+
+## Επαλήθευση #41 — Sorting selection
+
+Πέρασαν 65 backend tests και 10 frontend tests, lint/build, Django check και
+migration dry-run. Καλύπτονται Insertion Sort edge cases, όλοι οι dataset generators,
+dispatch των δύο algorithms, fresh copies, timing boundaries, λάθος αποτελέσματα,
+invalid/missing algorithm και compatibility του αρχικού Bubble endpoint.
+Τα rendering tests ελέγχουν mixed algorithm results και error/timeout labels σε el/en.
+Στον browser εκτελέστηκαν Bubble Sort και Insertion Sort με random size 100, seed 42:
+και οι δύο επέστρεψαν correct για 10 runs. Η αλλαγή selector και el→en→el διατήρησε
+την ταυτότητα και τις μετρήσεις των προηγούμενων γραμμών. Δεν εμφανίστηκαν console errors.
+Δεν έγινε νέο πραγματικό 30-second timeout ή delayed-request/unmount σενάριο.
