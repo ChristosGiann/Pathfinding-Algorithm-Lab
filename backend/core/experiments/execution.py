@@ -13,6 +13,15 @@ REGISTRY = {
 }
 
 
+def executable_algorithm(implementation):
+    algorithm = REGISTRY.get(implementation.registry_key)
+    if (algorithm and implementation.is_active and implementation.source_type == "built_in"
+            and implementation.language == "python" and implementation.algorithm.problem.slug == "sorting"
+            and implementation.algorithm.slug == algorithm):
+        return algorithm
+    return None
+
+
 class AlreadyExecuted(APIException):
     status_code = 409
     default_detail = "Only draft experiments can run."
@@ -37,10 +46,8 @@ def execute_experiment(experiment_id):
         raise ValidationError({"configuration": "Select between 1 and 4 implementation/dataset pairs."})
     resolved = []
     for implementation in implementations:
-        algorithm = REGISTRY.get(implementation.registry_key)
-        if (not algorithm or not implementation.is_active or implementation.source_type != "built_in"
-                or implementation.language != "python" or implementation.algorithm.problem.slug != "sorting"
-                or implementation.algorithm.slug != algorithm):
+        algorithm = executable_algorithm(implementation)
+        if not algorithm:
             raise ValidationError({"implementations": "Select executable active built-in Python sorting implementations."})
         resolved.append((implementation, algorithm))
     for dataset in datasets:

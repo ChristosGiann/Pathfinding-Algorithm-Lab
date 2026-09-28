@@ -1,3 +1,4 @@
+import type { Experiment, ExperimentInput } from "../types/experiment";
 import type { Algorithm } from "../types/algorithm";
 import type { BenchmarkRequest, BenchmarkResult } from "../types/benchmark";
 import type { ImplementationReview, ReviewInput } from "../types/review";
@@ -47,9 +48,9 @@ export function getBackendHealth(signal?: AbortSignal): Promise<BackendHealthRes
   );
 }
 
-export function getAlgorithms(): Promise<Algorithm[]> {
+export function getAlgorithms(signal?: AbortSignal): Promise<Algorithm[]> {
   return apiRequest<Algorithm[]>(
-    "/api/algorithms/",
+    "/api/algorithms/", { signal },
   );
 }
 
@@ -69,5 +70,20 @@ export function runSortingBenchmark(input: BenchmarkRequest, signal?: AbortSigna
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
     signal,
+  });
+}
+
+
+export function createExperiment(input: ExperimentInput, signal: AbortSignal): Promise<Experiment> {
+  return apiRequest<Experiment>("/api/experiments/", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input), signal,
+  });
+}
+export function getExperiment(id: number, signal: AbortSignal): Promise<Experiment> {
+  return apiRequest<Experiment>(`/api/experiments/${id}/`, { signal, cache: "no-store" });
+}
+export function runExperiment(id: number, signal: AbortSignal): Promise<Experiment> {
+  return apiRequest<Experiment>(`/api/experiments/${id}/run/`, {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: "{}", signal,
   });
 }

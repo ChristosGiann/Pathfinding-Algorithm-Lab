@@ -315,3 +315,17 @@ Lint/build πέρασαν. Smoke check μέσω Django APIClient στην migrat
 επαλήθευσε create 201, run 200 με δύο saved pairs, GET 200 με ίδια δεδομένα και
 repeat 409. Το προσωρινό experiment αφαιρέθηκε με transaction rollback.
 Δεν έγινε νέο browser flow: το feature αφορά backend API και μία διευκρίνιση UI κειμένου.
+
+## Επαλήθευση #45 — Experiment UI
+
+76 backend tests και 12 frontend tests πέρασαν, μαζί με lint/build, Django check,
+migration dry-run και diff check. Νέο capability test ελέγχει true για trusted
+Bubble/Insertion, false για unsupported/unknown registry και απόκρυψη registry_key.
+Rendering tests καλύπτουν snapshots μετά από catalogue deletion, incorrect output,
+runner failure, draft χωρίς invented metrics και translation parity.
+
+Browser στο πραγματικό local backend: save draft με δύο implementations, run,
+completed status με δύο rows, disabled rerun, αλλαγή el→en, page refresh και άνοιγμα
+με ID 2 επέστρεψαν ίδιες μετρήσεις. Χωρίς console errors. Το sample experiment
+`Smoke #45 — Bubble και Insertion` παραμένει στη local βάση για επανάληψη ελέγχου.
+Δεν έγινε νέο πραγματικό timeout/offline/unmount ή automated interaction suite.

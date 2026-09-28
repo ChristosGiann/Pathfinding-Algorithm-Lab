@@ -2,7 +2,7 @@
 
 The API creates/retrieves definitions (#19), and now executes bounded sorting
 experiments with persisted results (#43). The standalone benchmark UI remains
-session-only; no experiment UI is introduced here.
+session-only; #45 adds a separate saved-experiment UI.
 
 ## Models
 
@@ -114,3 +114,18 @@ defaults/bounds, invalid selections/configurations, duplicates, rollback,
 no benchmark execution, status constraint and unsupported mutations. The full
 suite contains 36 tests. Migration application, checks and dry-run are verified
 locally. No frontend behavior changes beyond adding the implementation ID type.
+
+## UI — #45
+
+Η ενότητα Αποθηκευμένα experiments προσφέρει όνομα, επιλογή implementations από
+το catalogue `executable` flag και ένα dataset (1–1000, type/seed). Save draft και
+Run είναι χωριστές ενέργειες. Το ID επιτρέπει άνοιγμα μετά από page refresh.
+Η φόρμα δημιουργεί νέο draft, δεν αλλάζει υπάρχον experiment. API-created multi-dataset
+experiments εμφανίζονται πλήρως. Τα persisted results χρησιμοποιούν snapshot identity.
+
+Τα controls κλειδώνουν κατά το request. Catalogue timeout 15s, mutations/read 30s,
+abort κατά unmount, χωρίς automatic replay. Με αποτυχία run απαιτείται successful
+GET πριν ενεργοποιηθεί ξανά Run. Μη επιβεβαιωμένο save προειδοποιεί ότι μπορεί να
+δημιουργήθηκε draft (η νέα αποθήκευση ενδέχεται να διπλασιάσει εγγραφή).
+Labels el/en· η αλλαγή γλώσσας διατηρεί state. Δεν υπάρχει listing, edit/delete ή
+localStorage. Authentication/ownership παραμένουν εκτός local MVP.

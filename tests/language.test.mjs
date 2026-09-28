@@ -30,6 +30,8 @@ registerHooks({
   },
 });
 const { translations } = await import('../src/i18n/translations.ts');
+const { experimentTexts } = await import('../src/i18n/experiment.ts');
+const { ExperimentDetails } = await import('../src/components/Experiments/ExperimentDetails.tsx');
 const { reviewTexts } = await import('../src/i18n/review.ts');
 const { benchmarkTexts } = await import('../src/i18n/benchmark.ts');
 const { customPythonTexts } = await import('../src/i18n/customPython.ts');
@@ -44,7 +46,7 @@ function shape(value) {
     typeof item === 'object' ? shape(item) : typeof item]));
 }
 test('all UI dictionaries have matching non-empty Greek and English entries', () => {
-  for (const texts of [translations, reviewTexts, benchmarkTexts, customPythonTexts]) {
+  for (const texts of [translations, reviewTexts, benchmarkTexts, customPythonTexts, experimentTexts]) {
     assert.deepEqual(shape(texts.el), shape(texts.en));
     assert.doesNotMatch(JSON.stringify(texts), /:""/);
   }
@@ -105,5 +107,29 @@ test('mixed algorithm results keep identity in table, chart and failed attempts 
     assert.match(html, /#1 · Insertion Sort · 100/);
     assert.ok(html.includes(benchmarkTexts[language].timeout));
     assert.ok(html.includes(benchmarkTexts[language].error));
+  }
+});
+
+
+test('saved experiment uses snapshots after catalogue deletion and keeps failed correctness visible', () => {
+  const experiment = {id:7, name:'Saved test', status:'failed', execution_error:'incorrect_result', implementations:[], datasets:[], results:[
+    {id:1, implementation_snapshot:{id:12,name:'Historical sorter',algorithm:'insertion-sort',language:'python'},
+    measurement:{algorithm:'insertion-sort',dataset_type:'random',size:100,seed:42,runs:10,correct:false,median_ns:1500000,min_ns:1000000,max_ns:2000000}}
+  ]};
+  for (const language of ['el','en']) {
+    const html = render(ExperimentDetails, {experiment, language});
+    assert.match(html, /Historical sorter/);
+    assert.match(html, /insertion-sort/);
+    assert.ok(html.includes(experimentTexts[language].incorrect));
+    assert.ok(html.includes(benchmarkTexts[language].incorrect));
+    assert.ok(html.includes(language === 'el' ? '1,5' : '1.5'));
+  }
+});
+test('draft and runner failure render without invented measurements', () => {
+  for (const status of ['draft','failed']) {
+    const html = render(ExperimentDetails, {language:'en',experiment:{id:1,name:'Test',status,execution_error:status==='failed'?'runner_error':'',implementations:[],datasets:[],results:[]}});
+    assert.match(html, /No saved measurements/);
+    assert.doesNotMatch(html, /<table/);
+    if (status==='failed') assert.match(html, /Execution failed in the runner/);
   }
 });

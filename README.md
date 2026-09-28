@@ -162,12 +162,12 @@ npm run build
 git diff --check
 ```
 
-Το integrated snapshot έχει 75 backend tests και 10 frontend tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
+Το integrated snapshot έχει 76 backend tests και 12 frontend tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
 
 ## Περιορισμοί MVP
 
 - Εκτελούνται Bubble Sort και Insertion Sort. Τα υπόλοιπα seeded algorithms είναι catalogue metadata.
-- Τα experiments εκτελούνται και αποθηκεύουν μετρήσεις μέσω API. Δεν υπάρχει ακόμη experiment UI ή listing/history endpoint.
+- Τα experiments εκτελούνται και αποθηκεύουν μετρήσεις μέσω API. Υπάρχει experiment UI με άνοιγμα μέσω ID. Δεν υπάρχει listing/history endpoint.
 - Το benchmark είναι synchronous, με 10 runs και όριο 1.000 στοιχείων, χωρίς warm-up exclusion ή απομονωμένο performance environment.
 - Τα reviews είναι κοινά ανά implementation στο single-user local MVP, χωρίς account isolation.
 - Το pathfinding grid είναι foundation· BFS/DFS execution και animation παραμένουν μελλοντικά.
@@ -215,5 +215,5 @@ git diff --check
 `POST /api/experiments/<id>/run/` με `{}`. Επιτρέπονται Bubble/Insertion, έως 4
 implementation×dataset pairs και 1–1000 στοιχεία. Το GET detail ανακτά persisted
 results. Προηγήσου με `python backend/manage.py migrate` (migration 0004).
-Το υπάρχον benchmark UI κρατά ακόμη session-only history· το experiment UI ακολουθεί.
+Το standalone benchmark κρατά session-only history. Η ενότητα Αποθηκευμένα experiments δημιουργεί/εκτελεί drafts και ανακτά persisted results με ID.
 Βλ. [Experiments](docs/EXPERIMENTS.md) για όρια και αποτυχίες.

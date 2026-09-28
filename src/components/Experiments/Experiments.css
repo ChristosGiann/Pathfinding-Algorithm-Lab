@@ -1,0 +1,14 @@
+.experiments { margin: 24px 0; padding: 24px; border: 1px solid #cbd5e1; border-radius: 16px; background: #f8fafc; color: #172033; }
+.experiments fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.experiments fieldset fieldset { margin: 16px 0; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; }
+.experiments label { display: flex; flex-direction: column; gap: 6px; }
+.experiments .experiments__choice { flex-direction: row; align-items: center; margin: 8px 0; }
+.experiments input, .experiments select { padding: 10px; border: 1px solid #94a3b8; border-radius: 6px; font: inherit; }
+.experiments button { padding: 10px 16px; margin: 8px 0; cursor: pointer; }
+.experiments button:disabled { cursor: default; opacity: .55; }
+.experiments__fields { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; margin: 12px 0; }
+.experiment-details { padding: 16px; margin-top: 16px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; }
+.experiment-details table { border-collapse: collapse; width: 100%; }
+.experiment-details th, .experiment-details td { padding: 10px; border-bottom: 1px solid #cbd5e1; text-align: left; }
+.experiment-details caption { text-align: left; padding: 12px 0; }
+.experiments [role="alert"] { color: #9f1239; }

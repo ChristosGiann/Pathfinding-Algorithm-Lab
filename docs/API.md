@@ -216,3 +216,10 @@ HTTP 200 επιστρέφει status, results και execution_error· 400 γι�
 configuration/body, 404 για άγνωστο ID, 409 για non-draft. Το GET detail επιστρέφει
 πλέον τα persisted results, ενώ το create τα εκθέτει read-only (αρχικά κενά).
 Βλ. [Experiments](EXPERIMENTS.md) για snapshots, failure/transaction semantics και limits.
+
+## Catalogue executable capability — #45
+
+Κάθε implementation στο GET /api/algorithms/ περιλαμβάνει read-only boolean
+`executable`, από τον ίδιο resolver που χρησιμοποιεί το experiment run. Το
+registry_key παραμένει private. Το flag είναι ένδειξη κατά τη φόρτωση· ο server
+επαναλαμβάνει όλους τους ελέγχους κατά το run. Δεν αλλάζει το create/run contract.

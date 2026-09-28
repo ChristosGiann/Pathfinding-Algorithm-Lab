@@ -10,6 +10,7 @@ export interface AlgorithmImplementation {
   source_type: AlgorithmImplementationSourceType;
   is_reference: boolean;
   is_active: boolean;
+  executable: boolean;
 }
 
 export interface Algorithm {
