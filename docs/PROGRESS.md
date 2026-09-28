@@ -1,6 +1,6 @@
 # Project Progress
 
-Last verified: **2026-09-25**
+Last verified: **2026-09-28**
 
 ## Current phase
 
@@ -62,7 +62,7 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 
 ## Next
 
-1. Continue with the remaining backlog (language selector #11); #22 is integrated through PR #38 and the #12 documentation is included in this snapshot.
+1. Το #11 (language selector) υλοποιήθηκε στο παρόν feature snapshot. Επόμενο βήμα είναι ο σχεδιασμός της πλήρους MVP integration. Τα #22 και #12 έχουν ενσωματωθεί στο dev μέσω PR #38/#39.
 2. Keep `dev` as the permanent integration branch for subsequent issue branches.
 3. Keep documentation synchronized in the same PR whenever feature status, API contracts, architecture, or roadmap change.
 
@@ -120,3 +120,11 @@ local CLI execution with a 2-second subprocess timeout. No persistence, public
 execution or custom benchmarks. All 60 backend tests and 4 frontend tests pass;
 lint/build, Django checks and migration dry-run pass. No migrations required.
 See [Custom Python](CUSTOM_PYTHON.md) for scope and verification limits.
+
+## Issue #11 — Επιλογή γλώσσας
+
+Το header προσφέρει Ελληνικά / English και ενημερώνει όλες τις ενότητες,
+reviews, grid accessibility labels και custom validation errors. Default el,
+χωρίς persistence της επιλογής. Τα drafts/results παραμένουν κατά την αλλαγή.
+Προστέθηκαν πέντε frontend regression tests (εννέα συνολικά).
+Βλ. [Language](LANGUAGE.md) για το contract και τα όρια.

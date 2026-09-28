@@ -5,6 +5,7 @@ import {
 
 import { getAlgorithms } from "../../services/apiClient";
 import type { Algorithm } from "../../types/algorithm";
+import type { Language } from "../../i18n/translations";
 import { ImplementationReview } from "../ImplementationReview/ImplementationReview";
 
 import "./AlgorithmLibrary.css";
@@ -33,10 +34,11 @@ export interface AlgorithmLibraryTexts {
 
 interface AlgorithmLibraryProps {
   texts: AlgorithmLibraryTexts;
+  language: Language;
 }
 
 export function AlgorithmLibrary({
-  texts,
+  texts, language,
 }: AlgorithmLibraryProps) {
   const [algorithms, setAlgorithms] = useState<Algorithm[]>([]);
   const [status, setStatus] =
@@ -219,7 +221,7 @@ export function AlgorithmLibrary({
                   </div>
                 </footer>
                 {algorithm.implementations.map(implementation => <ImplementationReview
-                  key={implementation.id} implementationId={implementation.id}
+                  key={implementation.id} implementationId={implementation.id} language={language}
                   name={`${algorithm.name} · ${implementation.name}`} />)}
               </article>
             ))}

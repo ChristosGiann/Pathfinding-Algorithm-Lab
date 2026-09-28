@@ -276,3 +276,14 @@ adversarial sandbox audit is claimed. See [Custom Python](CUSTOM_PYTHON.md).
 Μετά το merge του dev στο README branch και την επίλυση των τεσσάρων docs
 conflicts, πέρασαν ξανά 60 backend tests, 4 frontend tests, lint/build, Django
 check και migration dry-run. Διατηρήθηκαν και οι δύο ενότητες τεκμηρίωσης.
+
+## Επαλήθευση #11 — 2026-09-28
+
+Πέρασαν 9 frontend tests (5 νέα), 60 backend tests, lint/build, Django check και
+migration dry-run. Στον browser ελέγχθηκαν default Ελληνικά, αλλαγή σε English
+και επιστροφή, localized benchmark results και ήδη υπάρχον validation error.
+Διατηρήθηκαν source, αποτέλεσμα benchmark, grid wall και μη αποθηκευμένο review
+draft. Το draft δεν αποθηκεύτηκε στη βάση. Το document lang/title ακολουθεί τη
+γλώσσα και το refresh επιστρέφει στο el. Δεν παρατηρήθηκαν console errors.
+Δεν έγινε ξεχωριστό delayed-request ή offline end-to-end σενάριο κατά την
+αλλαγή γλώσσας. Τα tests rendering δεν υποκαθιστούν τα browser interaction checks.

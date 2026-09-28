@@ -1,5 +1,6 @@
 export const benchmarkTexts = {
   el: {
+    algorithmName: "Bubble Sort", implementationName: "Bubble Sort · Python",
     dashboard: "Αποτελέσματα μετρήσεων", implementation: "Υλοποίηση", status: "Ορθότητα / κατάσταση",
     emptyResults: "Εκτέλεσε ένα benchmark για να εμφανιστούν αποτελέσματα.",
     clearResults: "Καθαρισμός αποτελεσμάτων", sessionResults: "Οι τελευταίες 20 προσπάθειες αυτής της συνεδρίας",
@@ -19,6 +20,7 @@ export const benchmarkTexts = {
     runs: "Εκτελέσεις", types: { random: "Τυχαία", sorted: "Ταξινομημένα", reversed: "Αντίστροφα", nearly_sorted: "Σχεδόν ταξινομημένα" },
   },
   en: {
+    algorithmName: "Bubble Sort", implementationName: "Bubble Sort · Python",
     dashboard: "Measurement results", implementation: "Implementation", status: "Correctness / status",
     emptyResults: "Run a benchmark to see results.",
     clearResults: "Clear results", sessionResults: "The latest 20 attempts in this session",

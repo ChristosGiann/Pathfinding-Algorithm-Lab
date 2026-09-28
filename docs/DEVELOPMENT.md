@@ -318,3 +318,11 @@ Use `python backend\manage.py validate_custom_python .\example.py` for static
 validation of a UTF-8 file. Add `--run-local` only to execute your own trusted
 code locally with a 2-second timeout. The browser never executes custom code.
 See [Custom Python](CUSTOM_PYTHON.md) for examples and the lack of a sandbox.
+
+## Κείμενα UI και γλώσσα
+
+Τα νέα UI strings μπαίνουν στα `src/i18n/` με εγγραφές el/en. Τα components
+λαμβάνουν language ή texts από το κοινό App state· δεν ορίζουν δική τους default
+γλώσσα. Τα error codes παραμένουν σταθερά και μεταφράζονται κατά το render.
+Οι τύποι API δεν περιέχουν UI labels. Το `npm test` ελέγχει και αντιστοιχία
+translation keys. Βλ. [Language](LANGUAGE.md).

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./App.css";
 
@@ -22,7 +22,13 @@ const COLS = 30;
 const DEFAULT_LANGUAGE: Language = "el";
 
 function App() {
-  const texts = translations[DEFAULT_LANGUAGE];
+  const [language, setLanguage] = useState<Language>(DEFAULT_LANGUAGE);
+  const texts = translations[language];
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.title = translations[language].app.title;
+  }, [language]);
 
   const [grid, setGrid] = useState(() =>
     createGrid(ROWS, COLS),
@@ -49,11 +55,11 @@ function App() {
 
   return (
     <main>
-      <AppHeader texts={texts.app} />
+      <AppHeader texts={texts.app} language={language} onLanguageChange={setLanguage} />
 
       <BackendStatus texts={texts.backendStatus} />
-      <Benchmark language={DEFAULT_LANGUAGE} />
-      <CustomPython language={DEFAULT_LANGUAGE} />
+      <Benchmark language={language} />
+      <CustomPython language={language} />
 
       <Toolbar
         texts={texts.toolbar}
@@ -65,11 +71,13 @@ function App() {
 
       <Grid
         grid={grid}
+        texts={texts.grid}
         onNodeClick={handleNodeClick}
       />
 
       <AlgorithmLibrary
         texts={texts.algorithmLibrary}
+        language={language}
       />
     </main>
   );

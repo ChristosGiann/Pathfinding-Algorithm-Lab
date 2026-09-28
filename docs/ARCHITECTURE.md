@@ -304,7 +304,12 @@ does not automatically reload the Algorithm Library; its retry button does that.
 
 Greek and English translation structures already exist.
 
-Default language is currently Greek. A language switcher is lower priority than the evaluation MVP.
+Το App κρατά ένα language state (`el` / `en`), με default Ελληνικά. Το header
+ενημερώνει το state και οι ενότητες λαμβάνουν language/texts μέσω props.
+Δεν αλλάζουν component keys ή request dependencies όταν αλλάζει η γλώσσα,
+ώστε να διατηρούνται τα form drafts και results. Το document lang και ο τίτλος
+ακολουθούν την επιλογή. Τα static Python error codes μεταφράζονται στο render·
+το API contract και τα αποθηκευμένα δεδομένα δεν αλλάζουν. Βλ. [Language](LANGUAGE.md).
 
 ## Dataset utility (Issue #17, local implementation)
 

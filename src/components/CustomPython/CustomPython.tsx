@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import type { Language } from "../../i18n/translations";
+import { pythonErrorMessage } from "../../i18n/pythonErrors";
 import { customPythonTexts } from "../../i18n/customPython";
 import { validatePythonSource } from "../../services/apiClient";
 import type { PythonValidationResult } from "../../types/customPython";
@@ -50,7 +51,7 @@ export function CustomPython({ language }: { language: Language }) {
     {error && <p role="alert">{texts.error}</p>}
     {result?.valid && <p role="status">{texts.success}</p>}
     {result && !result.valid && <div role="alert"><h3>{texts.errors}</h3><ul>
-      {result.errors.map((item, index) => <li key={index}>{item.message}
+      {result.errors.map((item, index) => <li key={index}>{pythonErrorMessage(item.code, language)}
         {item.line != null && ` (${texts.line} ${item.line}${item.column != null ? `, ${texts.column} ${item.column}` : ""})`}
       </li>)}
     </ul></div>}

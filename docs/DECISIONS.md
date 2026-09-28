@@ -291,3 +291,13 @@ without introducing a public arbitrary-code execution endpoint. A subprocess
 is not a sandbox; public execution requires separate isolation work.
 Finite sorting smoke cases provide feedback, not a correctness/security proof.
 See [Custom Python](CUSTOM_PYTHON.md).
+
+## ADR-017 — Κοινό language state χωρίς remount
+
+Το App κρατά τη γλώσσα σε React state και τη μεταφέρει με props στην υπάρχουσα
+component hierarchy. Αρχική τιμή el σε κάθε page load, χωρίς storage preference.
+Η αλλαγή είναι παρουσίαση: δεν αλλάζει request dependencies ή component keys,
+άρα δεν απορρίπτει drafts/results ούτε ξεκινά νέα αιτήματα λόγω γλώσσας.
+Τα Python validation codes μεταφράζονται στο frontend, με localized fallback
+για άγνωστους codes. Το backend συνεχίζει να επιστρέφει ελληνικά messages.
+Catalogue content και user notes δεν μεταφράζονται αυτόματα.

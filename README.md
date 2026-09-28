@@ -162,7 +162,7 @@ npm run build
 git diff --check
 ```
 
-Το integrated snapshot έχει 60 backend tests και 4 frontend rendering tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
+Το integrated snapshot έχει 60 backend tests και 9 frontend tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
 
 ## Περιορισμοί MVP
 
@@ -171,7 +171,7 @@ git diff --check
 - Το benchmark είναι synchronous, με 10 runs και όριο 1.000 στοιχείων, χωρίς warm-up exclusion ή απομονωμένο performance environment.
 - Τα reviews είναι κοινά ανά implementation στο single-user local MVP, χωρίς account isolation.
 - Το pathfinding grid είναι foundation· BFS/DFS execution και animation παραμένουν μελλοντικά.
-- Υπάρχει i18n δομή, αλλά όχι ακόμη language selector (#11).
+- Ο language selector αλλάζει το UI μεταξύ Ελληνικών και Αγγλικών. Η επιλογή ισχύει μέχρι το refresh, που επιστρέφει στα Ελληνικά. Catalogue descriptions και δικές σου σημειώσεις εμφανίζονται όπως έχουν αποθηκευτεί.
 - **Custom code execution δεν είναι public-safe χωρίς πραγματικό sandbox**, όπως κατάλληλα περιορισμένο Docker environment. Ένα subprocess και ένα timeout δεν αποτελούν sandbox. Το PR #38 προσθέτει static validation και ρητή developer-only CLI εκτέλεση, όχι ασφαλή δημόσια εκτέλεση.
 - Το local setup δεν αποτελεί production deployment configuration.
 
@@ -182,7 +182,8 @@ git diff --check
 | Υλοποιημένα | Algorithm Library, datasets, Bubble Sort benchmark, draft experiments, results dashboard και reviews (#16–#21). |
 | Υλοποιημένο στο dev | Custom Python validation (#22 / PR #38). |
 | Τρέχουσα τεκμηρίωση | Portfolio-ready README (#12 / PR #39), με πραγματικό screenshot, setup και scope. |
-| Επόμενη λειτουργική επέκταση | Language selector (#11) και σχεδιασμός της πλήρους MVP integration: πολλαπλές εκτελέσιμες implementations, αποθήκευση αποτελεσμάτων και comparison. |
+| Υλοποιημένο στο παρόν feature snapshot | Language selector Ελληνικά / English (#11), με διατήρηση φόρμας και αποτελεσμάτων κατά την αλλαγή. |
+| Επόμενη λειτουργική επέκταση | Σχεδιασμός της πλήρους MVP integration: πολλαπλές εκτελέσιμες implementations, αποθήκευση αποτελεσμάτων και comparison. |
 | Μελλοντικά | Sorting visualization, searching, graph/pathfinding και άλλες algorithm families. |
 
 Το [Roadmap](docs/ROADMAP.md) καταγράφει τις φάσεις και το [Progress](docs/PROGRESS.md) το τρέχον snapshot. Οι μελλοντικοί στόχοι δεν παρουσιάζονται ως έτοιμες λειτουργίες.
@@ -206,3 +207,4 @@ git diff --check
 - [Implementation reviews](docs/IMPLEMENTATION_REVIEWS.md)
 
 - [Custom Python validation και τοπική εκτέλεση](docs/CUSTOM_PYTHON.md)
+- [Επιλογή γλώσσας](docs/LANGUAGE.md)

@@ -255,14 +255,20 @@ These are outside the first MVP.
 
 Το README έχει ανανεωθεί στο παρόν feature snapshot με setup frontend/backend,
 πραγματικό screenshot, τεχνική ροή, roadmap και σαφή MVP limitations. Το public
-demo URL θα προστεθεί μετά από deploy. Το #11 (language selector) παραμένει ανοιχτό.
+demo URL θα προστεθεί μετά από deploy. Το #11 (language selector) περιγράφεται στην επόμενη ενότητα.
 
 ## Lower-priority backlog
 
 Previously discussed work also includes:
 
 - README/documentation improvements
-- fuller i18n / language switching
+- persisted language preference και μεταφράσεις catalogue content, εφόσον χρειαστούν
 - continued visualizer improvements
 
 These should not interrupt the evaluation pipeline unless they become blockers.
+
+## Issue #11 — Ελληνικά / English
+
+Υλοποιημένο στο παρόν feature snapshot: κοινή επιλογή γλώσσας στο header,
+μεταφράσεις UI σε όλες τις ενότητες και διατήρηση drafts/results. Δεν περιλαμβάνει
+αυτόματη μετάφραση δεδομένων ή αποθήκευση προτίμησης. Βλ. [Language](LANGUAGE.md).

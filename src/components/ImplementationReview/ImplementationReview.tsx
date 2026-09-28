@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { getImplementationReview, saveImplementationReview } from "../../services/apiClient";
-import { noteLabels, ratingLabels } from "../../types/review";
+import { reviewTexts } from "../../i18n/review";
+import type { Language } from "../../i18n/translations";
 import type { ReviewInput } from "../../types/review";
 import "./ImplementationReview.css";
 
-function ReviewForm({ implementationId }: { implementationId: number }) {
+function ReviewForm({ implementationId, language }: { implementationId: number; language: Language }) {
+  const texts = reviewTexts[language];
+  const ratingLabels = texts.ratings;
+  const noteLabels = texts.notes;
   const [input, setInput] = useState<ReviewInput | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -67,20 +71,20 @@ function ReviewForm({ implementationId }: { implementationId: number }) {
     }
   }
 
-  if (loading) return <p role="status">Φόρτωση αξιολόγησης…</p>;
-  if (loadError) return <div role="alert"><p>Δεν φορτώθηκε η αξιολόγηση. Δοκίμασε ξανά πριν την επεξεργαστείς.</p>
-    <button type="button" onClick={() => { setLoadError(false); setLoading(true); setAttempt(value => value + 1); }}>Νέα προσπάθεια</button></div>;
+  if (loading) return <p role="status">{texts.loading}</p>;
+  if (loadError) return <div role="alert"><p>{texts.loadError}</p>
+    <button type="button" onClick={() => { setLoadError(false); setLoading(true); setAttempt(value => value + 1); }}>{texts.retry}</button></div>;
   if (!input) return null;
   return <form onSubmit={event => { void submit(event); }}>
-    <p>Προσωπική κρίση, ανεξάρτητη από τα αυτόματα benchmark metrics. 1: χαμηλή · 5: υψηλή. Η συνολική βαθμολογία ορίζεται από εσένα.</p>
-    <p>Μία κοινή αξιολόγηση ανά υλοποίηση σε αυτή την τοπική εγκατάσταση, χωρίς ξεχωριστούς λογαριασμούς.</p>
+    <p>{texts.hint}</p>
+    <p>{texts.scope}</p>
     <fieldset disabled={saving}>
-      <legend>Βαθμολογίες και σημειώσεις</legend>
+      <legend>{texts.legend}</legend>
       <div className="implementation-review__ratings">
         {Object.entries(ratingLabels).map(([field, label]) => {
           const key = field as keyof typeof ratingLabels;
           return <label key={key}>{label}<select value={input[key] ?? ""} onChange={event => change(key, event.target.value === "" ? null : Number(event.target.value))}>
-            <option value="">Χωρίς βαθμολογία</option>
+            <option value="">{texts.unrated}</option>
             {[1, 2, 3, 4, 5].map(value => <option key={value} value={value}>{value}</option>)}
           </select></label>;
         })}
@@ -88,22 +92,23 @@ function ReviewForm({ implementationId }: { implementationId: number }) {
       {Object.entries(noteLabels).map(([field, label]) => {
         const key = field as keyof typeof noteLabels;
         return <label key={key}>{label}<textarea aria-label={label} rows={3} maxLength={5000} value={input[key]} onChange={event => change(key, event.target.value)} />
-          <small>{input[key].length}/5.000 χαρακτήρες</small></label>;
+          <small>{input[key].length.toLocaleString(language)}/{(5000).toLocaleString(language)} {texts.characters}</small></label>;
       })}
-      <button type="submit">{saving ? "Αποθήκευση…" : "Αποθήκευση αξιολόγησης"}</button>
+      <button type="submit">{saving ? texts.saving : texts.save}</button>
     </fieldset>
-    {saving && <p role="status">Αποθήκευση αξιολόγησης…</p>}
-    {saved && <p role="status">Η αξιολόγηση αποθηκεύτηκε.</p>}
-    {dirty && <p>Υπάρχουν μη αποθηκευμένες αλλαγές. Αποθήκευσέ τες πριν ανανεώσεις τη σελίδα.</p>}
-    {saveError && <p role="alert">Δεν επιβεβαιώθηκε η αποθήκευση. Τα πεδία σου διατηρήθηκαν· δοκίμασε ξανά. Αν χάθηκε η απάντηση, ο server μπορεί να έχει ήδη αποθηκεύσει την αξιολόγηση.</p>}
-    {updatedAt && <p>Τελευταία αποθήκευση: {new Date(updatedAt).toLocaleString("el-GR")}</p>}
+    {saving && <p role="status">{texts.savingStatus}</p>}
+    {saved && <p role="status">{texts.saved}</p>}
+    {dirty && <p>{texts.dirty}</p>}
+    {saveError && <p role="alert">{texts.saveError}</p>}
+    {updatedAt && <p>{texts.updated} {new Date(updatedAt).toLocaleString(language)}</p>}
   </form>;
 }
 
-export function ImplementationReview({ implementationId, name }: { implementationId: number; name: string }) {
+export function ImplementationReview({ implementationId, name, language }: { implementationId: number; name: string; language: Language }) {
+  const texts = reviewTexts[language];
   const [opened, setOpened] = useState(false);
   return <details className="implementation-review" onToggle={event => { if (event.currentTarget.open) setOpened(true); }}>
-    <summary>Προσωπική αξιολόγηση — {name}</summary>
-    {opened && <ReviewForm key={implementationId} implementationId={implementationId} />}
+    <summary>{texts.summary} — {name}</summary>
+    {opened && <ReviewForm key={implementationId} implementationId={implementationId} language={language} />}
   </details>;
 }
