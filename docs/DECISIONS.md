@@ -311,3 +311,13 @@ compatibility. Ένα νέο sorting API απαιτεί explicit algorithm. Η �
 παλιές μετρήσεις ή errors. Δεν εισάγεται database registry execution ή custom code.
 Ίδιοι generators, όρια και measurement boundaries επιτρέπουν συγκρίσιμη διαδικασία,
 χωρίς να εγγυώνται ίδιους χρόνους ή καθολικό νικητή.
+
+## ADR-019 — Synchronous experiment execution με atomic result batch (#43)
+
+Ξεκινάμε με έως 4 pairs και size 1000, χωρίς queue. Conditional update από draft
+και transaction αποτρέπουν δεύτερο committed run. SQLite writers μπορεί να περιμένουν
+ή να αποτύχουν λόγω lock· δεν πρόκειται για production concurrency design.
+Τα results κρατούν JSON snapshots του bounded runner contract και της implementation
+identity, χωρίς FK προς mutable catalogue/dataset rows. Δεν είναι code-version snapshots.
+Runner failure γίνεται failed με generic code και μηδέν partial results. Storage failure
+κάνει rollback σε draft. Δεν υποσχόμαστε exactly-once υπολογισμό μετά από crash.

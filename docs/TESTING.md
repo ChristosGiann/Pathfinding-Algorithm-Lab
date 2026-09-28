@@ -299,3 +299,19 @@ invalid/missing algorithm και compatibility του αρχικού Bubble endp
 και οι δύο επέστρεψαν correct για 10 runs. Η αλλαγή selector και el→en→el διατήρησε
 την ταυτότητα και τις μετρήσεις των προηγούμενων γραμμών. Δεν εμφανίστηκαν console errors.
 Δεν έγινε νέο πραγματικό 30-second timeout ή delayed-request/unmount σενάριο.
+
+## Επαλήθευση #43
+
+75 backend tests πέρασαν, με 10 νέα execution tests: τέσσερα πραγματικά pairs,
+GET χωρίς rerun, conflict σε repeated/non-draft run, runtime limits, stale catalogue,
+registry identity mismatch, missing definitions, safe runner failure, incorrect output,
+rollback μετά από partial storage write και ανθεκτικά snapshots μετά από διαγραφές.
+Δεν έγινε πολυδιεργασιακό concurrency/load test· το execution παραμένει synchronous local MVP.
+
+Το migration 0004 εφαρμόστηκε επιτυχώς στην τοπική βάση. Django check και migration
+dry-run πέρασαν. Τα 10 frontend regression tests παραμένουν επιτυχή.
+
+Lint/build πέρασαν. Smoke check μέσω Django APIClient στην migrated local βάση
+επαλήθευσε create 201, run 200 με δύο saved pairs, GET 200 με ίδια δεδομένα και
+repeat 409. Το προσωρινό experiment αφαιρέθηκε με transaction rollback.
+Δεν έγινε νέο browser flow: το feature αφορά backend API και μία διευκρίνιση UI κειμένου.

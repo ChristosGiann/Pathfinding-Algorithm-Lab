@@ -30,7 +30,7 @@ The current production/reference snapshot on `main` therefore includes datasets,
 - Algorithm Library cards, loading/error/empty states and retry button.
 
 Seeded implementation records are metadata. Bubble Sort (#18) and Insertion Sort (#41)
-are executable through a fixed code allowlist. Other sorters and database registry resolution remain planned work.
+are executable through a fixed code allowlist. Other sorters remain planned; #43 resolves the two trusted catalogue implementations for experiment execution.
 
 ## Follow-up fixes
 
@@ -135,4 +135,11 @@ reviews, grid accessibility labels και custom validation errors. Default el,
 POST `/api/benchmarks/sorting/`. Ο selector και κάθε αποτέλεσμα κρατούν την ταυτότητα
 algorithm σε el/en. Το παλιό Bubble endpoint παραμένει συμβατό. Δεν αλλάζουν models.
 Τα #11/#12/#22 έχουν ενσωματωθεί στο dev μέσω PR #40/#39/#38 και έκλεισαν.
-Το #41 αναμένει review/merge. Το main παραμένει στο προηγούμενο promoted snapshot.
+Το #41 ενσωματώθηκε στο dev μέσω PR #42. Το main παραμένει στο προηγούμενο promoted snapshot.
+
+## Issue #43 — Εκτέλεση και αποθήκευση experiments
+
+Backend-only feature: POST run, runtime validation, έως 4 pairs, atomic persistence,
+GET persisted results και snapshot identity. Προστέθηκε migration 0004.
+Το #41 έγινε merge στο dev μέσω PR #42 (20b0e96) και έκλεισε.
+Το #43 αναμένει review/merge· το standalone benchmark UI παραμένει session-only.

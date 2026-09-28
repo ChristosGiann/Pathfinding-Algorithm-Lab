@@ -326,3 +326,9 @@ See [Custom Python](CUSTOM_PYTHON.md) for examples and the lack of a sandbox.
 γλώσσα. Τα error codes παραμένουν σταθερά και μεταφράζονται κατά το render.
 Οι τύποι API δεν περιέχουν UI labels. Το `npm test` ελέγχει και αντιστοιχία
 translation keys. Βλ. [Language](LANGUAGE.md).
+
+## Experiment execution migration (#43)
+
+Πριν χρησιμοποιήσεις το νέο run API, εκτέλεσε
+`python backend/manage.py migrate`. Το migration 0004 προσθέτει τον πίνακα results
+και execution_error. Οδηγίες και limits: [Experiments](EXPERIMENTS.md).

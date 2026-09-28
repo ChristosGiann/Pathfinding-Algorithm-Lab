@@ -16,7 +16,7 @@
 | Dataset generators | Random, Sorted, Reversed και Nearly Sorted, με size/seed και επαναλήψιμη παραγωγή εισόδου. |
 | Benchmark | 10 εκτελέσεις του επιλεγμένου Bubble Sort ή Insertion Sort σε ανεξάρτητα αντίγραφα του ίδιου dataset, με correctness check και median/min/max. Μέγεθος 1–1.000 στοιχεία. |
 | Results dashboard | Πίνακας και chart για τις τελευταίες 20 προσπάθειες της τρέχουσας συνεδρίας, μαζί με error/timeout states. |
-| Experiment API | Δημιουργία και ανάκτηση αποθηκευμένων draft definitions: implementations και dataset configurations. Δεν εκτελεί ακόμη experiments. |
+| Experiment API | Δημιουργία draft definitions, bounded execution και ανάκτηση persisted results μέσω API. |
 | Implementation reviews | Προσωπικές βαθμολογίες και σημειώσεις ανά implementation, με αποθήκευση και επεξεργασία. |
 | Custom Python validation | Ελληνική φόρμα για syntax/solve(values)/size checks χωρίς εκτέλεση. Ρητή τοπική CLI εκτέλεση δικού μας κώδικα με timeout 2 δευτερολέπτων. |
 | Pathfinding foundation | Grid, walls και clear/reset controls. Τα algorithm execution/animation controls παραμένουν ανενεργά. |
@@ -137,7 +137,7 @@ React Result Card / Results Dashboard
 
 Το πρώτο vertical slice συνδέει **React → Django → Bubble Sort benchmark → Result Card**, που πλέον έχει εξελιχθεί σε πίνακα και chart αποτελεσμάτων. Ο centralized API client βρίσκεται στο `src/services/apiClient.ts`. Ο runner και οι dataset generators βρίσκονται στα `backend/core/benchmarks/` και `backend/core/datasets/`.
 
-Τα experiment definitions και τα implementation reviews αποθηκεύονται μέσω Django models. Ο benchmark runner παραμένει ξεχωριστός και δεν αποθηκεύει timing results. Αυτό αποφεύγει να εμφανίζεται η αποθήκευση μιας ρύθμισης ως ολοκληρωμένη εκτέλεση.
+Τα experiment definitions και τα implementation reviews αποθηκεύονται μέσω Django models. Ο pure benchmark runner παραμένει ξεχωριστός. Η experiment execution υπηρεσία τον καλεί και αποθηκεύει τα results μετά τις μετρήσεις.
 
 ```text
 src/                   React components, i18n, API client, types
@@ -162,12 +162,12 @@ npm run build
 git diff --check
 ```
 
-Το integrated snapshot έχει 60 backend tests και 9 frontend tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
+Το integrated snapshot έχει 75 backend tests και 10 frontend tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
 
 ## Περιορισμοί MVP
 
 - Εκτελούνται Bubble Sort και Insertion Sort. Τα υπόλοιπα seeded algorithms είναι catalogue metadata.
-- Τα experiments αποθηκεύουν definitions, όχι execution lifecycle ή μετρήσεις. Δεν υπάρχει persistent benchmark history ή σύγκριση πολλών implementations.
+- Τα experiments εκτελούνται και αποθηκεύουν μετρήσεις μέσω API. Δεν υπάρχει ακόμη experiment UI ή listing/history endpoint.
 - Το benchmark είναι synchronous, με 10 runs και όριο 1.000 στοιχείων, χωρίς warm-up exclusion ή απομονωμένο performance environment.
 - Τα reviews είναι κοινά ανά implementation στο single-user local MVP, χωρίς account isolation.
 - Το pathfinding grid είναι foundation· BFS/DFS execution και animation παραμένουν μελλοντικά.
@@ -208,3 +208,12 @@ git diff --check
 
 - [Custom Python validation και τοπική εκτέλεση](docs/CUSTOM_PYTHON.md)
 - [Επιλογή γλώσσας](docs/LANGUAGE.md)
+
+### Experiment execution API (#43)
+
+Τα saved experiments μπορούν πλέον να εκτελεστούν μέσω
+`POST /api/experiments/<id>/run/` με `{}`. Επιτρέπονται Bubble/Insertion, έως 4
+implementation×dataset pairs και 1–1000 στοιχεία. Το GET detail ανακτά persisted
+results. Προηγήσου με `python backend/manage.py migrate` (migration 0004).
+Το υπάρχον benchmark UI κρατά ακόμη session-only history· το experiment UI ακολουθεί.
+Βλ. [Experiments](docs/EXPERIMENTS.md) για όρια και αποτυχίες.
