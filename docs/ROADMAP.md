@@ -284,3 +284,9 @@ selector και ταυτότητα algorithm σε session results. Αναμέν�
 Στο παρόν feature snapshot υλοποιείται backend run API, server-owned status και
 persisted measurement snapshots. Αναμένει review/merge. Το #41 ενσωματώθηκε στο dev
 μέσω PR #42 και έκλεισε. Επόμενο βήμα: UI για δημιουργία/εκτέλεση/ανάκτηση experiments.
+
+## Issue #45 — UI integration
+
+Υλοποιείται η ροή create → run → persisted results → reopen by ID στο UI.
+Το #43 έχει γίνει merge μέσω PR #44. Το #45 αναμένει review/merge.
+History/listing, editing και automatic ranking παραμένουν ξεχωριστά βήματα.

@@ -142,4 +142,10 @@ algorithm σε el/en. Το παλιό Bubble endpoint παραμένει συμ�
 Backend-only feature: POST run, runtime validation, έως 4 pairs, atomic persistence,
 GET persisted results και snapshot identity. Προστέθηκε migration 0004.
 Το #41 έγινε merge στο dev μέσω PR #42 (20b0e96) και έκλεισε.
-Το #43 αναμένει review/merge· το standalone benchmark UI παραμένει session-only.
+Το #43 ενσωματώθηκε στο dev μέσω PR #44· το standalone benchmark UI παραμένει session-only.
+
+## Issue #45 — Experiment UI
+
+Στο παρόν feature snapshot: create draft, run, open by ID, refresh, snapshot result
+table και el/en feedback. Το #43 ενσωματώθηκε στο dev μέσω PR #44 (ac23024) και έκλεισε.
+Το #45 αναμένει review/merge. Επόμενα: history/listing και βελτίωση σύγκρισης.

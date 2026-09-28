@@ -321,3 +321,11 @@ compatibility. Ένα νέο sorting API απαιτεί explicit algorithm. Η �
 identity, χωρίς FK προς mutable catalogue/dataset rows. Δεν είναι code-version snapshots.
 Runner failure γίνεται failed με generic code και μηδέν partial results. Storage failure
 κάνει rollback σε draft. Δεν υποσχόμαστε exactly-once υπολογισμό μετά από crash.
+
+## ADR-020 — Ξεχωριστή ροή persisted experiments (#45)
+
+Το νέο component κρατά χωριστά τα saved experiments από το session benchmark.
+Το backend παρέχει executable capability από κοινό resolver, όχι heuristic του UI.
+Ένα dataset ανά νέα φόρμα κρατά απλή τη δημιουργία· όλα τα stored datasets/results
+εμφανίζονται κατά retrieval. Run ambiguity αντιμετωπίζεται με refresh πριν νέο run,
+χωρίς automatic mutation retries. Το ID είναι το μέσο επαναφοράς μέχρι το listing.

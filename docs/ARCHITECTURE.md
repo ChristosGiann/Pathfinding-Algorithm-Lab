@@ -352,3 +352,10 @@ shared sorting runner → ExperimentResult snapshots → completed/failed.
 Μία transaction περιλαμβάνει claim, bounded execution και persistence. Δεν μπαίνουν
 DB writes στο timed region. Τα snapshots δεν έχουν FK προς catalogue/dataset records,
 ώστε να διατηρούνται μετά από αλλαγές τους. Δεν υπάρχει worker ή νέο UI.
+
+## Experiment UI (#45)
+
+Experiments component → centralized create/get/run API client → experiment service.
+ExperimentDetails εμφανίζει persisted snapshot measurements ανεξάρτητα από το
+session ResultsDashboard. Το catalogue capability μοιράζεται resolver με execution,
+με select_related για τις σχέσεις algorithm/problem. Δεν προστίθεται migration.

@@ -144,3 +144,16 @@ class ExecutionTests(APITestCase):
             with patch("core.experiments.execution.run_sorting_benchmark") as run:
                 self.assertEqual(self.run_experiment(pk).status_code, 409)
                 run.assert_not_called()
+
+    def test_catalogue_executable_matches_runner_capability_without_exposing_key(self):
+        data = self.client.get(reverse("algorithm-list")).data
+        for algorithm in data:
+            for item in algorithm["implementations"]:
+                self.assertEqual(item["executable"], algorithm["slug"] in ("bubble-sort", "insertion-sort"))
+                self.assertNotIn("registry_key", item)
+        implementation = AlgorithmImplementation.objects.get(registry_key="sorting.bubble_sort")
+        implementation.registry_key = "unknown"
+        implementation.save()
+        data = self.client.get(reverse("algorithm-list")).data
+        item = next(item for algorithm in data for item in algorithm["implementations"] if item["id"] == implementation.pk)
+        self.assertFalse(item["executable"])
