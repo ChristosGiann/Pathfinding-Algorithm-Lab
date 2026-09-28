@@ -78,7 +78,7 @@ test('all static API error codes have English feedback and unknown codes have sa
   }
 });
 test('existing results render localized status and numbers without changing measurements', () => {
-  const input = { dataset_type:'random', size:100, seed:42 };
+  const input = { algorithm:'bubble-sort', dataset_type:'random', size:100, seed:42 };
   const entries = [{ id:1, input, status:'completed', result:{...input, runs:10, correct:true, median_ns:1500000, min_ns:1000000, max_ns:2000000} }];
   const snapshot = JSON.stringify(entries);
   const en = render(ResultsDashboard, { entries, running:false, language:'en', onClear() {} });
@@ -88,4 +88,22 @@ test('existing results render localized status and numbers without changing meas
   assert.match(el, /Σωστή ταξινόμηση/);
   assert.match(el, /<td>1,5<\/td>/);
   assert.equal(JSON.stringify(entries), snapshot);
+});
+
+
+test('mixed algorithm results keep identity in table, chart and failed attempts in both languages', () => {
+  const input = { algorithm:'insertion-sort', dataset_type:'reversed', size:100, seed:42 };
+  const entries = [
+    { id:1, input, status:'completed', result:{...input, runs:10, correct:true, median_ns:100, min_ns:50, max_ns:200} },
+    { id:2, input:{...input, algorithm:'bubble-sort'}, status:'error' },
+    { id:3, input, status:'timeout' },
+  ];
+  for (const language of ['el', 'en']) {
+    const html = render(ResultsDashboard, {entries, running:false, language, onClear() {}});
+    assert.match(html, /Insertion Sort · Python/);
+    assert.match(html, /Bubble Sort · Python/);
+    assert.match(html, /#1 · Insertion Sort · 100/);
+    assert.ok(html.includes(benchmarkTexts[language].timeout));
+    assert.ok(html.includes(benchmarkTexts[language].error));
+  }
 });

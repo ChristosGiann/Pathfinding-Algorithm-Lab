@@ -320,7 +320,7 @@ provides independent mutable inputs. See [Datasets](DATASETS.md).
 ## First benchmark vertical slice (local #18)
 
 React Benchmark form -> centralized API client -> benchmark request serializer
--> pure runner -> dataset copies -> trusted Bubble Sort -> correctness and timing
+-> pure runner -> dataset copies -> trusted Bubble Sort / Insertion Sort -> correctness and timing
 summary -> result card. The endpoint has no persistence or registry lookup.
 See [Benchmarks](BENCHMARKS.md).
 
@@ -340,3 +340,7 @@ executes or saves submitted code. The separate developer CLI opts into a child
 Python process for finite correctness smoke cases with a timeout. The API does
 not import the runner. There is no sandbox, database model or benchmark integration.
 See [Custom Python](CUSTOM_PYTHON.md).
+
+Issue #41 adds a fixed code allowlist before dataset generation. The sorting API takes
+an algorithm identifier; no database metadata or custom source becomes executable.
+The legacy Bubble endpoint delegates to the shared runner.

@@ -5,9 +5,9 @@ from django.test import SimpleTestCase
 from django.urls import reverse
 from rest_framework.test import APISimpleTestCase
 
-from core.algorithms.sorting import bubble_sort
+from core.algorithms.sorting import bubble_sort, insertion_sort
 from core.datasets import generate_dataset
-from .runner import run_bubble_sort_benchmark
+from .runner import run_bubble_sort_benchmark, run_sorting_benchmark
 
 
 class BubbleSortTests(SimpleTestCase):
@@ -106,3 +106,65 @@ class BenchmarkAPITests(APISimpleTestCase):
 
     def test_get_is_not_allowed(self):
         self.assertEqual(self.client.get(reverse("bubble-sort-benchmark")).status_code, 405)
+
+
+class SortingSelectionTests(APISimpleTestCase):
+    def test_insertion_sort_edge_cases_and_generators(self):
+        inputs = [[], [1], [3, -1, 3, 0], [2, 2, 2]]
+        inputs += [generate_dataset(kind, 100, -7).copy_for_run()
+                   for kind in ("random", "sorted", "reversed", "nearly_sorted")]
+        for original in inputs:
+            values = original.copy()
+            self.assertIsNone(insertion_sort(values))
+            self.assertEqual(values, sorted(original))
+
+    def test_dispatch_and_fresh_inputs_for_both_algorithms(self):
+        for algorithm, symbol in (("bubble-sort", "bubble_sort"), ("insertion-sort", "insertion_sort")):
+            inputs, events = [], []
+            def sorter(values):
+                events.append("sort")
+                inputs.append(values)
+                self.assertEqual(values, generate_dataset("reversed", 10, 42).copy_for_run())
+                values.sort()
+            ticks = iter(range(20))
+            def clock():
+                events.append("clock")
+                return next(ticks)
+            with patch(f"core.benchmarks.runner.{symbol}", side_effect=sorter), \
+                 patch("core.benchmarks.runner.perf_counter_ns", side_effect=clock):
+                result = run_sorting_benchmark(algorithm, 10, dataset_type="reversed")
+            self.assertEqual(result["algorithm"], algorithm)
+            self.assertEqual(len({id(values) for values in inputs}), 10)
+            self.assertEqual(events, ["clock", "sort", "clock"] * 10)
+            self.assertEqual(result["timings_ns"], [1] * 10)
+            self.assertTrue(result["correct"])
+
+    def test_real_api_for_both_algorithms_and_all_datasets_without_database(self):
+        for algorithm in ("bubble-sort", "insertion-sort"):
+            for kind in ("random", "sorted", "reversed", "nearly_sorted"):
+                response = self.client.post(reverse("sorting-benchmark"),
+                    {"algorithm": algorithm, "size": 100, "dataset_type": kind}, format="json")
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.data["algorithm"], algorithm)
+                self.assertTrue(response.data["correct"])
+                self.assertEqual(len(response.data["timings_ns"]), 10)
+
+    def test_invalid_algorithm_and_payload_do_not_execute(self):
+        payloads = [{"size": 10}, *({"size": 10, "algorithm": value}
+                    for value in (None, "quick-sort", "__proto__", [], {}, True))]
+        payloads += [{"algorithm": "insertion-sort", "size": size} for size in (0, 1001, True, "10")]
+        payloads += [{"algorithm": "insertion-sort", "size": 10, "source": "code"}]
+        with patch("core.benchmarks.api.run_sorting_benchmark") as run:
+            for payload in payloads:
+                self.assertEqual(self.client.post(reverse("sorting-benchmark"), payload, format="json").status_code, 400)
+            run.assert_not_called()
+        self.assertEqual(self.client.get(reverse("sorting-benchmark")).status_code, 405)
+        with patch("core.benchmarks.runner.generate_dataset") as generate:
+            for algorithm in ("unknown", [], None):
+                with self.assertRaises(ValueError):
+                    run_sorting_benchmark(algorithm, 10)
+            generate.assert_not_called()
+
+    def test_insertion_correctness_failure_is_retained(self):
+        with patch("core.benchmarks.runner.insertion_sort", side_effect=lambda values: values.clear()):
+            self.assertFalse(run_sorting_benchmark("insertion-sort", 10)["correct"])

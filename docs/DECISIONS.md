@@ -301,3 +301,13 @@ component hierarchy. Αρχική τιμή el σε κάθε page load, χωρί�
 Τα Python validation codes μεταφράζονται στο frontend, με localized fallback
 για άγνωστους codes. Το backend συνεχίζει να επιστρέφει ελληνικά messages.
 Catalogue content και user notes δεν μεταφράζονται αυτόματα.
+
+## ADR-018 — Κοινός runner με fixed sorting allowlist (#41)
+
+Ο runner δέχεται μόνο `bubble-sort` / `insertion-sort` και επιλέγει trusted Python
+function πριν από dataset generation/timing. Το παλιό Bubble API διατηρείται για
+compatibility. Ένα νέο sorting API απαιτεί explicit algorithm. Η επιλογή αποθηκεύεται
+στο request snapshot κάθε UI attempt, ώστε αλλαγές του selector να μην ξαναβαφτίζουν
+παλιές μετρήσεις ή errors. Δεν εισάγεται database registry execution ή custom code.
+Ίδιοι generators, όρια και measurement boundaries επιτρέπουν συγκρίσιμη διαδικασία,
+χωρίς να εγγυώνται ίδιους χρόνους ή καθολικό νικητή.

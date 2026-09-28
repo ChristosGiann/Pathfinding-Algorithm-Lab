@@ -4,7 +4,7 @@
 
 Το project εξελίχθηκε από ένα pathfinding visualizer σε εργαστήριο για testing, benchmarking, visualization, comparison και προσωπική αξιολόγηση algorithm implementations. Το GitHub repository διατηρεί το όνομα `Pathfinding-Algorithm-Lab`.
 
-Σήμερα μπορείς να εξερευνήσεις sorting algorithms, να τρέξεις Bubble Sort σε ελεγχόμενα datasets και να εξετάσεις ορθότητα και χρόνους εκτέλεσης. Το UI είναι προεπιλεγμένα στα Ελληνικά· το header χρησιμοποιεί τη συντομότερη ονομασία «Εργαστήριο Αλγορίθμων».
+Σήμερα μπορείς να εξερευνήσεις sorting algorithms, να τρέξεις Bubble Sort ή Insertion Sort σε ελεγχόμενα datasets και να εξετάσεις ορθότητα και χρόνους εκτέλεσης. Το UI είναι προεπιλεγμένα στα Ελληνικά· το header χρησιμοποιεί τη συντομότερη ονομασία «Εργαστήριο Αλγορίθμων».
 
 [Τοπική εγκατάσταση](#quick-start) · [Αρχιτεκτονική](#architecture) · [Roadmap](docs/ROADMAP.md) · [API](docs/API.md)
 
@@ -12,9 +12,9 @@
 
 | Περιοχή | Υλοποιημένη δυνατότητα |
 | --- | --- |
-| Algorithm Library | Bubble, Selection, Insertion, Merge και Quick Sort με Big-O metadata και built-in implementation records. Εκτελέσιμος στο benchmark είναι προς το παρόν μόνο ο Bubble Sort. |
+| Algorithm Library | Bubble, Selection, Insertion, Merge και Quick Sort με Big-O metadata και built-in implementation records. Εκτελέσιμοι στο benchmark είναι οι Bubble Sort και Insertion Sort. |
 | Dataset generators | Random, Sorted, Reversed και Nearly Sorted, με size/seed και επαναλήψιμη παραγωγή εισόδου. |
-| Benchmark | 10 εκτελέσεις Bubble Sort σε ανεξάρτητα αντίγραφα του ίδιου dataset, με correctness check και median/min/max. Μέγεθος 1–1.000 στοιχεία. |
+| Benchmark | 10 εκτελέσεις του επιλεγμένου Bubble Sort ή Insertion Sort σε ανεξάρτητα αντίγραφα του ίδιου dataset, με correctness check και median/min/max. Μέγεθος 1–1.000 στοιχεία. |
 | Results dashboard | Πίνακας και chart για τις τελευταίες 20 προσπάθειες της τρέχουσας συνεδρίας, μαζί με error/timeout states. |
 | Experiment API | Δημιουργία και ανάκτηση αποθηκευμένων draft definitions: implementations και dataset configurations. Δεν εκτελεί ακόμη experiments. |
 | Implementation reviews | Προσωπικές βαθμολογίες και σημειώσεις ανά implementation, με αποθήκευση και επεξεργασία. |
@@ -123,12 +123,12 @@ VITE_API_BASE_URL=http://127.0.0.1:8000
 
 ```text
 React benchmark form
-        ↓ POST /api/benchmarks/bubble-sort/
+        ↓ POST /api/benchmarks/sorting/
 Django / DRF request validation
         ↓
 Dataset generator → fresh copy για κάθε run
         ↓
-Trusted Python Bubble Sort × 10
+Trusted Python Bubble Sort / Insertion Sort × 10
         ↓
 Correctness checks + timing statistics
         ↓ JSON response
@@ -166,7 +166,7 @@ git diff --check
 
 ## Περιορισμοί MVP
 
-- Μόνο Bubble Sort εκτελείται. Τα υπόλοιπα seeded algorithms είναι catalogue metadata.
+- Εκτελούνται Bubble Sort και Insertion Sort. Τα υπόλοιπα seeded algorithms είναι catalogue metadata.
 - Τα experiments αποθηκεύουν definitions, όχι execution lifecycle ή μετρήσεις. Δεν υπάρχει persistent benchmark history ή σύγκριση πολλών implementations.
 - Το benchmark είναι synchronous, με 10 runs και όριο 1.000 στοιχείων, χωρίς warm-up exclusion ή απομονωμένο performance environment.
 - Τα reviews είναι κοινά ανά implementation στο single-user local MVP, χωρίς account isolation.
@@ -179,7 +179,7 @@ git diff --check
 
 | Κατάσταση | Επόμενα βήματα |
 | --- | --- |
-| Υλοποιημένα | Algorithm Library, datasets, Bubble Sort benchmark, draft experiments, results dashboard και reviews (#16–#21). |
+| Υλοποιημένα | Algorithm Library, datasets, benchmark επιλογής Bubble/Insertion Sort, draft experiments, results dashboard και reviews (#16–#21). |
 | Υλοποιημένο στο dev | Custom Python validation (#22 / PR #38). |
 | Τρέχουσα τεκμηρίωση | Portfolio-ready README (#12 / PR #39), με πραγματικό screenshot, setup και scope. |
 | Υλοποιημένο στο παρόν feature snapshot | Language selector Ελληνικά / English (#11), με διατήρηση φόρμας και αποτελεσμάτων κατά την αλλαγή. |

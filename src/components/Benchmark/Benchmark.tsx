@@ -2,14 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import type { Language } from "../../i18n/translations";
 import { benchmarkTexts } from "../../i18n/benchmark";
-import { runBubbleSortBenchmark } from "../../services/apiClient";
-import type { DatasetType } from "../../types/benchmark";
+import { runSortingBenchmark } from "../../services/apiClient";
+import type { DatasetType, SortingAlgorithm } from "../../types/benchmark";
 import { ResultsDashboard } from "./ResultsDashboard";
 import type { ResultEntry } from "./ResultsDashboard";
 import "./Benchmark.css";
 
 export function Benchmark({ language }: { language: Language }) {
   const texts = benchmarkTexts[language];
+  const [algorithm, setAlgorithm] = useState<SortingAlgorithm>("bubble-sort");
   const [size, setSize] = useState("100");
   const [seed, setSeed] = useState("42");
   const [datasetType, setDatasetType] = useState<DatasetType>("random");
@@ -33,7 +34,7 @@ export function Benchmark({ language }: { language: Language }) {
     }
     const controller = new AbortController();
     activeRequest.current = controller;
-    const input = { size: inputSize, seed: inputSeed, dataset_type: datasetType };
+    const input = { algorithm, size: inputSize, seed: inputSeed, dataset_type: datasetType };
     const id = nextId.current++;
     const timeout = AbortSignal.timeout(30_000);
     const signal = AbortSignal.any([controller.signal, timeout]);
@@ -41,7 +42,7 @@ export function Benchmark({ language }: { language: Language }) {
     setRunning(true);
     setError(null);
     try {
-      const response = await runBubbleSortBenchmark(input, signal);
+      const response = await runSortingBenchmark(input, signal);
       if (!controller.signal.aborted) append({ id, input, status: "completed", result: response });
     } catch {
       if (!controller.signal.aborted) {
@@ -61,7 +62,7 @@ export function Benchmark({ language }: { language: Language }) {
       <p>{texts.description}</p>
       <form onSubmit={(event) => { void handleSubmit(event); }}>
         <fieldset disabled={running} className="benchmark__fields">
-          <label>{texts.algorithm}<select aria-label={texts.algorithm} value="bubble-sort" disabled><option value="bubble-sort">{texts.algorithmName}</option></select></label>
+          <label>{texts.algorithm}<select aria-label={texts.algorithm} value={algorithm} onChange={(event) => setAlgorithm(event.target.value as SortingAlgorithm)}>{Object.entries(texts.algorithms).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
           <label>{texts.dataset}<select value={datasetType} onChange={(event) => setDatasetType(event.target.value as DatasetType)}>
             {Object.entries(texts.types).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select></label>
