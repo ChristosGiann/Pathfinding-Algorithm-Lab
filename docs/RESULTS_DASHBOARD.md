@@ -13,8 +13,8 @@ The range is observed min–max, not a confidence interval.
 
 Bubble Sort and Insertion Sort are selectable through the trusted sorting endpoint (#41).
 Each attempt retains its selected algorithm in the table and chart, including error/timeout rows.
-Sequential runs can be inspected side by side with the same dataset configuration. There is no
-experiment execution/results endpoint, automatic batch comparison or persistent history. PR #31 was integrated into dev after PR #30.
+Sequential runs can be inspected side by side with the same dataset configuration. This UI does not use the persisted experiment execution API added in #43;
+its history remains session-only with no automatic batch comparison. PR #31 was integrated into dev after PR #30.
 
 Requests have a 30-second client response deadline. A timeout is shown separately
 from a network/HTTP error, preserves earlier rows and enables retry. Aborting the

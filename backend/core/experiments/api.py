@@ -1,7 +1,9 @@
 from django.db import transaction
 from rest_framework import generics, serializers
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-from core.models import AlgorithmImplementation, DatasetDefinition, Experiment
+from core.models import AlgorithmImplementation, DatasetDefinition, Experiment, ExperimentResult
 
 
 class StrictIntegerField(serializers.IntegerField):
@@ -39,7 +41,15 @@ class SelectedImplementationSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "slug", "algorithm", "language", "is_active", "source_type")
 
 
+class ExperimentResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExperimentResult
+        fields = ("id", "implementation_snapshot", "measurement", "created_at")
+        read_only_fields = fields
+
+
 class ExperimentSerializer(StrictInputSerializer):
+    results = ExperimentResultSerializer(many=True, read_only=True)
     implementation_ids = serializers.ListField(
         child=StrictIntegerField(min_value=1), min_length=1, max_length=20, write_only=True,
     )
@@ -48,8 +58,8 @@ class ExperimentSerializer(StrictInputSerializer):
 
     class Meta:
         model = Experiment
-        fields = ("id", "name", "status", "implementation_ids", "implementations", "datasets", "created_at", "updated_at")
-        read_only_fields = ("id", "status", "created_at", "updated_at")
+        fields = ("id", "name", "status", "implementation_ids", "implementations", "datasets", "results", "execution_error", "created_at", "updated_at")
+        read_only_fields = ("id", "status", "results", "execution_error", "created_at", "updated_at")
 
     def validate_implementation_ids(self, ids):
         if len(ids) != len(set(ids)):
@@ -89,4 +99,14 @@ class ExperimentCreateAPIView(generics.CreateAPIView):
 
 class ExperimentDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ExperimentSerializer
-    queryset = Experiment.objects.prefetch_related("implementations__algorithm", "datasets")
+    queryset = Experiment.objects.prefetch_related("implementations__algorithm", "datasets", "results")
+
+
+@api_view(["POST"])
+def experiment_run(request, pk):
+    from .execution import execute_experiment
+
+    if not isinstance(request.data, dict) or request.data:
+        raise serializers.ValidationError({"request": "Send an empty JSON object."})
+    experiment = execute_experiment(pk)
+    return Response(ExperimentSerializer(experiment).data)

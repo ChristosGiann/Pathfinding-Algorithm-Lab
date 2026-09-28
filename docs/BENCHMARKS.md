@@ -45,7 +45,7 @@ Generate the dataset and sorted reference once. For each of ten runs:
 Generation, copying, correctness checks, summary statistics, network, rendering,
 visualization and database writes are outside the timed region. No database
 reads or writes are needed by this endpoint. It directly imports trusted code;
-a fixed allowlist resolves Bubble Sort and Insertion Sort. Database registry resolution remains future work.
+a fixed allowlist resolves Bubble Sort and Insertion Sort. The separate experiment service resolves supported catalogue registry keys in #43.
 Bubble Sort exits early when a pass makes no swaps, matching its O(n) best case.
 
 ## UI and scope
@@ -57,7 +57,7 @@ shows times in milliseconds, converting from API nanoseconds. Greek and English
 texts are provided; the application currently defaults to Greek.
 
 Results are ephemeral: no persisted timing results or benchmark history.
-Issue #19 stores experiment definitions only; execution/results persistence is future work.
+Issue #43 adds a separate experiment execution/results persistence API; this standalone endpoint remains stateless.
 Ten runs are synchronous and size is capped at 1000 because Bubble Sort is
 quadratic. This is a local MVP, not an unrestricted public benchmarking service.
 There is no warm-up exclusion or guaranteed reproducible timing: machine load

@@ -344,3 +344,11 @@ See [Custom Python](CUSTOM_PYTHON.md).
 Issue #41 adds a fixed code allowlist before dataset generation. The sorting API takes
 an algorithm identifier; no database metadata or custom source becomes executable.
 The legacy Bubble endpoint delegates to the shared runner.
+
+## Bounded experiment execution (#43)
+
+Experiment run API → conditional draft claim → trusted registry resolution →
+shared sorting runner → ExperimentResult snapshots → completed/failed.
+Μία transaction περιλαμβάνει claim, bounded execution και persistence. Δεν μπαίνουν
+DB writes στο timed region. Τα snapshots δεν έχουν FK προς catalogue/dataset records,
+ώστε να διατηρούνται μετά από αλλαγές τους. Δεν υπάρχει worker ή νέο UI.

@@ -140,7 +140,7 @@ Status: **Merged through PR #30 and promoted to main through PR #33; Issue #19 c
 Experiment definitions store selected implementations and owned dataset
 configurations. Create and retrieve APIs, draft default, five model statuses,
 validation and atomic persistence are implemented. Execution, lifecycle transitions
-and stored timing results are separate future work. See [Experiments](EXPERIMENTS.md).
+and stored timing results are now added separately in #43. See [Experiments](EXPERIMENTS.md).
 
 ## Phase 7 — Issue #20: Results Dashboard
 
@@ -148,8 +148,7 @@ Status: **Merged through PR #31 and promoted to main through PR #33; Issue #20 c
 
 Implemented: a session results table, median/min/max chart, correctness and
 error/timeout states for the Bubble Sort benchmark. History is not persisted.
-Experiment execution/results and comparisons between implementations remain
-future work. See [Results dashboard](RESULTS_DASHBOARD.md).
+Experiment execution/results are added in #43; dashboard integration remains future work. See [Results dashboard](RESULTS_DASHBOARD.md).
 
 ## Phase 8 — Issue #21: Personal Implementation Review
 
@@ -277,5 +276,11 @@ These should not interrupt the evaluation pipeline unless they become blockers.
 
 Στο παρόν feature snapshot: δεύτερος trusted sorter (Insertion Sort), κοινός runner,
 selector και ταυτότητα algorithm σε session results. Αναμένει review/merge στο dev.
-Επόμενα βήματα: σύνδεση experiment execution, persistence αποτελεσμάτων και retrieval.
+Το #43 προσθέτει experiment execution, persistence αποτελεσμάτων και retrieval.
 Αυτόματη σύγκριση πολλών implementations παραμένει ξεχωριστό βήμα.
+
+## Issue #43 — Experiment execution / persistence
+
+Στο παρόν feature snapshot υλοποιείται backend run API, server-owned status και
+persisted measurement snapshots. Αναμένει review/merge. Το #41 ενσωματώθηκε στο dev
+μέσω PR #42 και έκλεισε. Επόμενο βήμα: UI για δημιουργία/εκτέλεση/ανάκτηση experiments.

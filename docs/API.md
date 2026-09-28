@@ -208,3 +208,11 @@ JSON: `{"algorithm":"insertion-sort","size":100,"seed":42,"dataset_type":"random
 10 runs, όριο 1–1000, POST-only, χωρίς database access. Άγνωστο/missing algorithm ή
 άγνωστα fields επιστρέφουν 400 πριν εκτελεστεί runner. Το αρχικό Bubble endpoint
 διατηρεί το contract του. Βλ. [Benchmarks](BENCHMARKS.md).
+
+## POST /api/experiments/<id>/run/ — #43
+
+Body `{}`. Εκτελεί μία φορά draft experiment με έως 4 pairs και size έως 1000.
+HTTP 200 επιστρέφει status, results και execution_error· 400 για μη έγκυρη
+configuration/body, 404 για άγνωστο ID, 409 για non-draft. Το GET detail επιστρέφει
+πλέον τα persisted results, ενώ το create τα εκθέτει read-only (αρχικά κενά).
+Βλ. [Experiments](EXPERIMENTS.md) για snapshots, failure/transaction semantics και limits.
