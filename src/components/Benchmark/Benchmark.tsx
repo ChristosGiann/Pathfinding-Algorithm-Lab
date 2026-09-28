@@ -61,7 +61,7 @@ export function Benchmark({ language }: { language: Language }) {
       <p>{texts.description}</p>
       <form onSubmit={(event) => { void handleSubmit(event); }}>
         <fieldset disabled={running} className="benchmark__fields">
-          <label>{texts.algorithm}<select aria-label={texts.algorithm} value="bubble-sort" disabled><option value="bubble-sort">Bubble Sort</option></select></label>
+          <label>{texts.algorithm}<select aria-label={texts.algorithm} value="bubble-sort" disabled><option value="bubble-sort">{texts.algorithmName}</option></select></label>
           <label>{texts.dataset}<select value={datasetType} onChange={(event) => setDatasetType(event.target.value as DatasetType)}>
             {Object.entries(texts.types).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select></label>

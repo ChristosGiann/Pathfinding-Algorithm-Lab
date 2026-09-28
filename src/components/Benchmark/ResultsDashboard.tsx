@@ -28,7 +28,7 @@ export function ResultsDashboard({ entries, running, language, onClear }: {
           <thead><tr>{["#", texts.implementation, texts.dataset, texts.size, texts.seed, texts.runs,
             texts.status, `${texts.median} (ms)`, `${texts.min} (ms)`, `${texts.max} (ms)`].map(label => <th key={label} scope="col">{label}</th>)}</tr></thead>
           <tbody>{entries.map(entry => <tr key={entry.id}>
-            <th scope="row">{entry.id}</th><td>Bubble Sort · Python</td>
+            <th scope="row">{entry.id}</th><td>{texts.implementationName}</td>
             <td>{texts.types[entry.input.dataset_type]}</td><td>{entry.input.size}</td><td>{entry.input.seed}</td>
             <td>{entry.status === "completed" ? entry.result.runs : "—"}</td>
             <td className={entry.status === "completed" && entry.result.correct ? "benchmark__correct" : "benchmark__incorrect"}>

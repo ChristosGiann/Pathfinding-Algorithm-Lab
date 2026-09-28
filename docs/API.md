@@ -195,3 +195,7 @@ unsupported content types 415 using DRF transport errors. Source is limited to
 32,768 UTF-8 bytes. Syntax positions are 1-based when available. A successful
 result checks syntax/declaration only, not correctness or safety.
 See [Custom Python](CUSTOM_PYTHON.md) for the signature and local CLI contract.
+
+Το #11 δεν αλλάζει το API contract: τα Python validation messages παραμένουν
+ελληνικά. Το frontend μεταφράζει τους stable error codes στην επιλεγμένη UI
+γλώσσα. Δεν αποστέλλεται language preference στο backend.

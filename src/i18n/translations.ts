@@ -2,9 +2,12 @@ export const translations = {
   el: {
     app: {
       title: "Εργαστήριο Αλγορίθμων",
+      language: "Γλώσσα", greek: "Ελληνικά", english: "English",
       subtitle:
         "Οπτικοποίησε, δοκίμασε και σύγκρινε αλγορίθμους.",
     },
+
+    grid: { cell: (row: number, col: number) => `Κελί γραμμής ${row}, στήλης ${col}` },
 
     backendStatus: {
       loading: "Έλεγχος σύνδεσης με το backend...",
@@ -59,9 +62,12 @@ export const translations = {
   en: {
     app: {
       title: "Algorithm Lab",
+      language: "Language", greek: "Ελληνικά", english: "English",
       subtitle:
         "Visualize, test and compare algorithms.",
     },
+
+    grid: { cell: (row: number, col: number) => `Cell row ${row}, column ${col}` },
 
     backendStatus: {
       loading: "Checking backend connection...",

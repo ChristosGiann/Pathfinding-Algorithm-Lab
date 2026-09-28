@@ -14,7 +14,9 @@ Custom code is not connected to experiments or benchmarks.
 - Expected behavior: return a sorted integer list, or sort the input list in
   place and return `None`. Static validation cannot prove this behavior.
 - Syntax checks use Python AST parsing and compilation without execution.
-- Errors have stable codes, Greek messages and optional 1-based line/column.
+- API errors have stable codes, Greek messages and optional 1-based line/column.
+  The UI renders codes in the selected Greek/English language; CLI messages
+  remain Greek. See [Language](LANGUAGE.md).
 
 For example:
 
