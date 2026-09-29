@@ -12,6 +12,7 @@ REGISTRY = {
     "sorting.insertion_sort": "insertion-sort",
     "sorting.selection_sort": "selection-sort",
     "sorting.merge_sort": "merge-sort",
+    "sorting.quick_sort": "quick-sort",
 }
 
 
