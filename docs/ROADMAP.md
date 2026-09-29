@@ -148,7 +148,7 @@ Status: **Merged through PR #31 and promoted to main through PR #33; Issue #20 c
 
 Implemented: a session results table, median/min/max chart, correctness and
 error/timeout states for the Bubble Sort benchmark. History is not persisted.
-Experiment execution/results are added in #43; dashboard integration remains future work. See [Results dashboard](RESULTS_DASHBOARD.md).
+Experiment execution/results are added in #43; saved experiment UI and history are delivered in #45/#47. See [Results dashboard](RESULTS_DASHBOARD.md).
 
 ## Phase 8 — Issue #21: Personal Implementation Review
 
@@ -294,4 +294,4 @@ History/listing υλοποιείται στο #47. Editing και automatic rank
 ## Issue #47 — History/listing
 
 Υλοποιείται το ιστορικό saved experiments με pagination και άνοιγμα από λίστα.
-Αναμένει review/merge. Search/filter, editing και richer comparison είναι ξεχωριστά βήματα.
+Έγινε merge στο dev μέσω PR #48. Search/filter, editing και richer comparison είναι ξεχωριστά βήματα.

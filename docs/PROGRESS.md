@@ -1,12 +1,12 @@
 # Project Progress
 
-Last verified: **2026-09-28**
+Last verified: **2026-09-29**
 
 ## Current phase
 
 Issues #17–#21 are completed and closed.
 They were integrated into `dev` through PRs #28–#32 and promoted together to `main` through PR #33 on 2026-09-23.
-The current production/reference snapshot on `main` therefore includes datasets, the first Bubble Sort benchmark, experiment definitions, the results dashboard, and implementation reviews.
+That promotion established the earlier baseline. The current release snapshot also includes custom Python validation, el/en selection, Bubble/Insertion benchmarks, persisted experiment execution, experiment UI and paginated history (PRs #38–#48).
 
 ## Git state
 
@@ -135,7 +135,7 @@ reviews, grid accessibility labels και custom validation errors. Default el,
 POST `/api/benchmarks/sorting/`. Ο selector και κάθε αποτέλεσμα κρατούν την ταυτότητα
 algorithm σε el/en. Το παλιό Bubble endpoint παραμένει συμβατό. Δεν αλλάζουν models.
 Τα #11/#12/#22 έχουν ενσωματωθεί στο dev μέσω PR #40/#39/#38 και έκλεισαν.
-Το #41 ενσωματώθηκε στο dev μέσω PR #42. Το main παραμένει στο προηγούμενο promoted snapshot.
+Το #41 ενσωματώθηκε στο dev μέσω PR #42. Το feature περιλαμβάνεται στο release snapshot.
 
 ## Issue #43 — Εκτέλεση και αποθήκευση experiments
 
@@ -153,5 +153,5 @@ table και el/en feedback. Το #43 ενσωματώθηκε στο dev μέσ
 ## Issue #47 — Experiment history
 
 Στο παρόν feature snapshot: GET collection με bounded summaries/cursor, history UI,
-previous/next, retry/refresh και άνοιγμα χωρίς ID πληκτρολόγηση. Αναμένει review/merge.
+previous/next, retry/refresh και άνοιγμα χωρίς ID πληκτρολόγηση. Ενσωματώθηκε στο dev μέσω PR #48.
 Το #45 έχει ενσωματωθεί στο dev μέσω PR #46 (e350267) και έκλεισε.
