@@ -1,4 +1,4 @@
-import type { Experiment, ExperimentInput } from "../types/experiment";
+import type { Experiment, ExperimentInput, ExperimentPage } from "../types/experiment";
 import type { Algorithm } from "../types/algorithm";
 import type { BenchmarkRequest, BenchmarkResult } from "../types/benchmark";
 import type { ImplementationReview, ReviewInput } from "../types/review";
@@ -86,4 +86,9 @@ export function runExperiment(id: number, signal: AbortSignal): Promise<Experime
   return apiRequest<Experiment>(`/api/experiments/${id}/run/`, {
     method: "POST", headers: { "Content-Type": "application/json" }, body: "{}", signal,
   });
+}
+
+export function listExperiments(before: number | null, signal: AbortSignal): Promise<ExperimentPage> {
+  const query = before === null ? "" : `?before=${before}`;
+  return apiRequest<ExperimentPage>(`/api/experiments/${query}`, { signal, cache: "no-store" });
 }

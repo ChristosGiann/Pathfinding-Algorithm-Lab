@@ -6,6 +6,7 @@ import { benchmarkTexts } from "../../i18n/benchmark";
 import { createExperiment, getAlgorithms, getExperiment, runExperiment } from "../../services/apiClient";
 import type { Experiment } from "../../types/experiment";
 import type { DatasetType } from "../../types/benchmark";
+import { ExperimentHistory } from "./ExperimentHistory";
 import { ExperimentDetails } from "./ExperimentDetails";
 import "./Experiments.css";
 
@@ -27,6 +28,7 @@ export function Experiments({ language }: { language: Language }) {
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [historyVersion, setHistoryVersion] = useState(0);
   const [needsRefresh, setNeedsRefresh] = useState(false);
   const active = useRef<AbortController | null>(null);
 
@@ -53,6 +55,7 @@ export function Experiments({ language }: { language: Language }) {
       const result = await operation(AbortSignal.any([controller.signal, AbortSignal.timeout(30_000)]));
       if (!controller.signal.aborted) {
         setExperiment(result); setLookup(String(result.id)); setNeedsRefresh(false);
+        if (action !== "open") setHistoryVersion(value => value + 1);
       }
     } catch {
       if (!controller.signal.aborted) {
@@ -101,6 +104,7 @@ export function Experiments({ language }: { language: Language }) {
       </fieldset>
     </form>
     <p>{t.note}</p>
+    <ExperimentHistory key={historyVersion} language={language} busy={busy} onOpen={id => void request("open", signal => getExperiment(id, signal))} />
     <form onSubmit={open}><fieldset disabled={busy} className="experiments__fields">
       <label>{t.id}<input type="number" required min={1} step={1} value={lookup} onChange={event => setLookup(event.target.value)} /></label>
       <button type="submit">{t.open}</button>

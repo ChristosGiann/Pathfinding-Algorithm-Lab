@@ -359,3 +359,11 @@ Experiments component → centralized create/get/run API client → experiment s
 ExperimentDetails εμφανίζει persisted snapshot measurements ανεξάρτητα από το
 session ResultsDashboard. Το catalogue capability μοιράζεται resolver με execution,
 με select_related για τις σχέσεις algorithm/problem. Δεν προστίθεται migration.
+
+## Experiment history (#47)
+
+GET collection χρησιμοποιεί ένα bounded query 11 summaries για 10 rows + next cursor,
+χωρίς count ή relation prefetch. Το ExperimentHistory χειρίζεται keyset cursors,
+loading/error και request cancellation. Το HistoryPage αποδίδει τις summaries.
+Η επιλογή row καλεί την υπάρχουσα detail ροή. Save/run κάνουν reset του history μόνο,
+διατηρώντας τη φόρμα και το επιλεγμένο experiment. Δεν προστίθεται migration.

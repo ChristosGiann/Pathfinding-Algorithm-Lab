@@ -223,3 +223,11 @@ configuration/body, 404 για άγνωστο ID, 409 για non-draft. Το GET
 `executable`, από τον ίδιο resolver που χρησιμοποιεί το experiment run. Το
 registry_key παραμένει private. Το flag είναι ένδειξη κατά τη φόρτωση· ο server
 επαναλαμβάνει όλους τους ελέγχους κατά το run. Δεν αλλάζει το create/run contract.
+
+## GET /api/experiments/ — #47
+
+Bounded summaries: `{ "results": [...], "next_before": 12 }`. Fields ανά summary:
+id/name/status/created_at/updated_at. Έως 10 rows με descending ID. Προαιρετικό
+`before` positive 64-bit integer, φίλτρο id < before. next_before null στο τέλος.
+Unknown/duplicate/invalid query parameters: 400. Το POST creation contract παραμένει
+ίδιο. Δεν εκτελείται benchmark και δεν φορτώνονται result blobs στο listing.
