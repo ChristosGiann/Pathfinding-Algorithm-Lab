@@ -301,4 +301,11 @@ History/listing υλοποιείται στο #47. Editing και automatic rank
 
 Υλοποιείται Selection Sort σε benchmark API, selector el/en και saved experiments.
 Επιλέγει το ελάχιστο στοιχείο σε κάθε pass: O(n²) χρόνος, O(1) επιπλέον χώρος.
-Τα όρια παραμένουν 1000 items, 10 runs και 4 experiment pairs. Τα #52/#53 ακολουθούν για Merge/Quick.
+Τα όρια παραμένουν 1000 items, 10 runs και 4 experiment pairs. Το #51 ενσωματώθηκε μέσω PR #54. Το #53 ακολουθεί για Quick Sort.
+
+
+## Issue #52 — Merge Sort
+
+Προστίθεται bottom-up Merge Sort: O(n log n) χρόνος και O(n) βοηθητικός χώρος.
+Benchmark API, selector el/en και persisted experiments χρησιμοποιούν την ίδια trusted implementation.
+Το υπάρχον list μεταβάλλεται, χωρίς recursion ή αλλαγή των execution limits.

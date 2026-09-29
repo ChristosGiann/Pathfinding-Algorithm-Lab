@@ -30,3 +30,23 @@ def selection_sort(values: list[int]) -> None:
                 smallest = candidate
         if smallest != index:
             values[index], values[smallest] = values[smallest], values[index]
+
+
+def merge_sort(values: list[int]) -> None:
+    """Stable bottom-up merges; mutate the caller's list with O(n) workspace."""
+    size = len(values)
+    buffer = [0] * size
+    width = 1
+    while width < size:
+        for left in range(0, size, 2 * width):
+            middle, right = min(left + width, size), min(left + 2 * width, size)
+            first, second = left, middle
+            for target in range(left, right):
+                if first < middle and (second >= right or values[first] <= values[second]):
+                    buffer[target] = values[first]
+                    first += 1
+                else:
+                    buffer[target] = values[second]
+                    second += 1
+        values[:] = buffer
+        width *= 2

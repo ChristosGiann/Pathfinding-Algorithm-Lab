@@ -162,3 +162,11 @@ test('Selection Sort is selectable and labelled in both languages', async () => 
     assert.match(html, /<option value="selection-sort">Selection Sort<\/option>/);
   }
 });
+
+test('Merge Sort is selectable and labelled in both languages', async () => {
+  const { Benchmark } = await import('../src/components/Benchmark/Benchmark.tsx');
+  for (const language of ['el', 'en']) {
+    const html = renderToStaticMarkup(createElement(Benchmark, { language }));
+    assert.match(html, /<option value="merge-sort">Merge Sort<\/option>/);
+  }
+});
