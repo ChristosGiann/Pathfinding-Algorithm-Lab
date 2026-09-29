@@ -22,7 +22,8 @@ registerHooks({
     if (url.endsWith('.css')) return { format: 'module', source: '', shortCircuit: true };
     if (/\.(ts|tsx)$/.test(url)) return {
       format: 'module', shortCircuit: true,
-      source: ts.transpileModule(readFileSync(fileURLToPath(url), 'utf8'), {
+      // Vite supplies import.meta.env in the browser; rendering tests do not make requests.
+      source: ts.transpileModule(readFileSync(fileURLToPath(url), 'utf8').replaceAll('import.meta.env', '({VITE_API_BASE_URL: \"http://127.0.0.1:8000/api\"})'), {
         compilerOptions: { module: ts.ModuleKind.ESNext, jsx: ts.JsxEmit.ReactJSX },
       }).outputText,
     };
@@ -151,4 +152,13 @@ test('empty history gives guidance without open buttons', () => {
   const html = render(HistoryPage, {data:{results:[],next_before:null},language:'en',busy:false,onOpen(){}});
   assert.match(html, /No experiments on this page/);
   assert.doesNotMatch(html, /<button/);
+});
+
+
+test('Selection Sort is selectable and labelled in both languages', async () => {
+  const { Benchmark } = await import('../src/components/Benchmark/Benchmark.tsx');
+  for (const language of ['el', 'en']) {
+    const html = renderToStaticMarkup(createElement(Benchmark, { language }));
+    assert.match(html, /<option value="selection-sort">Selection Sort<\/option>/);
+  }
 });

@@ -5,7 +5,7 @@ from django.test import SimpleTestCase
 from django.urls import reverse
 from rest_framework.test import APISimpleTestCase
 
-from core.algorithms.sorting import bubble_sort, insertion_sort
+from core.algorithms.sorting import bubble_sort, insertion_sort, selection_sort
 from core.datasets import generate_dataset
 from .runner import run_bubble_sort_benchmark, run_sorting_benchmark
 
@@ -118,8 +118,8 @@ class SortingSelectionTests(APISimpleTestCase):
             self.assertIsNone(insertion_sort(values))
             self.assertEqual(values, sorted(original))
 
-    def test_dispatch_and_fresh_inputs_for_both_algorithms(self):
-        for algorithm, symbol in (("bubble-sort", "bubble_sort"), ("insertion-sort", "insertion_sort")):
+    def test_dispatch_and_fresh_inputs_for_supported_algorithms(self):
+        for algorithm, symbol in (("bubble-sort", "bubble_sort"), ("insertion-sort", "insertion_sort"), ("selection-sort", "selection_sort")):
             inputs, events = [], []
             def sorter(values):
                 events.append("sort")
@@ -139,8 +139,8 @@ class SortingSelectionTests(APISimpleTestCase):
             self.assertEqual(result["timings_ns"], [1] * 10)
             self.assertTrue(result["correct"])
 
-    def test_real_api_for_both_algorithms_and_all_datasets_without_database(self):
-        for algorithm in ("bubble-sort", "insertion-sort"):
+    def test_real_api_for_supported_algorithms_and_all_datasets_without_database(self):
+        for algorithm in ("bubble-sort", "insertion-sort", "selection-sort"):
             for kind in ("random", "sorted", "reversed", "nearly_sorted"):
                 response = self.client.post(reverse("sorting-benchmark"),
                     {"algorithm": algorithm, "size": 100, "dataset_type": kind}, format="json")
@@ -168,3 +168,19 @@ class SortingSelectionTests(APISimpleTestCase):
     def test_insertion_correctness_failure_is_retained(self):
         with patch("core.benchmarks.runner.insertion_sort", side_effect=lambda values: values.clear()):
             self.assertFalse(run_sorting_benchmark("insertion-sort", 10)["correct"])
+
+
+class SelectionSortTests(SimpleTestCase):
+    def test_edge_cases_and_all_dataset_types(self):
+        inputs = [[], [1], [3, -1, 3, 0], [2] * 1000]
+        inputs += [generate_dataset(kind, 1000, -7).copy_for_run()
+                   for kind in ("random", "sorted", "reversed", "nearly_sorted")]
+        for original in inputs:
+            with self.subTest(size=len(original)):
+                values = original.copy()
+                self.assertIsNone(selection_sort(values))
+                self.assertEqual(values, sorted(original))
+
+    def test_incorrect_result_is_reported(self):
+        with patch("core.benchmarks.runner.selection_sort", side_effect=lambda values: values.clear()):
+            self.assertFalse(run_sorting_benchmark("selection-sort", 10)["correct"])

@@ -19,3 +19,14 @@ def insertion_sort(values: list[int]) -> None:
             values[previous + 1] = values[previous]
             previous -= 1
         values[previous + 1] = value
+
+
+def selection_sort(values: list[int]) -> None:
+    """Select the smallest remaining value for each position."""
+    for index in range(len(values) - 1):
+        smallest = index
+        for candidate in range(index + 1, len(values)):
+            if values[candidate] < values[smallest]:
+                smallest = candidate
+        if smallest != index:
+            values[index], values[smallest] = values[smallest], values[index]

@@ -295,3 +295,10 @@ History/listing υλοποιείται στο #47. Editing και automatic rank
 
 Υλοποιείται το ιστορικό saved experiments με pagination και άνοιγμα από λίστα.
 Έγινε merge στο dev μέσω PR #48. Search/filter, editing και richer comparison είναι ξεχωριστά βήματα.
+
+
+## Issue #51 — Selection Sort
+
+Υλοποιείται Selection Sort σε benchmark API, selector el/en και saved experiments.
+Επιλέγει το ελάχιστο στοιχείο σε κάθε pass: O(n²) χρόνος, O(1) επιπλέον χώρος.
+Τα όρια παραμένουν 1000 items, 10 runs και 4 experiment pairs. Τα #52/#53 ακολουθούν για Merge/Quick.

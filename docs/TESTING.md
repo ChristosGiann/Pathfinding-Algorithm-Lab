@@ -345,3 +345,8 @@ Browser: άνοιγμα του saved #2 από τη λίστα, save/run του 
 Σταμάτημα backend → history error με διατήρηση detail → restart → retry ανέκτησε
 τη λίστα. Τα αναμενόμενα network errors αυτού του offline ελέγχου δεν είναι application
 exceptions. Δεν έγινε νέο πραγματικό 15-second timeout ή automated browser suite.
+
+
+## Selection Sort (#51)
+
+Regression coverage: edge cases, τέσσερις dataset types έως 1000 items, fresh copies/timing boundaries, incorrect result, πραγματικό API και persisted create/run/get. Frontend rendering ελέγχει το option σε el/en.

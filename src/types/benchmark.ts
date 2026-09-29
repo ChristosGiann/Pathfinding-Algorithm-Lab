@@ -1,6 +1,6 @@
 export type DatasetType = "random" | "sorted" | "reversed" | "nearly_sorted";
 
-export type SortingAlgorithm = "bubble-sort" | "insertion-sort";
+export type SortingAlgorithm = "bubble-sort" | "insertion-sort" | "selection-sort";
 
 export interface BenchmarkRequest {
   algorithm: SortingAlgorithm;
