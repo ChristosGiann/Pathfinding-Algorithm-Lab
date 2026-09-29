@@ -64,7 +64,7 @@ Only draft experiments may execute. Unknown ID: 404; non-draft: 409;
 invalid body/configuration: 400; unsupported HTTP method: 405.
 
 Runtime validation requires active built-in Python implementations whose private
-registry key AND sorting algorithm identity match Bubble Sort or Insertion Sort.
+registry key AND sorting algorithm identity match Bubble Sort, Insertion Sort, Selection Sort, Merge Sort or Quick Sort.
 No dynamic imports or custom code are allowed. Drafts can still contain other
 catalogue entries, but those cannot run. Each dataset must have 1–1000 items,
 and the implementation × dataset product must be 1–4 pairs. Validation failure

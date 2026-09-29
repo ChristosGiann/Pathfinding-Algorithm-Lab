@@ -34,7 +34,7 @@ def bubble_sort_benchmark(request):
 
 
 class SortingBenchmarkRequestSerializer(BenchmarkRequestSerializer):
-    algorithm = serializers.ChoiceField(choices=("bubble-sort", "insertion-sort"))
+    algorithm = serializers.ChoiceField(choices=("bubble-sort", "insertion-sort", "selection-sort", "merge-sort", "quick-sort"))
 
 
 @api_view(["POST"])

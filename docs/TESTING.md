@@ -345,3 +345,27 @@ Browser: άνοιγμα του saved #2 από τη λίστα, save/run του 
 Σταμάτημα backend → history error με διατήρηση detail → restart → retry ανέκτησε
 τη λίστα. Τα αναμενόμενα network errors αυτού του offline ελέγχου δεν είναι application
 exceptions. Δεν έγινε νέο πραγματικό 15-second timeout ή automated browser suite.
+
+
+## Selection Sort (#51)
+
+Regression coverage: edge cases, τέσσερις dataset types έως 1000 items, fresh copies/timing boundaries, incorrect result, πραγματικό API και persisted create/run/get. Frontend rendering ελέγχει το option σε el/en.
+
+
+## Merge Sort (#52)
+
+Ίδια κάλυψη με Selection: edge cases/τέσσερα datasets έως 1000, fresh copies/timing, incorrect output, API και persisted round trip. Το frontend render test καλύπτει το option σε el/en.
+
+
+## Quick Sort (#53)
+
+Κάλυψη correctness έως το όριο 1000, επιπλέον algorithm-only stress 3000 χωρίς recursion, duplicate-heavy inputs και άνισα μεγέθη. API, fresh copies/timing, incorrect result, persisted round trip και el/en selector. Το API εξακολουθεί να απορρίπτει unknown algorithms και το execution πέντε pairs.
+
+
+### Integrated verification #51–#53 (2026-09-29)
+
+91 backend και 17 frontend tests, lint/build, Django checks και migration dry-run επιτυχή.
+Browser: κάθε νέος sorter έτρεξε benchmark, δημιουργήθηκε το local experiment #12
+«Smoke #51–53 — Sorting catalogue» με Selection/Merge/Quick, εκτελέστηκε με τρία σωστά results,
+έγινε refresh από server με ίδιες μετρήσεις και αλλαγή el/en. Δεν καταγράφηκαν console errors.
+Το δείγμα παραμένει τοπικά για επιθεώρηση. Δεν προστέθηκε migration.
