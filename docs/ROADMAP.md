@@ -275,18 +275,23 @@ These should not interrupt the evaluation pipeline unless they become blockers.
 ## Issue #41 — Πρώτο βήμα sorting MVP integration
 
 Στο παρόν feature snapshot: δεύτερος trusted sorter (Insertion Sort), κοινός runner,
-selector και ταυτότητα algorithm σε session results. Αναμένει review/merge στο dev.
+selector και ταυτότητα algorithm σε session results. Έγινε merge μέσω PR #42.
 Το #43 προσθέτει experiment execution, persistence αποτελεσμάτων και retrieval.
 Αυτόματη σύγκριση πολλών implementations παραμένει ξεχωριστό βήμα.
 
 ## Issue #43 — Experiment execution / persistence
 
 Στο παρόν feature snapshot υλοποιείται backend run API, server-owned status και
-persisted measurement snapshots. Αναμένει review/merge. Το #41 ενσωματώθηκε στο dev
+persisted measurement snapshots. Έγινε merge μέσω PR #44. Το #41 ενσωματώθηκε στο dev
 μέσω PR #42 και έκλεισε. Επόμενο βήμα: UI για δημιουργία/εκτέλεση/ανάκτηση experiments.
 
 ## Issue #45 — UI integration
 
 Υλοποιείται η ροή create → run → persisted results → reopen by ID στο UI.
-Το #43 έχει γίνει merge μέσω PR #44. Το #45 αναμένει review/merge.
-History/listing, editing και automatic ranking παραμένουν ξεχωριστά βήματα.
+Το #43 έχει γίνει merge μέσω PR #44. Το #45 έγινε merge μέσω PR #46.
+History/listing υλοποιείται στο #47. Editing και automatic ranking παραμένουν ξεχωριστά βήματα.
+
+## Issue #47 — History/listing
+
+Υλοποιείται το ιστορικό saved experiments με pagination και άνοιγμα από λίστα.
+Αναμένει review/merge. Search/filter, editing και richer comparison είναι ξεχωριστά βήματα.

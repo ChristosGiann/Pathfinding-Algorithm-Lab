@@ -148,4 +148,10 @@ GET persisted results και snapshot identity. Προστέθηκε migration 0
 
 Στο παρόν feature snapshot: create draft, run, open by ID, refresh, snapshot result
 table και el/en feedback. Το #43 ενσωματώθηκε στο dev μέσω PR #44 (ac23024) και έκλεισε.
-Το #45 αναμένει review/merge. Επόμενα: history/listing και βελτίωση σύγκρισης.
+Το #45 έγινε merge μέσω PR #46. Το #47 προσθέτει history/listing· richer comparison ακολουθεί.
+
+## Issue #47 — Experiment history
+
+Στο παρόν feature snapshot: GET collection με bounded summaries/cursor, history UI,
+previous/next, retry/refresh και άνοιγμα χωρίς ID πληκτρολόγηση. Αναμένει review/merge.
+Το #45 έχει ενσωματωθεί στο dev μέσω PR #46 (e350267) και έκλεισε.

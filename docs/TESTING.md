@@ -329,3 +329,19 @@ completed status με δύο rows, disabled rerun, αλλαγή el→en, page re
 με ID 2 επέστρεψαν ίδιες μετρήσεις. Χωρίς console errors. Το sample experiment
 `Smoke #45 — Bubble και Insertion` παραμένει στη local βάση για επανάληψη ελέγχου.
 Δεν έγινε νέο πραγματικό timeout/offline/unmount ή automated interaction suite.
+
+## Επαλήθευση #47 — Experiment history
+
+81 backend tests και 14 frontend tests πέρασαν, όπως lint/build, Django check,
+migration dry-run και diff check. Πέντε νέα backend tests ελέγχουν empty/exact-page,
+23-row pagination με ενδιάμεση εισαγωγή, ένα bounded query χωρίς relations, invalid
+queries, missing cursor row και listing χωρίς execution. Δύο frontend rendering
+tests ελέγχουν localized summaries, escaped names, disabled controls και empty state.
+
+Browser: άνοιγμα του saved #2 από τη λίστα, save/run του sample #3 με αυτόματη
+ανανέωση history σε completed, el/en, next/previous σε 11 rows και διατήρηση δεύτερης
+σελίδας κατά αλλαγή γλώσσας. Οι οκτώ προσωρινές pagination εγγραφές αφαιρέθηκαν.
+Το sample #3 `Smoke #47 — Ιστορικό` παραμένει στη local βάση για review.
+Σταμάτημα backend → history error με διατήρηση detail → restart → retry ανέκτησε
+τη λίστα. Τα αναμενόμενα network errors αυτού του offline ελέγχου δεν είναι application
+exceptions. Δεν έγινε νέο πραγματικό 15-second timeout ή automated browser suite.

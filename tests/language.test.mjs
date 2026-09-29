@@ -31,6 +31,7 @@ registerHooks({
 });
 const { translations } = await import('../src/i18n/translations.ts');
 const { experimentTexts } = await import('../src/i18n/experiment.ts');
+const { HistoryPage } = await import('../src/components/Experiments/HistoryPage.tsx');
 const { ExperimentDetails } = await import('../src/components/Experiments/ExperimentDetails.tsx');
 const { reviewTexts } = await import('../src/i18n/review.ts');
 const { benchmarkTexts } = await import('../src/i18n/benchmark.ts');
@@ -132,4 +133,22 @@ test('draft and runner failure render without invented measurements', () => {
     assert.doesNotMatch(html, /<table/);
     if (status==='failed') assert.match(html, /Execution failed in the runner/);
   }
+});
+
+
+test('history renders localized summaries, escaped names and disabled open controls', () => {
+  const data = {results:[{id:7,name:'<script>sample</script>',status:'completed',created_at:'2026-09-29T12:00:00Z',updated_at:'2026-09-29T12:05:00Z'}],next_before:null};
+  for (const language of ['el','en']) {
+    const html = render(HistoryPage, {data,language,busy:true,onOpen(){}});
+    assert.ok(html.includes(experimentTexts[language].states.completed));
+    assert.ok(html.includes(experimentTexts[language].open+' #7'));
+    assert.match(html, /disabled=""/);
+    assert.match(html, /&lt;script&gt;/);
+    assert.match(html, /dateTime="2026-09-29T12:00:00Z"/i);
+  }
+});
+test('empty history gives guidance without open buttons', () => {
+  const html = render(HistoryPage, {data:{results:[],next_before:null},language:'en',busy:false,onOpen(){}});
+  assert.match(html, /No experiments on this page/);
+  assert.doesNotMatch(html, /<button/);
 });

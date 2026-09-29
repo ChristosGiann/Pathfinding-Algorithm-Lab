@@ -329,3 +329,10 @@ Runner failure γίνεται failed με generic code και μηδέν partial
 Ένα dataset ανά νέα φόρμα κρατά απλή τη δημιουργία· όλα τα stored datasets/results
 εμφανίζονται κατά retrieval. Run ambiguity αντιμετωπίζεται με refresh πριν νέο run,
 χωρίς automatic mutation retries. Το ID είναι το μέσο επαναφοράς μέχρι το listing.
+
+## ADR-021 — Bounded history με ID cursor (#47)
+
+Δέκα summaries ανά page, order -id και before cursor αποφεύγουν offset shifts από
+νέες εισαγωγές. Δεν χρειάζεται total count ούτε φόρτωση metrics για listing.
+Previous/refresh διαβάζουν live δεδομένα, όχι historical snapshot. Το υπάρχον detail
+API παραμένει η πηγή των πλήρων results. Δεν εισάγουμε search/ownership σε αυτό το βήμα.

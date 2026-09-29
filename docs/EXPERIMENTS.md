@@ -54,7 +54,7 @@ Datasets contain their stored id, type, size and effective seed. The input-only
 ## Read
 
 `GET /api/experiments/<id>/` returns the same representation (HTTP 200).
-An unknown ID returns 404. Update, delete and listing endpoints remain unavailable; unsupported methods return 405.
+An unknown ID returns 404. Update and delete endpoints remain unavailable; unsupported methods return 405.
 
 ## Execution — Issue #43
 
@@ -127,5 +127,22 @@ experiments εμφανίζονται πλήρως. Τα persisted results χρη
 abort κατά unmount, χωρίς automatic replay. Με αποτυχία run απαιτείται successful
 GET πριν ενεργοποιηθεί ξανά Run. Μη επιβεβαιωμένο save προειδοποιεί ότι μπορεί να
 δημιουργήθηκε draft (η νέα αποθήκευση ενδέχεται να διπλασιάσει εγγραφή).
-Labels el/en· η αλλαγή γλώσσας διατηρεί state. Δεν υπάρχει listing, edit/delete ή
+Labels el/en· η αλλαγή γλώσσας διατηρεί state. Δεν υπάρχει edit/delete ή
 localStorage. Authentication/ownership παραμένουν εκτός local MVP.
+
+## History — #47
+
+GET `/api/experiments/` επιστρέφει `{results: [...], next_before: number|null}`.
+Κάθε summary περιλαμβάνει id/name/status/created_at/updated_at, χωρίς relations ή
+measurement blobs. Έως 10 ανά σελίδα, descending ID (creation order, όχι updated time).
+Για επόμενη σελίδα στείλε `?before=<next_before>`. Ο cursor δεν απαιτεί να υπάρχει
+η αντίστοιχη εγγραφή. Άκυρος/μη θετικός/out-of-range cursor, unknown ή duplicate
+query parameters επιστρέφουν 400. Δεν υπάρχει total count ή page-size override.
+
+Το UI δείχνει history, previous/next, refresh στην πρώτη σελίδα και Open κάθε row
+μέσω GET detail. Οι επιτυχημένες save/run ενέργειες ανανεώνουν την πρώτη σελίδα.
+Το history refresh δεν αλλάζει το ανοιχτό detail ή τη φόρμα. Request timeout 15s,
+abort/stale-response suppression κατά navigation/unmount, localized loading/error/retry.
+Η γλώσσα δεν επανεκκινεί το request ή την pagination. Άνοιγμα row δεν εκτελεί experiment.
+Νέες εισαγωγές δεν μετακινούν τα επόμενα pages· refresh/previous διαβάζουν την τρέχουσα
+βάση, χωρίς snapshot isolation. Το local single-user scope δεν παρέχει ownership.

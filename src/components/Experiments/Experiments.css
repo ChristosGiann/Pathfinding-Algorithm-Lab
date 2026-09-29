@@ -12,3 +12,8 @@
 .experiment-details th, .experiment-details td { padding: 10px; border-bottom: 1px solid #cbd5e1; text-align: left; }
 .experiment-details caption { text-align: left; padding: 12px 0; }
 .experiments [role="alert"] { color: #9f1239; }
+
+.experiment-history { list-style: none; padding: 0; }
+.experiment-history li { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #cbd5e1; }
+.experiment-history small { flex-basis: 100%; color: #475569; }
+.experiment-history button { overflow-wrap: anywhere; text-align: left; }
