@@ -6,7 +6,7 @@ Last verified: **2026-09-29**
 
 Issues #17–#21 are completed and closed.
 They were integrated into `dev` through PRs #28–#32 and promoted together to `main` through PR #33 on 2026-09-23.
-That promotion established the earlier baseline. The current release snapshot also includes custom Python validation, el/en selection, Bubble/Insertion benchmarks, persisted experiment execution, experiment UI and paginated history (PRs #38–#48).
+PR #50 promoted the subsequent sorting/experiment snapshot to main on 2026-09-29. That promotion established the shared baseline. The current release snapshot also includes custom Python validation, el/en selection, Bubble/Insertion benchmarks, persisted experiment execution, experiment UI and paginated history (PRs #38–#48).
 
 ## Git state
 
@@ -30,7 +30,7 @@ That promotion established the earlier baseline. The current release snapshot al
 - Algorithm Library cards, loading/error/empty states and retry button.
 
 Seeded implementation records are metadata. Bubble Sort (#18) and Insertion Sort (#41)
-are executable through a fixed code allowlist. Selection Sort (#51) is also executable; Merge Sort (#52) is executable; Quick remains planned. The experiment resolver checks trusted catalogue identity.
+are executable through a fixed code allowlist. Selection Sort (#51) is also executable; Merge Sort (#52) is executable; Quick Sort (#53) completes all five executable sorters. The experiment resolver checks trusted catalogue identity.
 
 ## Follow-up fixes
 
@@ -62,7 +62,7 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 
 ## Next
 
-1. Το #11 (language selector) υλοποιήθηκε στο παρόν feature snapshot. Επόμενο βήμα είναι ο σχεδιασμός της πλήρους MVP integration. Τα #22 και #12 έχουν ενσωματωθεί στο dev μέσω PR #38/#39.
+1. Προτεραιότητα παραμένει το sorting lab: ολοκλήρωση MVP integration review και προσδιορισμός των επόμενων κενών σε σχετικά GitHub issues πριν από υλοποίηση. Τα pathfinding #1–#10 παραμένουν μελλοντικά.
 2. Keep `dev` as the permanent integration branch for subsequent issue branches.
 3. Keep documentation synchronized in the same PR whenever feature status, API contracts, architecture, or roadmap change.
 
@@ -161,7 +161,7 @@ previous/next, retry/refresh και άνοιγμα χωρίς ID πληκτρο�
 
 Υλοποιείται Selection Sort σε benchmark API, selector el/en και saved experiments.
 Επιλέγει το ελάχιστο στοιχείο σε κάθε pass: O(n²) χρόνος, O(1) επιπλέον χώρος.
-Τα όρια παραμένουν 1000 items, 10 runs και 4 experiment pairs. Το #51 ενσωματώθηκε μέσω PR #54. Το #53 ακολουθεί για Quick Sort.
+Τα όρια παραμένουν 1000 items, 10 runs και 4 experiment pairs. Το #51 ενσωματώθηκε μέσω PR #54. Τα #52/#53 ολοκληρώνουν Merge/Quick Sort.
 
 
 ## Issue #52 — Merge Sort
@@ -169,3 +169,21 @@ previous/next, retry/refresh και άνοιγμα χωρίς ID πληκτρο�
 Προστίθεται bottom-up Merge Sort: O(n log n) χρόνος και O(n) βοηθητικός χώρος.
 Benchmark API, selector el/en και persisted experiments χρησιμοποιούν την ίδια trusted implementation.
 Το υπάρχον list μεταβάλλεται, χωρίς recursion ή αλλαγή των execution limits.
+
+
+## Issue #53 — Quick Sort
+
+Προστίθεται iterative three-way Quick Sort με middle pivot και επεξεργασία μικρότερου partition πρώτα.
+O(n log n) average, O(n²) worst-case, O(log n) stack· όλα ίσα στοιχεία ολοκληρώνονται σε O(n).
+Και οι πέντε catalogue sorters είναι executable σε benchmark/experiments.
+Τα #51/#52 ενσωματώθηκαν με PR #54/#55. Διατηρείται όριο 4 pairs ανά experiment·
+οι πέντε implementations δεν επιλέγονται όλες μαζί σε ένα run.
+
+
+### Integrated verification #51–#53 (2026-09-29)
+
+91 backend και 17 frontend tests, lint/build, Django checks και migration dry-run επιτυχή.
+Browser: κάθε νέος sorter έτρεξε benchmark, δημιουργήθηκε το local experiment #12
+«Smoke #51–53 — Sorting catalogue» με Selection/Merge/Quick, εκτελέστηκε με τρία σωστά results,
+έγινε refresh από server με ίδιες μετρήσεις και αλλαγή el/en. Δεν καταγράφηκαν console errors.
+Το δείγμα παραμένει τοπικά για επιθεώρηση. Δεν προστέθηκε migration.

@@ -53,7 +53,7 @@ class ExecutionTests(APITestCase):
         self.assertEqual(ExperimentResult.objects.filter(experiment_id=pk).count(), 4)
 
     def test_unsupported_and_oversized_definitions_stay_draft(self):
-        cases = [(('quick-sort',), 10, 1), (('bubble-sort',), 1001, 1), (('bubble-sort',), 10, 5)]
+        cases = [(("bubble-sort", "insertion-sort", "selection-sort", "merge-sort", "quick-sort"), 10, 1), (('bubble-sort',), 1001, 1), (('bubble-sort',), 10, 5)]
         with patch("core.experiments.execution.run_sorting_benchmark") as run:
             for algorithms, size, count in cases:
                 pk = self.create(algorithms, size, count)
@@ -149,7 +149,7 @@ class ExecutionTests(APITestCase):
         data = self.client.get(reverse("algorithm-list")).data
         for algorithm in data:
             for item in algorithm["implementations"]:
-                self.assertEqual(item["executable"], algorithm["slug"] in ("bubble-sort", "insertion-sort", "selection-sort", "merge-sort"))
+                self.assertEqual(item["executable"], algorithm["slug"] in ("bubble-sort", "insertion-sort", "selection-sort", "merge-sort", "quick-sort"))
                 self.assertNotIn("registry_key", item)
         implementation = AlgorithmImplementation.objects.get(registry_key="sorting.bubble_sort")
         implementation.registry_key = "unknown"
@@ -178,5 +178,16 @@ class ExecutionTests(APITestCase):
         result = response.data["results"][0]
         self.assertEqual(result["implementation_snapshot"]["algorithm"], "merge-sort")
         self.assertEqual(result["measurement"]["algorithm"], "merge-sort")
+        self.assertTrue(result["measurement"]["correct"])
+        self.assertEqual(self.client.get(reverse("experiment-detail", args=[pk])).data, response.data)
+
+    def test_quick_sort_persisted_round_trip(self):
+        pk = self.create(("quick-sort",), size=100, count=1)
+        response = self.run_experiment(pk)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["status"], "completed")
+        result = response.data["results"][0]
+        self.assertEqual(result["implementation_snapshot"]["algorithm"], "quick-sort")
+        self.assertEqual(result["measurement"]["algorithm"], "quick-sort")
         self.assertTrue(result["measurement"]["correct"])
         self.assertEqual(self.client.get(reverse("experiment-detail", args=[pk])).data, response.data)

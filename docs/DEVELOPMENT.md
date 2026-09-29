@@ -127,6 +127,12 @@ curl.exe http://127.0.0.1:8000/api/health/
 curl.exe http://127.0.0.1:8000/api/algorithms/
 ```
 
+## Προτεραιότητα και καταγραφή εργασιών
+
+Ολοκληρώνουμε πρώτα το sorting lab. Τα pathfinding issues παραμένουν μελλοντικά.
+Για εργασία χωρίς υπάρχον GitHub issue, δημιουργούμε σχετικό issue με scope και
+acceptance criteria πριν από την υλοποίηση. Κάθε issue ακολουθεί ξεχωριστό branch/PR προς dev.
+
 ## Normal feature workflow
 
 ```text

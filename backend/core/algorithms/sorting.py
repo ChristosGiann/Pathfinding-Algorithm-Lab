@@ -50,3 +50,31 @@ def merge_sort(values: list[int]) -> None:
                     second += 1
         values[:] = buffer
         width *= 2
+
+
+def quick_sort(values: list[int]) -> None:
+    """Three-way partition with a middle pivot; process smaller ranges first."""
+    pending = [(0, len(values) - 1)]
+    while pending:
+        left, right = pending.pop()
+        if left >= right:
+            continue
+        pivot = values[(left + right) // 2]
+        lower, current, upper = left, left, right
+        while current <= upper:
+            if values[current] < pivot:
+                values[lower], values[current] = values[current], values[lower]
+                lower += 1
+                current += 1
+            elif values[current] > pivot:
+                values[current], values[upper] = values[upper], values[current]
+                upper -= 1
+            else:
+                current += 1
+        first, second = (left, lower - 1), (upper + 1, right)
+        # LIFO: leave the larger range pending, keeping stack space O(log n).
+        if first[1] - first[0] < second[1] - second[0]:
+            first, second = second, first
+        for start, end in (first, second):
+            if start < end:
+                pending.append((start, end))
