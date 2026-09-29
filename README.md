@@ -4,7 +4,7 @@
 
 Το project εξελίχθηκε από ένα pathfinding visualizer σε εργαστήριο για testing, benchmarking, visualization, comparison και προσωπική αξιολόγηση algorithm implementations. Το GitHub repository διατηρεί το όνομα `Pathfinding-Algorithm-Lab`.
 
-Σήμερα μπορείς να εξερευνήσεις sorting algorithms, να τρέξεις Bubble Sort, Insertion Sort ή Selection Sort σε ελεγχόμενα datasets και να εξετάσεις ορθότητα και χρόνους εκτέλεσης. Το UI είναι προεπιλεγμένα στα Ελληνικά· το header χρησιμοποιεί τη συντομότερη ονομασία «Εργαστήριο Αλγορίθμων».
+Σήμερα μπορείς να εξερευνήσεις sorting algorithms, να τρέξεις Bubble Sort, Insertion Sort, Selection Sort ή Merge Sort σε ελεγχόμενα datasets και να εξετάσεις ορθότητα και χρόνους εκτέλεσης. Το UI είναι προεπιλεγμένα στα Ελληνικά· το header χρησιμοποιεί τη συντομότερη ονομασία «Εργαστήριο Αλγορίθμων».
 
 [Τοπική εγκατάσταση](#quick-start) · [Αρχιτεκτονική](#architecture) · [Roadmap](docs/ROADMAP.md) · [API](docs/API.md)
 
@@ -12,16 +12,16 @@
 
 | Περιοχή | Υλοποιημένη δυνατότητα |
 | --- | --- |
-| Algorithm Library | Bubble, Selection, Insertion, Merge και Quick Sort με Big-O metadata και built-in implementation records. Εκτελέσιμοι στο benchmark είναι οι Bubble Sort, Insertion Sort και Selection Sort. |
+| Algorithm Library | Bubble, Selection, Insertion, Merge και Quick Sort με Big-O metadata και built-in implementation records. Εκτελέσιμοι στο benchmark είναι οι Bubble Sort, Insertion Sort, Selection Sort και Merge Sort. |
 | Dataset generators | Random, Sorted, Reversed και Nearly Sorted, με size/seed και επαναλήψιμη παραγωγή εισόδου. |
-| Benchmark | 10 εκτελέσεις του επιλεγμένου Bubble Sort, Insertion Sort ή Selection Sort σε ανεξάρτητα αντίγραφα του ίδιου dataset, με correctness check και median/min/max. Μέγεθος 1–1.000 στοιχεία. |
+| Benchmark | 10 εκτελέσεις του επιλεγμένου Bubble Sort, Insertion Sort, Selection Sort ή Merge Sort σε ανεξάρτητα αντίγραφα του ίδιου dataset, με correctness check και median/min/max. Μέγεθος 1–1.000 στοιχεία. |
 | Results dashboard | Πίνακας και chart για τις τελευταίες 20 προσπάθειες της τρέχουσας συνεδρίας, μαζί με error/timeout states. |
 | Experiment API | Δημιουργία draft definitions, bounded execution και ανάκτηση persisted results μέσω API. |
 | Implementation reviews | Προσωπικές βαθμολογίες και σημειώσεις ανά implementation, με αποθήκευση και επεξεργασία. |
 | Custom Python validation | Ελληνική φόρμα για syntax/solve(values)/size checks χωρίς εκτέλεση. Ρητή τοπική CLI εκτέλεση δικού μας κώδικα με timeout 2 δευτερολέπτων. |
 | Pathfinding foundation | Grid, walls και clear/reset controls. Τα algorithm execution/animation controls παραμένουν ανενεργά. |
 
-Το παρόν snapshot περιλαμβάνει τα ολοκληρωμένα #11, #12, #16–#22 και #41/#43/#45/#47: δίγλωσσο UI, custom Python validation, τρεις trusted sorters και πλήρη ροή saved experiments με ιστορικό. Τα σχετικά PR #38–#48 ενσωματώθηκαν στο dev για την προώθηση στη main.
+Το παρόν snapshot περιλαμβάνει τα ολοκληρωμένα #11, #12, #16–#22 και #41/#43/#45/#47: δίγλωσσο UI, custom Python validation, τέσσερις trusted sorters και πλήρη ροή saved experiments με ιστορικό. Τα σχετικά PR #38–#48 ενσωματώθηκαν στο dev για την προώθηση στη main.
 
 ## Benchmarking και visualization
 
@@ -128,7 +128,7 @@ Django / DRF request validation
         ↓
 Dataset generator → fresh copy για κάθε run
         ↓
-Trusted Python Bubble Sort / Insertion Sort / Selection Sort × 10
+Trusted Python Bubble Sort / Insertion Sort / Selection Sort / Merge Sort × 10
         ↓
 Correctness checks + timing statistics
         ↓ JSON response
@@ -166,7 +166,7 @@ git diff --check
 
 ## Περιορισμοί MVP
 
-- Εκτελούνται Bubble Sort, Insertion Sort και Selection Sort. Τα υπόλοιπα seeded algorithms είναι catalogue metadata.
+- Εκτελούνται Bubble Sort, Insertion Sort, Selection Sort και Merge Sort. Τα υπόλοιπα seeded algorithms είναι catalogue metadata.
 - Τα experiments εκτελούνται και αποθηκεύουν μετρήσεις μέσω API. Το experiment UI έχει ιστορικό με pagination και άνοιγμα από λίστα ή μέσω ID.
 - Το benchmark είναι synchronous, με 10 runs και όριο 1.000 στοιχείων, χωρίς warm-up exclusion ή απομονωμένο performance environment.
 - Τα reviews είναι κοινά ανά implementation στο single-user local MVP, χωρίς account isolation.
@@ -179,7 +179,7 @@ git diff --check
 
 | Κατάσταση | Επόμενα βήματα |
 | --- | --- |
-| Υλοποιημένα | Algorithm Library, datasets, benchmark επιλογής Bubble/Insertion/Selection Sort, draft experiments, results dashboard και reviews (#16–#21). |
+| Υλοποιημένα | Algorithm Library, datasets, benchmark επιλογής Bubble/Insertion/Selection/Merge Sort, draft experiments, results dashboard και reviews (#16–#21). |
 | Υλοποιημένο στο dev | Custom Python validation (#22 / PR #38). |
 | Τρέχουσα τεκμηρίωση | Portfolio-ready README (#12 / PR #39), με πραγματικό screenshot, setup και scope. |
 | Υλοποιημένο στο παρόν feature snapshot | Language selector Ελληνικά / English (#11), με διατήρηση φόρμας και αποτελεσμάτων κατά την αλλαγή. |
@@ -212,7 +212,7 @@ git diff --check
 ### Experiment execution API (#43)
 
 Τα saved experiments μπορούν πλέον να εκτελεστούν μέσω
-`POST /api/experiments/<id>/run/` με `{}`. Επιτρέπονται Bubble/Insertion/Selection, έως 4
+`POST /api/experiments/<id>/run/` με `{}`. Επιτρέπονται Bubble/Insertion/Selection/Merge, έως 4
 implementation×dataset pairs και 1–1000 στοιχεία. Το GET detail ανακτά persisted
 results. Προηγήσου με `python backend/manage.py migrate` (migration 0004).
 Το standalone benchmark κρατά session-only history. Η ενότητα Αποθηκευμένα experiments δημιουργεί/εκτελεί drafts και ανακτά persisted results από το ιστορικό ή με ID.

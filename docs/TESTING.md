@@ -350,3 +350,8 @@ exceptions. Δεν έγινε νέο πραγματικό 15-second timeout ή a
 ## Selection Sort (#51)
 
 Regression coverage: edge cases, τέσσερις dataset types έως 1000 items, fresh copies/timing boundaries, incorrect result, πραγματικό API και persisted create/run/get. Frontend rendering ελέγχει το option σε el/en.
+
+
+## Merge Sort (#52)
+
+Ίδια κάλυψη με Selection: edge cases/τέσσερα datasets έως 1000, fresh copies/timing, incorrect output, API και persisted round trip. Το frontend render test καλύπτει το option σε el/en.
