@@ -10,6 +10,7 @@ MAX_PAIRS = 4
 REGISTRY = {
     "sorting.bubble_sort": "bubble-sort",
     "sorting.insertion_sort": "insertion-sort",
+    "sorting.selection_sort": "selection-sort",
 }
 
 

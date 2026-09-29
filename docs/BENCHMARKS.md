@@ -45,12 +45,12 @@ Generate the dataset and sorted reference once. For each of ten runs:
 Generation, copying, correctness checks, summary statistics, network, rendering,
 visualization and database writes are outside the timed region. No database
 reads or writes are needed by this endpoint. It directly imports trusted code;
-a fixed allowlist resolves Bubble Sort and Insertion Sort. The separate experiment service resolves supported catalogue registry keys in #43.
+a fixed allowlist resolves Bubble Sort, Insertion Sort and Selection Sort. The separate experiment service resolves supported catalogue registry keys in #43.
 Bubble Sort exits early when a pass makes no swaps, matching its O(n) best case.
 
 ## UI and scope
 
-The form selects Bubble Sort (default) or Insertion Sort and accepts dataset type, size and
+The form selects Bubble Sort (default), Insertion Sort or Selection Sort and accepts dataset type, size and
 seed. Every submitted attempt retains its algorithm, including failed requests. Inputs and submission are disabled while the request is pending. Errors
 allow another attempt. The result card retains the submitted configuration and
 shows times in milliseconds, converting from API nanoseconds. Greek and English

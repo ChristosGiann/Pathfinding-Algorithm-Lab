@@ -149,7 +149,7 @@ class ExecutionTests(APITestCase):
         data = self.client.get(reverse("algorithm-list")).data
         for algorithm in data:
             for item in algorithm["implementations"]:
-                self.assertEqual(item["executable"], algorithm["slug"] in ("bubble-sort", "insertion-sort"))
+                self.assertEqual(item["executable"], algorithm["slug"] in ("bubble-sort", "insertion-sort", "selection-sort"))
                 self.assertNotIn("registry_key", item)
         implementation = AlgorithmImplementation.objects.get(registry_key="sorting.bubble_sort")
         implementation.registry_key = "unknown"
@@ -157,3 +157,15 @@ class ExecutionTests(APITestCase):
         data = self.client.get(reverse("algorithm-list")).data
         item = next(item for algorithm in data for item in algorithm["implementations"] if item["id"] == implementation.pk)
         self.assertFalse(item["executable"])
+
+
+    def test_selection_sort_persisted_round_trip(self):
+        pk = self.create(("selection-sort",), size=100, count=1)
+        response = self.run_experiment(pk)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["status"], "completed")
+        result = response.data["results"][0]
+        self.assertEqual(result["implementation_snapshot"]["algorithm"], "selection-sort")
+        self.assertEqual(result["measurement"]["algorithm"], "selection-sort")
+        self.assertTrue(result["measurement"]["correct"])
+        self.assertEqual(self.client.get(reverse("experiment-detail", args=[pk])).data, response.data)

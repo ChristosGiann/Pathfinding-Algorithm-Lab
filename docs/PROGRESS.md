@@ -30,7 +30,7 @@ That promotion established the earlier baseline. The current release snapshot al
 - Algorithm Library cards, loading/error/empty states and retry button.
 
 Seeded implementation records are metadata. Bubble Sort (#18) and Insertion Sort (#41)
-are executable through a fixed code allowlist. Other sorters remain planned; #43 resolves the two trusted catalogue implementations for experiment execution.
+are executable through a fixed code allowlist. Selection Sort (#51) is also executable; Merge/Quick remain planned. The experiment resolver checks trusted catalogue identity.
 
 ## Follow-up fixes
 
@@ -155,3 +155,10 @@ table και el/en feedback. Το #43 ενσωματώθηκε στο dev μέσ
 Στο παρόν feature snapshot: GET collection με bounded summaries/cursor, history UI,
 previous/next, retry/refresh και άνοιγμα χωρίς ID πληκτρολόγηση. Ενσωματώθηκε στο dev μέσω PR #48.
 Το #45 έχει ενσωματωθεί στο dev μέσω PR #46 (e350267) και έκλεισε.
+
+
+## Issue #51 — Selection Sort
+
+Υλοποιείται Selection Sort σε benchmark API, selector el/en και saved experiments.
+Επιλέγει το ελάχιστο στοιχείο σε κάθε pass: O(n²) χρόνος, O(1) επιπλέον χώρος.
+Τα όρια παραμένουν 1000 items, 10 runs και 4 experiment pairs. Τα #52/#53 ακολουθούν για Merge/Quick.
