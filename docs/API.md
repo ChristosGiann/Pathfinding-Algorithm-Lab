@@ -173,3 +173,61 @@ No endpoint path or payload is final yet.
 4. Keep frontend types aligned with API responses.
 5. Add API tests for new endpoints.
 6. Update this document in the same PR when a public contract changes.
+
+## Custom Python static validation (#22)
+
+`POST /api/implementations/validate-python/` accepts only JSON `{ "source": "def solve(values):\n    return sorted(values)" }`.
+There is no execution flag. No submitted code is executed or persisted.
+
+A valid request returns HTTP 200 with a domain result, including source errors:
+
+```json
+{"valid": true, "stage": "static", "errors": []}
+```
+
+```json
+{"valid": false, "stage": "static", "errors": [{"code": "missing_solve", "message": "Χρειάζεται μία συνάρτηση def solve(values): στο κύριο επίπεδο του αρχείου.", "line": null, "column": null}]}
+```
+
+Malformed JSON, missing/extra fields and non-string source return HTTP 400 with
+`invalid_request` in the same envelope. Unsupported methods return 405 and
+unsupported content types 415 using DRF transport errors. Source is limited to
+32,768 UTF-8 bytes. Syntax positions are 1-based when available. A successful
+result checks syntax/declaration only, not correctness or safety.
+See [Custom Python](CUSTOM_PYTHON.md) for the signature and local CLI contract.
+
+Το #11 δεν αλλάζει το API contract: τα Python validation messages παραμένουν
+ελληνικά. Το frontend μεταφράζει τους stable error codes στην επιλεγμένη UI
+γλώσσα. Δεν αποστέλλεται language preference στο backend.
+
+## POST /api/benchmarks/sorting/ — #41
+
+JSON: `{"algorithm":"insertion-sort","size":100,"seed":42,"dataset_type":"random"}`.
+Υποχρεωτικό algorithm: `bubble-sort` ή `insertion-sort`. Η απόκριση περιλαμβάνει το
+επιλεγμένο algorithm και τα ίδια metrics με το Bubble endpoint. Ίδιο strict validation,
+10 runs, όριο 1–1000, POST-only, χωρίς database access. Άγνωστο/missing algorithm ή
+άγνωστα fields επιστρέφουν 400 πριν εκτελεστεί runner. Το αρχικό Bubble endpoint
+διατηρεί το contract του. Βλ. [Benchmarks](BENCHMARKS.md).
+
+## POST /api/experiments/<id>/run/ — #43
+
+Body `{}`. Εκτελεί μία φορά draft experiment με έως 4 pairs και size έως 1000.
+HTTP 200 επιστρέφει status, results και execution_error· 400 για μη έγκυρη
+configuration/body, 404 για άγνωστο ID, 409 για non-draft. Το GET detail επιστρέφει
+πλέον τα persisted results, ενώ το create τα εκθέτει read-only (αρχικά κενά).
+Βλ. [Experiments](EXPERIMENTS.md) για snapshots, failure/transaction semantics και limits.
+
+## Catalogue executable capability — #45
+
+Κάθε implementation στο GET /api/algorithms/ περιλαμβάνει read-only boolean
+`executable`, από τον ίδιο resolver που χρησιμοποιεί το experiment run. Το
+registry_key παραμένει private. Το flag είναι ένδειξη κατά τη φόρτωση· ο server
+επαναλαμβάνει όλους τους ελέγχους κατά το run. Δεν αλλάζει το create/run contract.
+
+## GET /api/experiments/ — #47
+
+Bounded summaries: `{ "results": [...], "next_before": 12 }`. Fields ανά summary:
+id/name/status/created_at/updated_at. Έως 10 rows με descending ID. Προαιρετικό
+`before` positive 64-bit integer, φίλτρο id < before. next_before null στο τέλος.
+Unknown/duplicate/invalid query parameters: 400. Το POST creation contract παραμένει
+ίδιο. Δεν εκτελείται benchmark και δεν φορτώνονται result blobs στο listing.

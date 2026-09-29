@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from core.datasets.generators import DATASET_TYPES
-from .runner import MAX_BENCHMARK_SIZE, run_bubble_sort_benchmark
+from .runner import MAX_BENCHMARK_SIZE, run_bubble_sort_benchmark, run_sorting_benchmark
 
 
 class StrictIntegerField(serializers.IntegerField):
@@ -31,3 +31,14 @@ def bubble_sort_benchmark(request):
     serializer = BenchmarkRequestSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     return Response(run_bubble_sort_benchmark(**serializer.validated_data))
+
+
+class SortingBenchmarkRequestSerializer(BenchmarkRequestSerializer):
+    algorithm = serializers.ChoiceField(choices=("bubble-sort", "insertion-sort"))
+
+
+@api_view(["POST"])
+def sorting_benchmark(request):
+    serializer = SortingBenchmarkRequestSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    return Response(run_sorting_benchmark(**serializer.validated_data))

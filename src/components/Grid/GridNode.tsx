@@ -1,17 +1,19 @@
+import type { AppTexts } from "../../i18n/translations";
 import type { GridNode as GridNodeType } from "../../types/grid";
 
 type GridNodeProps = {
   node: GridNodeType;
+  texts: AppTexts["grid"];
   onNodeClick: (row: number, col: number) => void;
 };
 
-export function GridNode({ node, onNodeClick }: GridNodeProps) {
+export function GridNode({ node, texts, onNodeClick }: GridNodeProps) {
   return (
     <button
       type="button"
       className={`grid-node grid-node--${node.type}`}
-      title={`row: ${node.row}, col: ${node.col}`}
-      aria-label={`Κελί γραμμής ${node.row}, στήλης ${node.col}`}
+      title={texts.cell(node.row, node.col)}
+      aria-label={texts.cell(node.row, node.col)}
       onClick={() => onNodeClick(node.row, node.col)}
     />
   );

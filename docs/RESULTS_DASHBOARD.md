@@ -11,9 +11,10 @@ Incorrect sorting remains explicitly labelled in both the table and chart.
 Compare identical configurations in the same environment; no winner is declared.
 The range is observed min–max, not a confidence interval.
 
-Only the existing trusted Bubble Sort Python endpoint is executable. There is no
-experiment execution/results endpoint yet, and no multi-implementation comparison
-or persistent results history. PR #31 was integrated into dev after PR #30.
+Bubble Sort and Insertion Sort are selectable through the trusted sorting endpoint (#41).
+Each attempt retains its selected algorithm in the table and chart, including error/timeout rows.
+Sequential runs can be inspected side by side with the same dataset configuration. This UI does not use the persisted experiment execution API added in #43;
+its history remains session-only with no automatic batch comparison. PR #31 was integrated into dev after PR #30.
 
 Requests have a 30-second client response deadline. A timeout is shown separately
 from a network/HTTP error, preserves earlier rows and enables retry. Aborting the

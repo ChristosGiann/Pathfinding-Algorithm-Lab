@@ -140,7 +140,7 @@ Status: **Merged through PR #30 and promoted to main through PR #33; Issue #19 c
 Experiment definitions store selected implementations and owned dataset
 configurations. Create and retrieve APIs, draft default, five model statuses,
 validation and atomic persistence are implemented. Execution, lifecycle transitions
-and stored timing results are separate future work. See [Experiments](EXPERIMENTS.md).
+and stored timing results are now added separately in #43. See [Experiments](EXPERIMENTS.md).
 
 ## Phase 7 — Issue #20: Results Dashboard
 
@@ -148,8 +148,7 @@ Status: **Merged through PR #31 and promoted to main through PR #33; Issue #20 c
 
 Implemented: a session results table, median/min/max chart, correctness and
 error/timeout states for the Bubble Sort benchmark. History is not persisted.
-Experiment execution/results and comparisons between implementations remain
-future work. See [Results dashboard](RESULTS_DASHBOARD.md).
+Experiment execution/results are added in #43; saved experiment UI and history are delivered in #45/#47. See [Results dashboard](RESULTS_DASHBOARD.md).
 
 ## Phase 8 — Issue #21: Personal Implementation Review
 
@@ -161,19 +160,23 @@ ratings, strengths, weaknesses, use cases and notes are persisted via GET/PUT
 and edited through a Greek form in the Algorithm Library.
 See [Implementation reviews](IMPLEMENTATION_REVIEWS.md) for the single-user scope.
 
-## Current next issue — #22: Custom Python implementation validation
+## Issue #22: Custom Python implementation validation
 
-Status: **Open; implementation not started**
+Status: **Integrated into dev through PR #38**
 
-Planned scope:
+Delivered scope:
 
 - accept Python source code for a local custom implementation,
 - validate syntax,
 - require a `solve(values)` function,
 - enforce a source-size limit,
 - return structured validation errors,
-- use timeout protection where local subprocess execution is introduced,
+- provide explicit local CLI execution with a 2-second subprocess timeout,
 - keep arbitrary custom-code execution local-development-only until a real sandbox exists.
+
+The HTTP API performs static checks only. Execution requires the local CLI flag;
+custom-code persistence and benchmark integration remain future work.
+See [Custom Python](CUSTOM_PYTHON.md).
 
 ## Future milestone — MVP Integration Review
 
@@ -247,12 +250,48 @@ Possible future features:
 
 These are outside the first MVP.
 
+## Issue #12 — Portfolio-ready README
+
+Το README έχει ανανεωθεί στο παρόν feature snapshot με setup frontend/backend,
+πραγματικό screenshot, τεχνική ροή, roadmap και σαφή MVP limitations. Το public
+demo URL θα προστεθεί μετά από deploy. Το #11 (language selector) περιγράφεται στην επόμενη ενότητα.
+
 ## Lower-priority backlog
 
 Previously discussed work also includes:
 
 - README/documentation improvements
-- fuller i18n / language switching
+- persisted language preference και μεταφράσεις catalogue content, εφόσον χρειαστούν
 - continued visualizer improvements
 
 These should not interrupt the evaluation pipeline unless they become blockers.
+
+## Issue #11 — Ελληνικά / English
+
+Υλοποιημένο στο παρόν feature snapshot: κοινή επιλογή γλώσσας στο header,
+μεταφράσεις UI σε όλες τις ενότητες και διατήρηση drafts/results. Δεν περιλαμβάνει
+αυτόματη μετάφραση δεδομένων ή αποθήκευση προτίμησης. Βλ. [Language](LANGUAGE.md).
+
+## Issue #41 — Πρώτο βήμα sorting MVP integration
+
+Στο παρόν feature snapshot: δεύτερος trusted sorter (Insertion Sort), κοινός runner,
+selector και ταυτότητα algorithm σε session results. Έγινε merge μέσω PR #42.
+Το #43 προσθέτει experiment execution, persistence αποτελεσμάτων και retrieval.
+Αυτόματη σύγκριση πολλών implementations παραμένει ξεχωριστό βήμα.
+
+## Issue #43 — Experiment execution / persistence
+
+Στο παρόν feature snapshot υλοποιείται backend run API, server-owned status και
+persisted measurement snapshots. Έγινε merge μέσω PR #44. Το #41 ενσωματώθηκε στο dev
+μέσω PR #42 και έκλεισε. Επόμενο βήμα: UI για δημιουργία/εκτέλεση/ανάκτηση experiments.
+
+## Issue #45 — UI integration
+
+Υλοποιείται η ροή create → run → persisted results → reopen by ID στο UI.
+Το #43 έχει γίνει merge μέσω PR #44. Το #45 έγινε merge μέσω PR #46.
+History/listing υλοποιείται στο #47. Editing και automatic ranking παραμένουν ξεχωριστά βήματα.
+
+## Issue #47 — History/listing
+
+Υλοποιείται το ιστορικό saved experiments με pagination και άνοιγμα από λίστα.
+Έγινε merge στο dev μέσω PR #48. Search/filter, editing και richer comparison είναι ξεχωριστά βήματα.

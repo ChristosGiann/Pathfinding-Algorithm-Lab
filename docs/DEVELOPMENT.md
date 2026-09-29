@@ -87,7 +87,7 @@ python backend\manage.py check
 ## Backend tests
 
 ```powershell
-python backend\manage.py test core
+python backend\manage.py test core reviews
 ```
 
 ## Frontend
@@ -211,7 +211,7 @@ Recommended checks:
 npm run lint
 npm run build
 python backend\manage.py check
-python backend\manage.py test core
+python backend\manage.py test core reviews
 python backend\manage.py makemigrations --check --dry-run
 git diff --check
 git status -sb
@@ -302,9 +302,33 @@ the latest shared Git history even when GitHub created a merge commit on `main`.
 
 ## GitHub communication
 
+Write PR descriptions and GitHub comments in Greek, keeping established technical
+terms, code identifiers and commands in English.
+
 For every PR, add a detailed description and a conversation comment explaining
 the problem, implementation choices, acceptance criteria, validation and remaining
 limitations. Before closing a completed issue, post a completion comment linking
 the merged PR and explaining how its criteria were satisfied. Distinguish tested
 behavior from future integration work. Target dev; promote to main only on
 explicit user instruction.
+
+## Custom Python checks
+
+Use `python backend\manage.py validate_custom_python .\example.py` for static
+validation of a UTF-8 file. Add `--run-local` only to execute your own trusted
+code locally with a 2-second timeout. The browser never executes custom code.
+See [Custom Python](CUSTOM_PYTHON.md) for examples and the lack of a sandbox.
+
+## Κείμενα UI και γλώσσα
+
+Τα νέα UI strings μπαίνουν στα `src/i18n/` με εγγραφές el/en. Τα components
+λαμβάνουν language ή texts από το κοινό App state· δεν ορίζουν δική τους default
+γλώσσα. Τα error codes παραμένουν σταθερά και μεταφράζονται κατά το render.
+Οι τύποι API δεν περιέχουν UI labels. Το `npm test` ελέγχει και αντιστοιχία
+translation keys. Βλ. [Language](LANGUAGE.md).
+
+## Experiment execution migration (#43)
+
+Πριν χρησιμοποιήσεις το νέο run API, εκτέλεσε
+`python backend/manage.py migrate`. Το migration 0004 προσθέτει τον πίνακα results
+και execution_error. Οδηγίες και limits: [Experiments](EXPERIMENTS.md).

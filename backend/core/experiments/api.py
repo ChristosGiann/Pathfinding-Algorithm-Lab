@@ -1,7 +1,9 @@
 from django.db import transaction
 from rest_framework import generics, serializers
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-from core.models import AlgorithmImplementation, DatasetDefinition, Experiment
+from core.models import AlgorithmImplementation, DatasetDefinition, Experiment, ExperimentResult
 
 
 class StrictIntegerField(serializers.IntegerField):
@@ -39,7 +41,15 @@ class SelectedImplementationSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "slug", "algorithm", "language", "is_active", "source_type")
 
 
+class ExperimentResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExperimentResult
+        fields = ("id", "implementation_snapshot", "measurement", "created_at")
+        read_only_fields = fields
+
+
 class ExperimentSerializer(StrictInputSerializer):
+    results = ExperimentResultSerializer(many=True, read_only=True)
     implementation_ids = serializers.ListField(
         child=StrictIntegerField(min_value=1), min_length=1, max_length=20, write_only=True,
     )
@@ -48,8 +58,8 @@ class ExperimentSerializer(StrictInputSerializer):
 
     class Meta:
         model = Experiment
-        fields = ("id", "name", "status", "implementation_ids", "implementations", "datasets", "created_at", "updated_at")
-        read_only_fields = ("id", "status", "created_at", "updated_at")
+        fields = ("id", "name", "status", "implementation_ids", "implementations", "datasets", "results", "execution_error", "created_at", "updated_at")
+        read_only_fields = ("id", "status", "results", "execution_error", "created_at", "updated_at")
 
     def validate_implementation_ids(self, ids):
         if len(ids) != len(set(ids)):
@@ -83,10 +93,46 @@ class ExperimentSerializer(StrictInputSerializer):
         return experiment
 
 
+class ExperimentSummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experiment
+        fields = ("id", "name", "status", "created_at", "updated_at")
+        read_only_fields = fields
+
+
 class ExperimentCreateAPIView(generics.CreateAPIView):
     serializer_class = ExperimentSerializer
+
+    def get(self, request):
+        params = request.query_params
+        if set(params) - {"before"} or any(len(params.getlist(key)) != 1 for key in params):
+            raise serializers.ValidationError({"query": "Only one optional before parameter is accepted."})
+        before = params.get("before")
+        queryset = Experiment.objects.order_by("-pk")
+        if before is not None:
+            if (not before.isascii() or not before.isdecimal() or len(before) > 19
+                    or not 1 <= int(before) <= 2**63 - 1):
+                raise serializers.ValidationError({"before": "Use a positive 64-bit integer ID."})
+            queryset = queryset.filter(pk__lt=int(before))
+        # One bounded query; no result blobs, relationship queries, or total-count scan.
+        rows = list(queryset.only("id", "name", "status", "created_at", "updated_at")[:11])
+        page = rows[:10]
+        return Response({
+            "results": ExperimentSummarySerializer(page, many=True).data,
+            "next_before": page[-1].pk if len(rows) > 10 else None,
+        })
 
 
 class ExperimentDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ExperimentSerializer
-    queryset = Experiment.objects.prefetch_related("implementations__algorithm", "datasets")
+    queryset = Experiment.objects.prefetch_related("implementations__algorithm", "datasets", "results")
+
+
+@api_view(["POST"])
+def experiment_run(request, pk):
+    from .execution import execute_experiment
+
+    if not isinstance(request.data, dict) or request.data:
+        raise serializers.ValidationError({"request": "Send an empty JSON object."})
+    experiment = execute_experiment(pk)
+    return Response(ExperimentSerializer(experiment).data)

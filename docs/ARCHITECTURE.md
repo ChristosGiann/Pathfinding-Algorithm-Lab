@@ -304,7 +304,12 @@ does not automatically reload the Algorithm Library; its retry button does that.
 
 Greek and English translation structures already exist.
 
-Default language is currently Greek. A language switcher is lower priority than the evaluation MVP.
+Το App κρατά ένα language state (`el` / `en`), με default Ελληνικά. Το header
+ενημερώνει το state και οι ενότητες λαμβάνουν language/texts μέσω props.
+Δεν αλλάζουν component keys ή request dependencies όταν αλλάζει η γλώσσα,
+ώστε να διατηρούνται τα form drafts και results. Το document lang και ο τίτλος
+ακολουθούν την επιλογή. Τα static Python error codes μεταφράζονται στο render·
+το API contract και τα αποθηκευμένα δεδομένα δεν αλλάζουν. Βλ. [Language](LANGUAGE.md).
 
 ## Dataset utility (Issue #17, local implementation)
 
@@ -315,7 +320,7 @@ provides independent mutable inputs. See [Datasets](DATASETS.md).
 ## First benchmark vertical slice (local #18)
 
 React Benchmark form -> centralized API client -> benchmark request serializer
--> pure runner -> dataset copies -> trusted Bubble Sort -> correctness and timing
+-> pure runner -> dataset copies -> trusted Bubble Sort / Insertion Sort -> correctness and timing
 summary -> result card. The endpoint has no persistence or registry lookup.
 See [Benchmarks](BENCHMARKS.md).
 
@@ -326,3 +331,39 @@ DatasetDefinition rows through a foreign key. API validation precedes atomic
 creation of all records. Status is server-owned and defaults to draft.
 Read uses prefetching for implementations, algorithms and datasets. No execution
 is triggered. See [Experiments](EXPERIMENTS.md).
+
+## Custom Python validation (#22)
+
+React CustomPython editor -> centralized API client -> static validation API ->
+AST parse/compile and signature checks -> structured result. This path never
+executes or saves submitted code. The separate developer CLI opts into a child
+Python process for finite correctness smoke cases with a timeout. The API does
+not import the runner. There is no sandbox, database model or benchmark integration.
+See [Custom Python](CUSTOM_PYTHON.md).
+
+Issue #41 adds a fixed code allowlist before dataset generation. The sorting API takes
+an algorithm identifier; no database metadata or custom source becomes executable.
+The legacy Bubble endpoint delegates to the shared runner.
+
+## Bounded experiment execution (#43)
+
+Experiment run API → conditional draft claim → trusted registry resolution →
+shared sorting runner → ExperimentResult snapshots → completed/failed.
+Μία transaction περιλαμβάνει claim, bounded execution και persistence. Δεν μπαίνουν
+DB writes στο timed region. Τα snapshots δεν έχουν FK προς catalogue/dataset records,
+ώστε να διατηρούνται μετά από αλλαγές τους. Δεν υπάρχει worker ή νέο UI.
+
+## Experiment UI (#45)
+
+Experiments component → centralized create/get/run API client → experiment service.
+ExperimentDetails εμφανίζει persisted snapshot measurements ανεξάρτητα από το
+session ResultsDashboard. Το catalogue capability μοιράζεται resolver με execution,
+με select_related για τις σχέσεις algorithm/problem. Δεν προστίθεται migration.
+
+## Experiment history (#47)
+
+GET collection χρησιμοποιεί ένα bounded query 11 summaries για 10 rows + next cursor,
+χωρίς count ή relation prefetch. Το ExperimentHistory χειρίζεται keyset cursors,
+loading/error και request cancellation. Το HistoryPage αποδίδει τις summaries.
+Η επιλογή row καλεί την υπάρχουσα detail ροή. Save/run κάνουν reset του history μόνο,
+διατηρώντας τη φόρμα και το επιλεγμένο experiment. Δεν προστίθεται migration.

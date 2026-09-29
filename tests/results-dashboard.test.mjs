@@ -25,7 +25,7 @@ registerHooks({
   },
 });
 const { ResultsDashboard } = await import('../src/components/Benchmark/ResultsDashboard.tsx');
-const input = { dataset_type: 'random', size: 100, seed: 42 };
+const input = { algorithm: 'bubble-sort', dataset_type: 'random', size: 100, seed: 42 };
 const result = { ...input, algorithm: 'bubble-sort', runs: 10, correct: true,
   timings_ns: [], median_ns: 2000000, min_ns: 1000000, max_ns: 4000000 };
 const render = (entries, running = false) => renderToStaticMarkup(createElement(ResultsDashboard,

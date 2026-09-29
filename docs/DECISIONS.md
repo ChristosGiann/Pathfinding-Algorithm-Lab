@@ -278,3 +278,61 @@ execution status. This avoids claiming execution has occurred when saving
 configuration. Dataset limits match generation (100,000); actual execution
 must apply runner limits separately. Catalogue references are live, not code
 version snapshots. See [Experiments](EXPERIMENTS.md) for limitations.
+
+## ADR-016 — Separate static validation from local custom-code execution
+
+**Status:** Implemented in Issue #22 feature snapshot
+
+Expose only syntax/declaration validation over HTTP. Require an explicit
+`--run-local` management-command flag to execute developer-owned Python in a
+separate process with a 2-second timeout. Apply a 32,768-byte UTF-8 source cap
+and return structured Greek errors. This enables initial contract feedback
+without introducing a public arbitrary-code execution endpoint. A subprocess
+is not a sandbox; public execution requires separate isolation work.
+Finite sorting smoke cases provide feedback, not a correctness/security proof.
+See [Custom Python](CUSTOM_PYTHON.md).
+
+## ADR-017 — Κοινό language state χωρίς remount
+
+Το App κρατά τη γλώσσα σε React state και τη μεταφέρει με props στην υπάρχουσα
+component hierarchy. Αρχική τιμή el σε κάθε page load, χωρίς storage preference.
+Η αλλαγή είναι παρουσίαση: δεν αλλάζει request dependencies ή component keys,
+άρα δεν απορρίπτει drafts/results ούτε ξεκινά νέα αιτήματα λόγω γλώσσας.
+Τα Python validation codes μεταφράζονται στο frontend, με localized fallback
+για άγνωστους codes. Το backend συνεχίζει να επιστρέφει ελληνικά messages.
+Catalogue content και user notes δεν μεταφράζονται αυτόματα.
+
+## ADR-018 — Κοινός runner με fixed sorting allowlist (#41)
+
+Ο runner δέχεται μόνο `bubble-sort` / `insertion-sort` και επιλέγει trusted Python
+function πριν από dataset generation/timing. Το παλιό Bubble API διατηρείται για
+compatibility. Ένα νέο sorting API απαιτεί explicit algorithm. Η επιλογή αποθηκεύεται
+στο request snapshot κάθε UI attempt, ώστε αλλαγές του selector να μην ξαναβαφτίζουν
+παλιές μετρήσεις ή errors. Δεν εισάγεται database registry execution ή custom code.
+Ίδιοι generators, όρια και measurement boundaries επιτρέπουν συγκρίσιμη διαδικασία,
+χωρίς να εγγυώνται ίδιους χρόνους ή καθολικό νικητή.
+
+## ADR-019 — Synchronous experiment execution με atomic result batch (#43)
+
+Ξεκινάμε με έως 4 pairs και size 1000, χωρίς queue. Conditional update από draft
+και transaction αποτρέπουν δεύτερο committed run. SQLite writers μπορεί να περιμένουν
+ή να αποτύχουν λόγω lock· δεν πρόκειται για production concurrency design.
+Τα results κρατούν JSON snapshots του bounded runner contract και της implementation
+identity, χωρίς FK προς mutable catalogue/dataset rows. Δεν είναι code-version snapshots.
+Runner failure γίνεται failed με generic code και μηδέν partial results. Storage failure
+κάνει rollback σε draft. Δεν υποσχόμαστε exactly-once υπολογισμό μετά από crash.
+
+## ADR-020 — Ξεχωριστή ροή persisted experiments (#45)
+
+Το νέο component κρατά χωριστά τα saved experiments από το session benchmark.
+Το backend παρέχει executable capability από κοινό resolver, όχι heuristic του UI.
+Ένα dataset ανά νέα φόρμα κρατά απλή τη δημιουργία· όλα τα stored datasets/results
+εμφανίζονται κατά retrieval. Run ambiguity αντιμετωπίζεται με refresh πριν νέο run,
+χωρίς automatic mutation retries. Το ID είναι το μέσο επαναφοράς μέχρι το listing.
+
+## ADR-021 — Bounded history με ID cursor (#47)
+
+Δέκα summaries ανά page, order -id και before cursor αποφεύγουν offset shifts από
+νέες εισαγωγές. Δεν χρειάζεται total count ούτε φόρτωση metrics για listing.
+Previous/refresh διαβάζουν live δεδομένα, όχι historical snapshot. Το υπάρχον detail
+API παραμένει η πηγή των πλήρων results. Δεν εισάγουμε search/ownership σε αυτό το βήμα.

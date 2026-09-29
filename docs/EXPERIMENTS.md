@@ -1,8 +1,8 @@
 # Experiment definitions — Issue #19
 
-The API creates and retrieves saved experiment definitions. It does not schedule
-or run benchmarks, generate arrays, persist timings, or change the existing
-Bubble Sort benchmark endpoint. No experiment UI is introduced in this issue.
+The API creates/retrieves definitions (#19), and now executes bounded sorting
+experiments with persisted results (#43). The standalone benchmark UI remains
+session-only; #45 adds a separate saved-experiment UI.
 
 ## Models
 
@@ -14,8 +14,8 @@ Bubble Sort benchmark endpoint. No experiment UI is introduced in this issue.
 Definitions are owned by each experiment so another experiment cannot edit its
 dataset configuration. Implementation references are live catalogue records,
 not versioned code snapshots. Deleting catalogue implementations through ORM/admin
-removes their many-to-many selections. Historical snapshots/deletion protection
-should be designed with execution results; they are not provided in this step.
+removes their many-to-many selections. Execution results now retain independent identity/configuration snapshots; deleting catalogue
+records or definitions does not remove those snapshots. Deleting the experiment deletes its results.
 
 ## Create
 
@@ -54,23 +54,53 @@ Datasets contain their stored id, type, size and effective seed. The input-only
 ## Read
 
 `GET /api/experiments/<id>/` returns the same representation (HTTP 200).
-An unknown ID returns 404. Update, delete, listing and execution endpoints are
-not part of this issue; unsupported methods return 405.
+An unknown ID returns 404. Update and delete endpoints remain unavailable; unsupported methods return 405.
 
-## Status and execution boundary
+## Execution — Issue #43
 
-The model supports draft, pending, running, completed and failed. Only draft
-creation and reading are exposed. A future orchestration service must own legal
-transitions, resolve trusted executable implementations and validate execution
-limits at run time. An active catalogue entry alone is not proof of executable
-code; currently only Bubble Sort is implemented.
+`POST /api/experiments/<id>/run/` accepts an empty JSON object `{}` and returns
+HTTP 200 with the full experiment, including `results` and `execution_error`.
+Only draft experiments may execute. Unknown ID: 404; non-draft: 409;
+invalid body/configuration: 400; unsupported HTTP method: 405.
 
-The generator definition limit is 100,000, while the existing synchronous Bubble
-Sort endpoint remains capped at 1,000. Saving a larger draft does not authorize
-or start a larger benchmark. Authentication/ownership are still outside the local
-MVP: these APIs do not provide per-user isolation.
+Runtime validation requires active built-in Python implementations whose private
+registry key AND sorting algorithm identity match Bubble Sort or Insertion Sort.
+No dynamic imports or custom code are allowed. Drafts can still contain other
+catalogue entries, but those cannot run. Each dataset must have 1–1000 items,
+and the implementation × dataset product must be 1–4 pairs. Validation failure
+rolls back the claim, leaving a draft with no results.
 
-## Verification
+Each pair runs through the existing runner (10 fresh copies, sorting-only timing).
+`results` contains id, created_at, implementation_snapshot (id/name/slug/algorithm/language)
+and measurement (algorithm/dataset_type/size/seed/runs/correct/timings_ns/median_ns/min_ns/max_ns).
+These snapshots survive changes/deletion of catalogue records and dataset definitions.
+They are not code-version or environment snapshots and do not guarantee replay of timings.
+
+Server-owned transitions are draft → running → completed/failed. A conditional
+update claims the draft in one database transaction, held through the bounded execution
+and result writes. Running is therefore internal, not a progress/polling signal.
+SQLite serializes writers; a concurrent request may wait or receive a database-lock
+error. This is a local MVP, not a production worker/queue design.
+
+- All correctness checks pass: completed, empty execution_error, all results saved.
+- Incorrect sorting: failed, `incorrect_result`, measured results retained and labelled false.
+- Runner exception: failed, `runner_error`, no partial results or exception details exposed.
+- Storage failure/process interruption before commit: transaction rolls back to draft;
+  a later request may execute again. This is not exactly-once execution across crashes.
+- Completed and failed experiments cannot rerun. Create a new draft for another attempt.
+
+GET returns persisted results without execution. Create accepts neither results nor
+execution_error/status from clients. No authentication/ownership, async scheduling,
+cancellation or public concurrency guarantee is provided. The 100,000-item draft
+limit is independent of the 1000-item execution limit.
+
+## Migration #43
+
+Run `python backend/manage.py migrate` to apply
+`0004_experiment_execution_error_experimentresult`. This adds a result table and
+an empty-by-default error field; existing draft definitions remain valid.
+
+## Original #19 verification
 
 Migration: `0003_experiment_definitions`. Run:
 
@@ -84,3 +114,35 @@ defaults/bounds, invalid selections/configurations, duplicates, rollback,
 no benchmark execution, status constraint and unsupported mutations. The full
 suite contains 36 tests. Migration application, checks and dry-run are verified
 locally. No frontend behavior changes beyond adding the implementation ID type.
+
+## UI — #45
+
+Η ενότητα Αποθηκευμένα experiments προσφέρει όνομα, επιλογή implementations από
+το catalogue `executable` flag και ένα dataset (1–1000, type/seed). Save draft και
+Run είναι χωριστές ενέργειες. Το ID επιτρέπει άνοιγμα μετά από page refresh.
+Η φόρμα δημιουργεί νέο draft, δεν αλλάζει υπάρχον experiment. API-created multi-dataset
+experiments εμφανίζονται πλήρως. Τα persisted results χρησιμοποιούν snapshot identity.
+
+Τα controls κλειδώνουν κατά το request. Catalogue timeout 15s, mutations/read 30s,
+abort κατά unmount, χωρίς automatic replay. Με αποτυχία run απαιτείται successful
+GET πριν ενεργοποιηθεί ξανά Run. Μη επιβεβαιωμένο save προειδοποιεί ότι μπορεί να
+δημιουργήθηκε draft (η νέα αποθήκευση ενδέχεται να διπλασιάσει εγγραφή).
+Labels el/en· η αλλαγή γλώσσας διατηρεί state. Δεν υπάρχει edit/delete ή
+localStorage. Authentication/ownership παραμένουν εκτός local MVP.
+
+## History — #47
+
+GET `/api/experiments/` επιστρέφει `{results: [...], next_before: number|null}`.
+Κάθε summary περιλαμβάνει id/name/status/created_at/updated_at, χωρίς relations ή
+measurement blobs. Έως 10 ανά σελίδα, descending ID (creation order, όχι updated time).
+Για επόμενη σελίδα στείλε `?before=<next_before>`. Ο cursor δεν απαιτεί να υπάρχει
+η αντίστοιχη εγγραφή. Άκυρος/μη θετικός/out-of-range cursor, unknown ή duplicate
+query parameters επιστρέφουν 400. Δεν υπάρχει total count ή page-size override.
+
+Το UI δείχνει history, previous/next, refresh στην πρώτη σελίδα και Open κάθε row
+μέσω GET detail. Οι επιτυχημένες save/run ενέργειες ανανεώνουν την πρώτη σελίδα.
+Το history refresh δεν αλλάζει το ανοιχτό detail ή τη φόρμα. Request timeout 15s,
+abort/stale-response suppression κατά navigation/unmount, localized loading/error/retry.
+Η γλώσσα δεν επανεκκινεί το request ή την pagination. Άνοιγμα row δεν εκτελεί experiment.
+Νέες εισαγωγές δεν μετακινούν τα επόμενα pages· refresh/previous διαβάζουν την τρέχουσα
+βάση, χωρίς snapshot isolation. Το local single-user scope δεν παρέχει ownership.

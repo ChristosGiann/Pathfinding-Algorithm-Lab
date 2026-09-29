@@ -4,6 +4,12 @@ from .models import Algorithm, AlgorithmImplementation
 
 
 class AlgorithmImplementationSerializer(serializers.ModelSerializer):
+    executable = serializers.SerializerMethodField()
+
+    def get_executable(self, obj):
+        from .experiments.execution import executable_algorithm
+        return executable_algorithm(obj) is not None
+
     class Meta:
         model = AlgorithmImplementation
 
@@ -15,6 +21,7 @@ class AlgorithmImplementationSerializer(serializers.ModelSerializer):
             "source_type",
             "is_reference",
             "is_active",
+            "executable",
         )
 
 

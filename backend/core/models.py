@@ -181,6 +181,7 @@ class Experiment(models.Model):
         FAILED = "failed", "Failed"
 
     name = models.CharField(max_length=200)
+    execution_error = models.CharField(max_length=40, blank=True)
     implementations = models.ManyToManyField(
         AlgorithmImplementation, related_name="experiments",
     )
@@ -220,3 +221,14 @@ class DatasetDefinition(models.Model):
             models.CheckConstraint(condition=models.Q(seed__gte=-(2**31), seed__lte=2**31 - 1), name="dataset_valid_seed"),
             models.CheckConstraint(condition=models.Q(dataset_type__in=["random", "sorted", "reversed", "nearly_sorted"]), name="dataset_valid_type"),
         ]
+
+
+class ExperimentResult(models.Model):
+    """Historical snapshots survive catalogue and dataset-definition edits/deletions."""
+    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, related_name="results")
+    implementation_snapshot = models.JSONField()
+    measurement = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["pk"]

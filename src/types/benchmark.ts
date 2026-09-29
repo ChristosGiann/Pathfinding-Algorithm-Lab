@@ -1,13 +1,15 @@
 export type DatasetType = "random" | "sorted" | "reversed" | "nearly_sorted";
 
+export type SortingAlgorithm = "bubble-sort" | "insertion-sort";
+
 export interface BenchmarkRequest {
+  algorithm: SortingAlgorithm;
   size: number;
   seed: number;
   dataset_type: DatasetType;
 }
 
 export interface BenchmarkResult extends BenchmarkRequest {
-  algorithm: "bubble-sort";
   runs: number;
   correct: boolean;
   timings_ns: number[];

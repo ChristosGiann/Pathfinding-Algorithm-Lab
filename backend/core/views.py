@@ -24,7 +24,7 @@ class AlgorithmListAPIView(ListAPIView):
             AlgorithmImplementation.objects.filter(
                 source_type=AlgorithmImplementation.SourceType.BUILT_IN,
                 is_active=True,
-            ).order_by("name")
+            ).select_related("algorithm__problem").order_by("name")
         )
 
         return (
