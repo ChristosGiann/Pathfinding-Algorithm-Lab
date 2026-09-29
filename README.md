@@ -21,7 +21,7 @@
 | Custom Python validation | Ελληνική φόρμα για syntax/solve(values)/size checks χωρίς εκτέλεση. Ρητή τοπική CLI εκτέλεση δικού μας κώδικα με timeout 2 δευτερολέπτων. |
 | Pathfinding foundation | Grid, walls και clear/reset controls. Τα algorithm execution/animation controls παραμένουν ανενεργά. |
 
-Τα #17–#21 έχουν ενσωματωθεί μέσω των PR #28–#32 και προωθηθεί στη main με το PR #33. Το [#22 — custom Python validation](https://github.com/ChristosGiann/Pathfinding-Algorithm-Lab/pull/38) έχει ενσωματωθεί στο dev μέσω του PR #38. Η main παραμένει στο προηγούμενο snapshot μέχρι την επόμενη ρητά εγκεκριμένη προώθηση.
+Το παρόν snapshot περιλαμβάνει τα ολοκληρωμένα #11, #12, #16–#22 και #41/#43/#45/#47: δίγλωσσο UI, custom Python validation, δύο trusted sorters και πλήρη ροή saved experiments με ιστορικό. Τα σχετικά PR #38–#48 ενσωματώθηκαν στο dev για την προώθηση στη main.
 
 ## Benchmarking και visualization
 
