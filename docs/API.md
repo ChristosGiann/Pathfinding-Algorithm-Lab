@@ -231,3 +231,8 @@ id/name/status/created_at/updated_at. Έως 10 rows με descending ID. Προ�
 `before` positive 64-bit integer, φίλτρο id < before. next_before null στο τέλος.
 Unknown/duplicate/invalid query parameters: 400. Το POST creation contract παραμένει
 ίδιο. Δεν εκτελείται benchmark και δεν φορτώνονται result blobs στο listing.
+
+
+## Comparison backend (#58)
+
+POST `/api/benchmarks/sorting/compare/`: algorithms (2–5 distinct trusted slugs), size (1–1000), dataset_type και seed. Μία deterministic generation, fresh copy ανά sorter/run, 10 runs. Response: configuration και results με algorithm/status/measurement ή ασφαλές runner_error χωρίς metrics. Αποτυχία ενός sorter δεν ακυρώνει τους υπόλοιπους. Χωρίς persistence· ίδια single-run contracts. Tests: κοινό input, distinct copies, dispatch, API validation και isolated failures.
