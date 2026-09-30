@@ -26,6 +26,12 @@ class AlgorithmImplementationSerializer(serializers.ModelSerializer):
 
 
 class AlgorithmSerializer(serializers.ModelSerializer):
+    education = serializers.SerializerMethodField()
+
+    def get_education(self, obj):
+        from .education import EDUCATION
+        return EDUCATION.get(obj.slug)
+
     problem = serializers.CharField(
         source="problem.name",
         read_only=True,
@@ -44,6 +50,7 @@ class AlgorithmSerializer(serializers.ModelSerializer):
             "name",
             "slug",
             "description",
+            "education",
             "problem",
             "best_case_complexity",
             "average_case_complexity",
