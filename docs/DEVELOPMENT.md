@@ -338,3 +338,8 @@ translation keys. Βλ. [Language](LANGUAGE.md).
 Πριν χρησιμοποιήσεις το νέο run API, εκτέλεσε
 `python backend/manage.py migrate`. Το migration 0004 προσθέτει τον πίνακα results
 και execution_error. Οδηγίες και limits: [Experiments](EXPERIMENTS.md).
+
+
+## CI (#61)
+
+GitHub Actions `.github/workflows/checks.yml` τρέχει σε PR προς dev/main και push στα δύο μόνιμα branches. Backend: Python 3.10, pinned requirements, tests/check/migration consistency. Frontend: Node 24, npm ci, tests/lint/build. Independent jobs, read-only contents permission, 10-minute timeouts, cancellation παλαιότερου run στο ίδιο ref. Τα env values είναι αποκλειστικά test defaults, χωρίς secrets. Δεν αλλάζουν branch protections/deployment.
