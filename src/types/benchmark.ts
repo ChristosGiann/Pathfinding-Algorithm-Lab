@@ -16,4 +16,8 @@ export interface BenchmarkResult extends BenchmarkRequest {
   median_ns: number;
   min_ns: number;
   max_ns: number;
+  mean_ns?: number;
+  stddev_ns?: number;
+  baseline_algorithm?: string;
+  relative_speed?: number | null;
 }
