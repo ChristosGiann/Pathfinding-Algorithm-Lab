@@ -12,7 +12,7 @@ export function ComparisonResults({ result, language }: { result: ComparisonResu
   const catalogue = useCatalogue();
   const t = comparisonTexts[language], b = benchmarkTexts[language], id = useId();
   const format = (ns: number | undefined) => ns === undefined || !Number.isFinite(ns) ? "—" : (ns / 1_000_000).toLocaleString(language, { maximumSignificantDigits: 6 });
-  const name = (slug: string) => b.algorithms[slug as SortingAlgorithm] ?? slug;
+  const name = (slug: string) => slug === "custom-python" ? "Custom Python" : b.algorithms[slug as SortingAlgorithm] ?? slug;
   const measured = result.results.filter(row => row.status === "completed");
   const max = Math.max(0, ...measured.map(row => row.measurement.max_ns));
   return <section className="results" aria-labelledby={id}>

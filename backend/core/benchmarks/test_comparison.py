@@ -48,6 +48,6 @@ class ComparisonTests(APISimpleTestCase):
         with patch("core.benchmarks.runner.bubble_sort", side_effect=RuntimeError("secret")), \
              patch("core.benchmarks.runner.quick_sort", side_effect=lambda values: values.clear()):
             results = compare_sorting(["bubble-sort", "quick-sort", "merge-sort"], 8)["results"]
-        self.assertEqual(results[0], {"algorithm": "bubble-sort", "status": "error", "error": "runner_error"})
+        self.assertEqual(results[0], {"algorithm": "bubble-sort", "source_type": "built_in", "status": "error", "error": "runner_error"})
         self.assertFalse(results[1]["measurement"]["correct"])
         self.assertTrue(results[2]["measurement"]["correct"])

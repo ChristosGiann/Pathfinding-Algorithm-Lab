@@ -281,3 +281,16 @@ test('custom benchmark requires trusted acknowledgement and explains local limit
   assert.match(html,language==='el'?/δικός μου trusted/:/my own trusted/);
  }
 });
+
+
+test('mixed comparison identifies custom, retains built-in timings and failed rows',async()=>{
+ const {ComparisonResults}=await import('../src/components/Comparison/ComparisonResults.tsx');
+ for(const language of ['el','en']) for(const status of ['completed','error','timeout']) {
+  const measurement={correct:true,median_ns:1000000,min_ns:500000,max_ns:2000000,relative_speed:2};
+  const custom=status==='completed'?{algorithm:'custom-python',source_type:'custom',status,measurement}:{algorithm:'custom-python',source_type:'custom',status,error:'runner_error'};
+  const result={baseline_algorithm:'quick-sort',dataset_type:'random',size:8,seed:42,results:[{algorithm:'quick-sort',source_type:'built_in',status:'completed',measurement},custom]};
+  const html=renderToStaticMarkup(createElement(ComparisonResults,{result,language}));
+  assert.match(html,/Quick Sort · Built-in/);assert.match(html,/Custom Python · Custom/);assert.match(html,/width:50%/);
+  if(status!=='completed')assert.match(html,/<td>—<\/td>/);
+ }
+});

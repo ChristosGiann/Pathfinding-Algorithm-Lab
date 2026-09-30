@@ -45,8 +45,20 @@ def sorting_benchmark(request):
 
 
 class ComparisonRequestSerializer(BenchmarkRequestSerializer):
+    custom_source = serializers.CharField(required=False, max_length=32768, trim_whitespace=False)
+    trusted = serializers.BooleanField(required=False)
+
+    def validate(self, data):
+        custom = "custom_source" in data
+        minimum, maximum = (1, 4) if custom else (2, 5)
+        if not minimum <= len(data["algorithms"]) <= maximum:
+            raise serializers.ValidationError({"algorithms": "Select 2–5 built-ins, or 1–4 with custom."})
+        if custom and data.get("trusted") is not True:
+            raise serializers.ValidationError({"trusted": "Trusted code acknowledgement required."})
+        return data
+
     algorithms = serializers.ListField(child=serializers.ChoiceField(choices=SORTING_ALGORITHMS),
-                                       min_length=2, max_length=5)
+                                       min_length=1, max_length=5)
 
     def validate_algorithms(self, values):
         if len(set(values)) != len(values):
@@ -59,7 +71,10 @@ def sorting_comparison(request):
     serializer = ComparisonRequestSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     from .persistence import sign_comparison
-    result = compare_sorting(**serializer.validated_data)
+    from core.custom_python.benchmark_api import execution_allowed
+    data = dict(serializer.validated_data)
+    data.pop("trusted", None)
+    result = compare_sorting(**data, custom_allowed=execution_allowed(request))
     return Response({**result, "save_token": sign_comparison(result)})
 
 
