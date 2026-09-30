@@ -5,4 +5,4 @@ export type ComparisonRow = { algorithm: string; source_type?: "built_in" | "cus
   | { status: "completed"; measurement: BenchmarkResult }
   | { status: "error" | "timeout"; error: string }
 );
-export interface ComparisonResult { dataset_type: DatasetType; size: number; seed: number; results: ComparisonRow[] }
+export interface ComparisonResult { save_token?: string | null; dataset_type: DatasetType; size: number; seed: number; results: ComparisonRow[] }

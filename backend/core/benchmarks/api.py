@@ -58,4 +58,26 @@ class ComparisonRequestSerializer(BenchmarkRequestSerializer):
 def sorting_comparison(request):
     serializer = ComparisonRequestSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    return Response(compare_sorting(**serializer.validated_data))
+    from .persistence import sign_comparison
+    result = compare_sorting(**serializer.validated_data)
+    return Response({**result, "save_token": sign_comparison(result)})
+
+
+class SaveComparisonSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=200)
+    token = serializers.CharField(max_length=65536)
+
+    def to_internal_value(self, data):
+        if isinstance(data, dict) and set(data) - {"name", "token"}:
+            raise serializers.ValidationError({"request": "Only name and token are accepted."})
+        return super().to_internal_value(data)
+
+
+@api_view(["POST"])
+def persist_comparison(request):
+    from .persistence import save_comparison
+    from core.experiments.api import ExperimentSerializer
+    serializer = SaveComparisonSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    experiment = save_comparison(**serializer.validated_data)
+    return Response(ExperimentSerializer(experiment).data, status=201)

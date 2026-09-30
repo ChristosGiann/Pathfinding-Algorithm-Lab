@@ -146,3 +146,8 @@ abort/stale-response suppression κατά navigation/unmount, localized loading/
 Η γλώσσα δεν επανεκκινεί το request ή την pagination. Άνοιγμα row δεν εκτελεί experiment.
 Νέες εισαγωγές δεν μετακινούν τα επόμενα pages· refresh/previous διαβάζουν την τρέχουσα
 βάση, χωρίς snapshot isolation. Το local single-user scope δεν παρέχει ownership.
+
+
+## Persisted comparisons (#62)
+
+Comparison response προσθέτει save_token μόνο για πλήρη measured batches. POST `/api/benchmarks/sorting/compare/save/` δέχεται name/token, επαληθεύει server signature (1 ώρα), και αποθηκεύει υπάρχουσες μετρήσεις σε Experiment/ExperimentResult χωρίς rerun. Δεν δέχεται client timings. Snapshot marker comparison επιτρέπει reopen με το κοινό chart από το υπάρχον history/ID. Catalogue identity αποτυπώνεται κατά το save· αν λείπει απορρίπτεται. Έως 5 ήδη εκτελεσμένα results, ενώ draft execution παραμένει max 4 pairs. Χωρίς migration. Token replay μπορεί να δημιουργήσει δεύτερο saved copy· σε timeout ελέγχουμε history πριν retry. Tests: signature/expiry/tamper, persistence/history/immutable snapshots και frontend reconstruction.

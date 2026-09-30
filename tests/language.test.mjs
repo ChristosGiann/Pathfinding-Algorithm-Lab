@@ -208,3 +208,14 @@ test('complexity context maps by slug and never fabricates missing values', asyn
     assert.match(missing,language === 'el' ? /Metadata μη διαθέσιμα/ : /Metadata unavailable/);
   }
 });
+
+
+test('persisted comparison reconstructs after refresh from snapshots only', async () => {
+  const { comparisonFromExperiment } = await import('../src/components/Comparison/fromExperiment.ts');
+  const { ComparisonResults } = await import('../src/components/Comparison/ComparisonResults.tsx');
+  const experiment = JSON.parse(JSON.stringify({results:['quick-sort','merge-sort'].map(algorithm => ({implementation_snapshot:{algorithm,comparison:true},measurement:{algorithm,dataset_type:'reversed',size:10,seed:7,correct:true,median_ns:1000,min_ns:500,max_ns:2000}}))}));
+  const restored = comparisonFromExperiment(experiment);
+  assert.equal(restored.results.length,2);
+  assert.match(renderToStaticMarkup(createElement(ComparisonResults,{result:restored,language:'en'})),/Quick Sort/);
+  assert.equal(comparisonFromExperiment({results:[]}),null);
+});
