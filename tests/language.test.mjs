@@ -178,3 +178,20 @@ test('Quick Sort is selectable and labelled in both languages', async () => {
     assert.match(html, /<option value="quick-sort">Quick Sort<\/option>/);
   }
 });
+
+
+test('comparison uses shared scale, preserves failed/incorrect rows and both languages', async () => {
+  const { ComparisonResults } = await import('../src/components/Comparison/ComparisonResults.tsx');
+  const result = { dataset_type:'random', size:10, seed:42, results:[
+    {algorithm:'bubble-sort',status:'completed',measurement:{correct:true,median_ns:2000000,min_ns:1000000,max_ns:4000000}},
+    {algorithm:'quick-sort',status:'completed',measurement:{correct:false,median_ns:1000000,min_ns:500000,max_ns:2000000}},
+    {algorithm:'merge-sort',status:'error',error:'runner_error'}] };
+  for (const language of ['el','en']) {
+    const html = renderToStaticMarkup(createElement(ComparisonResults,{result,language}));
+    assert.match(html,/width:50%/); assert.match(html,/width:25%/);
+    assert.match(html,/Merge Sort/); assert.match(html,/<td>—<\/td>/);
+    assert.match(html,language === 'el' ? /Αποτυχία ελέγχου/ : /Correctness check failed/);
+    const zero = {...result,results:[{...result.results[0],measurement:{correct:true,median_ns:0,min_ns:0,max_ns:0}}]};
+    assert.doesNotMatch(renderToStaticMarkup(createElement(ComparisonResults,{result:zero,language})),/NaN|Infinity/);
+  }
+});

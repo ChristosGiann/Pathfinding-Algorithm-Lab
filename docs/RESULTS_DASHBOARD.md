@@ -41,3 +41,8 @@ the active request and suppresses late state updates.
 4. Restore backend and retry; prior rows remain.
 5. Clear results; empty guidance appears. Reload also clears session history.
 6. At narrow widths, scroll the table horizontally; chart rows stack vertically.
+
+
+## Comparison view (#59)
+
+Dedicated comparison form επιλέγει 2–5 sorters και κοινό dataset. Table και median/min/max chart χρησιμοποιούν κοινή κλίμακα ms. Incorrect rows διατηρούν τη σήμανσή τους, failed rows δεν εμφανίζουν metrics. State ανεξάρτητο από language, request guard/abort και 30s timeout. Rendering tests καλύπτουν el/en, shared scale και zero timings. Το #58 ενσωματώθηκε μέσω PR #69.

@@ -1,3 +1,4 @@
+import type { ComparisonInput, ComparisonResult } from "../types/comparison";
 import type { Experiment, ExperimentInput, ExperimentPage } from "../types/experiment";
 import type { Algorithm } from "../types/algorithm";
 import type { BenchmarkRequest, BenchmarkResult } from "../types/benchmark";
@@ -91,4 +92,10 @@ export function runExperiment(id: number, signal: AbortSignal): Promise<Experime
 export function listExperiments(before: number | null, signal: AbortSignal): Promise<ExperimentPage> {
   const query = before === null ? "" : `?before=${before}`;
   return apiRequest<ExperimentPage>(`/api/experiments/${query}`, { signal, cache: "no-store" });
+}
+
+export function runComparison(input: ComparisonInput, signal: AbortSignal): Promise<ComparisonResult> {
+  return apiRequest<ComparisonResult>("/api/benchmarks/sorting/compare/", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input), signal,
+  });
 }
