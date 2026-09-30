@@ -3,6 +3,7 @@ import ast
 import json
 import os
 from pathlib import Path
+import signal
 import subprocess
 import sys
 import tempfile
@@ -61,6 +62,8 @@ def measure_custom(source, dataset):
                 input=payload.encode("utf-8"), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                 cwd=directory, env=env, timeout=TIMEOUT_SECONDS,
                 creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
+            if os.name != "nt" and process.returncode == -signal.SIGXCPU:
+                return error_result("timeout")
             if process.returncode or not output.exists() or output.stat().st_size > 16384:
                 return error_result("runtime_error")
             return json.loads(output.read_text(encoding="utf-8"))

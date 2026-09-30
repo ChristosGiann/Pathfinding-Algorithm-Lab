@@ -14,7 +14,8 @@ from core.custom_python.benchmark import BUILTINS, error_result
 def main():
     if os.name != "nt":
         import resource
-        resource.setrlimit(resource.RLIMIT_CPU, (2, 2))
+        resource.setrlimit(resource.RLIMIT_CPU, (2, 3))
+        resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
         resource.setrlimit(resource.RLIMIT_AS, (256 * 1024 * 1024, 256 * 1024 * 1024))
         resource.setrlimit(resource.RLIMIT_FSIZE, (16384, 16384))
     data = json.loads(sys.stdin.buffer.read(200000))
