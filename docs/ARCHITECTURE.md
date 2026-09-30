@@ -367,3 +367,8 @@ GET collection χρησιμοποιεί ένα bounded query 11 summaries για
 loading/error και request cancellation. Το HistoryPage αποδίδει τις summaries.
 Η επιλογή row καλεί την υπάρχουσα detail ροή. Save/run κάνουν reset του history μόνο,
 διατηρώντας τη φόρμα και το επιλεγμένο experiment. Δεν προστίθεται migration.
+
+
+## Sorting visualization (#64)
+
+Ανεξάρτητο TypeScript educational trace για Bubble/Insertion/Selection/Merge/Quick, με algorithm identities του catalogue, explicit input 1–32 integers 0–999 και immutable step snapshots. Play/Pause/Step/Speed/Reset χρησιμοποιούν καθαρό reducer· αλλαγή algorithm ξαναφορτώνει το αρχικό input. Το UI εξηγεί ότι writes μπορεί να εμφανίζουν προσωρινά duplicates λόγω buffer/key εκτός array. Δεν καλείται ούτε αλλάζει ο Python benchmark runner και δεν παράγονται performance metrics από animation. Tests καλύπτουν deterministic traces, duplicates/sorted/reversed/singleton, input validation, playback transitions και el/en controls.
