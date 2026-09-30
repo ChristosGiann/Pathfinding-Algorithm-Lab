@@ -231,3 +231,29 @@ test('statistics render explicit baseline, finite ratios and legacy fallback', a
     assert.doesNotMatch(html,/NaN|Infinity/);
   }
 });
+
+
+test('all five sorting traces are deterministic, isolated and end sorted', async () => {
+ const {sortingTrace,parseInput}=await import('../src/visualization/sortingTrace.ts');
+ for (const slug of Object.keys(benchmarkTexts.en.algorithms)) for (const input of [[1],[3,1,3,0,2],[9,8,7,6],[1,2,3],[4,4,4]]) {
+  const original=[...input],steps=sortingTrace(slug,input);
+  assert.deepEqual(input,original);assert.deepEqual(steps,sortingTrace(slug,input));
+  assert.deepEqual(steps[0].values,original);assert.deepEqual(steps.at(-1).values,[...input].sort((a,b)=>a-b));
+  assert.equal(steps.at(-1).kind,'done');assert.equal(new Set(steps.map(s=>s.values)).size,steps.length);
+ }
+ assert.deepEqual(parseInput('3, 0 2'),[3,0,2]);
+ for(const value of ['', '-1','1.5','1000',Array(33).fill('1').join(',')]) assert.throws(()=>parseInput(value));
+});
+
+test('playback pauses, steps, resets and stops at end without losing original', async()=>{
+ const {sortingTrace,playback}=await import('../src/visualization/sortingTrace.ts');
+ let s={steps:sortingTrace('bubble-sort',[2,1]),index:0,playing:false};
+ s=playback(s,{type:'play'});s=playback(s,{type:'tick'});assert.equal(s.index,1);
+ s=playback(s,{type:'pause'});assert.equal(playback(s,{type:'tick'}).index,1);
+ s=playback(s,{type:'step'});assert.equal(s.index,2);assert.equal(s.playing,false);
+ s=playback(s,{type:'play'});for(let i=0;i<20;i++)s=playback(s,{type:'tick'});
+ assert.equal(s.index,s.steps.length-1);assert.equal(s.playing,false);
+ s=playback(s,{type:'reset'});assert.equal(s.index,0);assert.deepEqual(s.steps[0].values,[2,1]);
+ const {SortingVisualization}=await import('../src/components/SortingVisualization/SortingVisualization.tsx');
+ for(const language of ['el','en']) {const html=renderToStaticMarkup(createElement(SortingVisualization,{language}));for(const label of ['Play','Pause','Step','Reset']) assert.match(html,new RegExp(label));}
+});
