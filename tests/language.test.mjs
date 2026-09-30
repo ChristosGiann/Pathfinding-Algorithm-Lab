@@ -257,3 +257,17 @@ test('playback pauses, steps, resets and stops at end without losing original', 
  const {SortingVisualization}=await import('../src/components/SortingVisualization/SortingVisualization.tsx');
  for(const language of ['el','en']) {const html=renderToStaticMarkup(createElement(SortingVisualization,{language}));for(const label of ['Play','Pause','Step','Reset']) assert.match(html,new RegExp(label));}
 });
+
+
+test('education renders localized structure, supplied content and missing fallback',async()=>{
+ const {EducationalContent}=await import('../src/components/AlgorithmLibrary/EducationalContent.tsx');
+ for (const language of ['el','en']) {
+  const content={what:'WHAT',intuition:'INTUITION',how:['STEP'],strengths:'STRENGTH',weaknesses:'WEAK',uses:'USE',pitfalls:'NOTE'};
+  const algorithm={education:{[language]:content,stable:true,in_place:false,walkthrough:[[2,1],[1,2]]}};
+  const html=renderToStaticMarkup(createElement(EducationalContent,{algorithm,language}));
+  for(const value of ['WHAT','INTUITION','STEP','STRENGTH','WEAK','USE','NOTE','[2, 1]'])assert.ok(html.includes(value));
+  assert.match(html,language==='el'?/Πλεονεκτήματα/:/Strengths/);
+  const missing=renderToStaticMarkup(createElement(EducationalContent,{algorithm:{},language}));
+  assert.doesNotMatch(missing,/O\(|WHAT/);assert.match(missing,language==='el'?/μη διαθέσιμο/:/unavailable/);
+ }
+});

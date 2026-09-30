@@ -9,6 +9,7 @@ import type { Language } from "../../i18n/translations";
 import { ImplementationReview } from "../ImplementationReview/ImplementationReview";
 
 import "./AlgorithmLibrary.css";
+import { EducationalContent } from "./EducationalContent";
 
 type RequestStatus =
   | "loading"
@@ -159,7 +160,7 @@ export function AlgorithmLibrary({
                 </header>
 
                 <p className="algorithm-card__description">
-                  {algorithm.description}
+                  {algorithm.education?.[language]?.what ?? algorithm.description}
                 </p>
 
                 <dl className="algorithm-card__complexities">
@@ -192,6 +193,7 @@ export function AlgorithmLibrary({
                   </div>
                 </dl>
 
+                <EducationalContent algorithm={algorithm} language={language} />
                 <footer className="algorithm-card__footer">
                   <p className="algorithm-card__footer-title">
                     {texts.implementations}
