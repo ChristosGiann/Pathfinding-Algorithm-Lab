@@ -10,7 +10,7 @@ export interface Experiment {
   execution_error: string;
   implementations: { id: number; name: string; algorithm: string; language: string }[];
   datasets: { id: number; dataset_type: DatasetType; size: number; seed: number }[];
-  results: { id: number; implementation_snapshot: { id: number; name: string; algorithm: string; language: string }; measurement: BenchmarkResult; created_at: string }[];
+  results: { id: number; implementation_snapshot: { comparison?: boolean; id: number; name: string; algorithm: string; language: string }; measurement: BenchmarkResult; created_at: string }[];
 }
 
 export interface ExperimentSummary {

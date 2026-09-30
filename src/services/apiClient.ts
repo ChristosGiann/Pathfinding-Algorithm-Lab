@@ -99,3 +99,9 @@ export function runComparison(input: ComparisonInput, signal: AbortSignal): Prom
     method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input), signal,
   });
 }
+
+export function saveComparison(name: string, token: string, signal: AbortSignal): Promise<Experiment> {
+  return apiRequest<Experiment>("/api/benchmarks/sorting/compare/save/", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, token }), signal,
+  });
+}

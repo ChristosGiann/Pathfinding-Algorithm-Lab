@@ -1,3 +1,4 @@
+import { SaveComparison } from "./SaveComparison";
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import type { Language } from "../../i18n/translations";
@@ -38,6 +39,6 @@ export function Comparison({ language }: { language: Language }) {
         <label>{b.seed}<input type="number" required min={-2147483648} max={2147483647} value={seed} onChange={event => setSeed(event.target.value)} /></label>
         <button type="submit">{t.run}</button></div></fieldset></form>
     {busy && <p role="status">{t.loading}</p>}{error && <p role="alert">{t[error]}</p>}
-    {result ? <ComparisonResults result={result} language={language} /> : !busy && <p>{t.empty}</p>}
+    {result ? <><ComparisonResults result={result} language={language} />{result.save_token && <SaveComparison key={result.save_token} token={result.save_token} language={language} />}</> : !busy && <p>{t.empty}</p>}
   </section>;
 }
