@@ -318,3 +318,8 @@ O(n log n) average, O(n²) worst-case, O(log n) stack· όλα ίσα στοιχ
 Και οι πέντε catalogue sorters είναι executable σε benchmark/experiments.
 Τα #51/#52 ενσωματώθηκαν με PR #54/#55. Διατηρείται όριο 4 pairs ανά experiment·
 οι πέντε implementations δεν επιλέγονται όλες μαζί σε ένα run.
+
+
+## Comparison backend (#58)
+
+POST `/api/benchmarks/sorting/compare/`: algorithms (2–5 distinct trusted slugs), size (1–1000), dataset_type και seed. Μία deterministic generation, fresh copy ανά sorter/run, 10 runs. Response: configuration και results με algorithm/status/measurement ή ασφαλές runner_error χωρίς metrics. Αποτυχία ενός sorter δεν ακυρώνει τους υπόλοιπους. Χωρίς persistence· ίδια single-run contracts. Tests: κοινό input, distinct copies, dispatch, API validation και isolated failures.

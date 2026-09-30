@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from core.datasets.generators import DATASET_TYPES
-from .runner import MAX_BENCHMARK_SIZE, run_bubble_sort_benchmark, run_sorting_benchmark
+from .runner import MAX_BENCHMARK_SIZE, SORTING_ALGORITHMS, compare_sorting, run_bubble_sort_benchmark, run_sorting_benchmark
 
 
 class StrictIntegerField(serializers.IntegerField):
@@ -34,7 +34,7 @@ def bubble_sort_benchmark(request):
 
 
 class SortingBenchmarkRequestSerializer(BenchmarkRequestSerializer):
-    algorithm = serializers.ChoiceField(choices=("bubble-sort", "insertion-sort", "selection-sort", "merge-sort", "quick-sort"))
+    algorithm = serializers.ChoiceField(choices=SORTING_ALGORITHMS)
 
 
 @api_view(["POST"])
@@ -42,3 +42,20 @@ def sorting_benchmark(request):
     serializer = SortingBenchmarkRequestSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     return Response(run_sorting_benchmark(**serializer.validated_data))
+
+
+class ComparisonRequestSerializer(BenchmarkRequestSerializer):
+    algorithms = serializers.ListField(child=serializers.ChoiceField(choices=SORTING_ALGORITHMS),
+                                       min_length=2, max_length=5)
+
+    def validate_algorithms(self, values):
+        if len(set(values)) != len(values):
+            raise serializers.ValidationError("Select distinct algorithms.")
+        return values
+
+
+@api_view(["POST"])
+def sorting_comparison(request):
+    serializer = ComparisonRequestSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    return Response(compare_sorting(**serializer.validated_data))
