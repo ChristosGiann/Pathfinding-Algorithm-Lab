@@ -1,3 +1,5 @@
+import { useCatalogue } from "../../hooks/useCatalogue";
+import { ComplexityContext } from "../Benchmark/ComplexityContext";
 import { useId } from "react";
 import type { ComparisonResult } from "../../types/comparison";
 import type { SortingAlgorithm } from "../../types/benchmark";
@@ -7,6 +9,7 @@ import { comparisonTexts } from "../../i18n/comparison";
 import "../Benchmark/ResultsDashboard.css";
 
 export function ComparisonResults({ result, language }: { result: ComparisonResult; language: Language }) {
+  const catalogue = useCatalogue();
   const t = comparisonTexts[language], b = benchmarkTexts[language], id = useId();
   const format = (ns: number) => (ns / 1_000_000).toLocaleString(language, { maximumSignificantDigits: 6 });
   const name = (slug: string) => b.algorithms[slug as SortingAlgorithm] ?? slug;
@@ -18,7 +21,7 @@ export function ComparisonResults({ result, language }: { result: ComparisonResu
     <div className="results__scroll" role="region" aria-label={t.results} tabIndex={0}>
       <table><caption>{t.results}</caption><thead><tr>{[b.algorithm, b.status, `${b.median} (ms)`, `${b.min} (ms)`, `${b.max} (ms)`].map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
         <tbody>{result.results.map(row => <tr key={row.algorithm}>
-          <th scope="row">{name(row.algorithm)} · {row.source_type === "custom" ? t.custom : t.builtIn}</th>
+          <th scope="row">{name(row.algorithm)} · {row.source_type === "custom" ? t.custom : t.builtIn}<ComplexityContext slug={row.algorithm} catalogue={catalogue} language={language} /></th>
           <td>{row.status === "completed" ? (row.measurement.correct ? b.correct : b.incorrect) : row.status === "timeout" ? t.timeout : t.failed}</td>
           {(["median_ns", "min_ns", "max_ns"] as const).map(metric => <td key={metric}>{row.status === "completed" ? format(row.measurement[metric]) : "—"}</td>)}
         </tr>)}</tbody>

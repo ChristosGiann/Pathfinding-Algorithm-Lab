@@ -195,3 +195,16 @@ test('comparison uses shared scale, preserves failed/incorrect rows and both lan
     assert.doesNotMatch(renderToStaticMarkup(createElement(ComparisonResults,{result:zero,language})),/NaN|Infinity/);
   }
 });
+
+
+test('complexity context maps by slug and never fabricates missing values', async () => {
+  const { ComplexityContext } = await import('../src/components/Benchmark/ComplexityContext.tsx');
+  const catalogue = [{slug:'quick-sort',best_case_complexity:'BEST',average_case_complexity:'AVG',worst_case_complexity:'WORST',space_complexity:'SPACE'}];
+  for (const language of ['el','en']) {
+    const html = renderToStaticMarkup(createElement(ComplexityContext,{slug:'quick-sort',catalogue,language}));
+    for (const value of ['BEST','AVG','WORST','SPACE']) assert.match(html,new RegExp(value));
+    const missing = renderToStaticMarkup(createElement(ComplexityContext,{slug:'unknown',catalogue,language}));
+    assert.doesNotMatch(missing,/BEST|AVG|WORST|SPACE/);
+    assert.match(missing,language === 'el' ? /Metadata μη διαθέσιμα/ : /Metadata unavailable/);
+  }
+});
