@@ -9,7 +9,8 @@ export interface BenchmarkRequest {
   dataset_type: DatasetType;
 }
 
-export interface BenchmarkResult extends BenchmarkRequest {
+export interface BenchmarkResult extends Omit<BenchmarkRequest, "algorithm"> {
+  algorithm: string;
   runs: number;
   correct: boolean;
   timings_ns: number[];

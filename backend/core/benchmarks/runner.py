@@ -53,11 +53,7 @@ def measure_sorter(algorithm, sorter, dataset):
         "runs": RUN_COUNT,
         "correct": correct,
         "timings_ns": timings,
-        "median_ns": median(timings),
-        "mean_ns": mean(timings),
-        "stddev_ns": pstdev(timings),
-        "min_ns": min(timings),
-        "max_ns": max(timings),
+        **timing_statistics(timings),
     }
 
 
@@ -99,3 +95,8 @@ def add_relative_statistics(results, baseline_algorithm):
                                                and measurement["correct"] else None)
             if measurement["relative_speed"] is not None and not isfinite(measurement["relative_speed"]):
                 measurement["relative_speed"] = None
+
+
+def timing_statistics(timings):
+    return {"median_ns": median(timings), "mean_ns": mean(timings), "stddev_ns": pstdev(timings),
+            "min_ns": min(timings), "max_ns": max(timings)}

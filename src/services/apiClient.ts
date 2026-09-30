@@ -105,3 +105,7 @@ export function saveComparison(name: string, token: string, signal: AbortSignal)
     method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, token }), signal,
   });
 }
+
+export function runCustomBenchmark(input: {source:string; trusted:boolean; size:number; seed:number; dataset_type: import("../types/benchmark").DatasetType}, signal: AbortSignal): Promise<import("../types/comparison").ComparisonRow> {
+  return apiRequest("/api/benchmarks/sorting/custom/", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(input),signal});
+}
