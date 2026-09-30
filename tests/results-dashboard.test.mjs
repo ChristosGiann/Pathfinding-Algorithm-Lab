@@ -51,7 +51,7 @@ test('failures and timeouts have no invented timing or correctness', () => {
   assert.match(html, /Η εκτέλεση απέτυχε/);
   assert.match(html, /30 δευτερόλεπτα/);
   assert.doesNotMatch(html, /results__plot|Σωστή ταξινόμηση/);
-  assert.equal((html.match(/<td>—<\/td>/g) ?? []).length, 8);
+  assert.equal((html.match(/<td>—<\/td>/g) ?? []).length, 12);
 });
 test('incorrect output stays labelled and zero timings stay finite', () => {
   const html = render([{ id: 1, input, status: 'completed', result: {

@@ -1,5 +1,6 @@
 export const benchmarkTexts = {
   el: {
+    mean: "Μέσος όρος", stddev: "Τυπική απόκλιση (πληθυσμού)",
     algorithms: { "bubble-sort": "Bubble Sort", "insertion-sort": "Insertion Sort", "selection-sort": "Selection Sort", "merge-sort": "Merge Sort", "quick-sort": "Quick Sort" },
     dashboard: "Αποτελέσματα μετρήσεων", implementation: "Υλοποίηση", status: "Ορθότητα / κατάσταση",
     emptyResults: "Εκτέλεσε ένα benchmark για να εμφανιστούν αποτελέσματα.",
@@ -20,6 +21,7 @@ export const benchmarkTexts = {
     runs: "Εκτελέσεις", types: { random: "Τυχαία", sorted: "Ταξινομημένα", reversed: "Αντίστροφα", nearly_sorted: "Σχεδόν ταξινομημένα" },
   },
   en: {
+    mean: "Mean", stddev: "Standard deviation (population)",
     algorithms: { "bubble-sort": "Bubble Sort", "insertion-sort": "Insertion Sort", "selection-sort": "Selection Sort", "merge-sort": "Merge Sort", "quick-sort": "Quick Sort" },
     dashboard: "Measurement results", implementation: "Implementation", status: "Correctness / status",
     emptyResults: "Run a benchmark to see results.",

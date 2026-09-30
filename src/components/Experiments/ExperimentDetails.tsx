@@ -9,7 +9,7 @@ export function ExperimentDetails({ experiment, language }: { experiment: Experi
   const comparison = comparisonFromExperiment(experiment);
   const t = experimentTexts[language];
   const b = benchmarkTexts[language];
-  const ms = (value: number) => (value / 1_000_000).toLocaleString(language, { maximumSignificantDigits: 6 });
+  const ms = (value: number | undefined) => value === undefined || !Number.isFinite(value) ? "—" : (value / 1_000_000).toLocaleString(language, { maximumSignificantDigits: 6 });
   return <div className="experiment-details">
     <h3>#{experiment.id} · {experiment.name}</h3>
     <p>{b.status}: {t.states[experiment.status]}</p>
@@ -20,12 +20,12 @@ export function ExperimentDetails({ experiment, language }: { experiment: Experi
     <h4>{t.saved}</h4>
     {!experiment.results.length ? <p>{t.noResults}</p> : <div className="results__scroll" tabIndex={0} role="region" aria-label={t.saved}>
       <table><caption>{t.saved} · #{experiment.id}</caption>
-        <thead><tr>{[b.implementation, b.dataset, b.size, b.seed, b.runs, b.status, `${b.median} (ms)`, `${b.min} (ms)`, `${b.max} (ms)`].map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
+        <thead><tr>{[b.implementation, b.dataset, b.size, b.seed, b.runs, b.status, `${b.median} (ms)`, `${b.min} (ms)`, `${b.max} (ms)`, `${b.mean} (ms)`, `${b.stddev} (ms)`].map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
         <tbody>{experiment.results.map(item => <tr key={item.id}>
           <th scope="row">{item.implementation_snapshot.algorithm} · {item.implementation_snapshot.name} · {item.implementation_snapshot.language}</th>
           <td>{b.types[item.measurement.dataset_type]}</td><td>{item.measurement.size}</td><td>{item.measurement.seed}</td><td>{item.measurement.runs}</td>
           <td>{item.measurement.correct ? b.correct : b.incorrect}</td>
-          <td>{ms(item.measurement.median_ns)}</td><td>{ms(item.measurement.min_ns)}</td><td>{ms(item.measurement.max_ns)}</td>
+          <td>{ms(item.measurement.median_ns)}</td><td>{ms(item.measurement.min_ns)}</td><td>{ms(item.measurement.max_ns)}</td><td>{ms(item.measurement.mean_ns)}</td><td>{ms(item.measurement.stddev_ns)}</td>
         </tr>)}</tbody>
       </table>
     </div>}

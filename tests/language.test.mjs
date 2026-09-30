@@ -219,3 +219,15 @@ test('persisted comparison reconstructs after refresh from snapshots only', asyn
   assert.match(renderToStaticMarkup(createElement(ComparisonResults,{result:restored,language:'en'})),/Quick Sort/);
   assert.equal(comparisonFromExperiment({results:[]}),null);
 });
+
+
+test('statistics render explicit baseline, finite ratios and legacy fallback', async () => {
+  const { ComparisonResults } = await import('../src/components/Comparison/ComparisonResults.tsx');
+  const result = {baseline_algorithm:'quick-sort',dataset_type:'random',size:3,seed:1,results:[{algorithm:'quick-sort',status:'completed',measurement:{correct:true,median_ns:1000000,min_ns:1,max_ns:2000000,mean_ns:1500000,stddev_ns:500000,relative_speed:2}}]};
+  for (const language of ['el','en']) {
+    const html=renderToStaticMarkup(createElement(ComparisonResults,{result,language}));
+    assert.match(html,/2×/); assert.match(html,language==='el' ? /Μέσος όρος/ : /Mean/);
+    assert.match(html,language==='el' ? /Baseline αναφοράς: Quick Sort/ : /Reference baseline: Quick Sort/);
+    assert.doesNotMatch(html,/NaN|Infinity/);
+  }
+});

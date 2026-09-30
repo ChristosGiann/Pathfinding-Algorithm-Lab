@@ -1,4 +1,5 @@
-from statistics import median
+from math import isfinite
+from statistics import median, mean, pstdev
 from time import perf_counter_ns
 
 from core.algorithms.sorting import bubble_sort, insertion_sort, selection_sort, merge_sort, quick_sort
@@ -53,6 +54,8 @@ def measure_sorter(algorithm, sorter, dataset):
         "correct": correct,
         "timings_ns": timings,
         "median_ns": median(timings),
+        "mean_ns": mean(timings),
+        "stddev_ns": pstdev(timings),
         "min_ns": min(timings),
         "max_ns": max(timings),
     }
@@ -78,4 +81,21 @@ def compare_sorting(algorithms, size, seed=42, dataset_type="random"):
             results.append({"algorithm": algorithm, "status": "completed", "measurement": measurement})
         except Exception:
             results.append({"algorithm": algorithm, "status": "error", "error": "runner_error"})
-    return {"dataset_type": dataset_type, "size": size, "seed": seed, "results": results}
+    add_relative_statistics(results, algorithms[0])
+    return {"baseline_algorithm": algorithms[0], "dataset_type": dataset_type, "size": size, "seed": seed, "results": results}
+
+
+def add_relative_statistics(results, baseline_algorithm):
+    """Keep the explicit reference even when it fails; never choose a new one."""
+    reference = next((row for row in results if row["algorithm"] == baseline_algorithm), None)
+    baseline = (reference["measurement"]["median_ns"] if reference
+                and reference["status"] == "completed" and reference["measurement"]["correct"] else 0)
+    for row in results:
+        if row["status"] == "completed":
+            measurement = row["measurement"]
+            duration = measurement["median_ns"]
+            measurement["baseline_algorithm"] = baseline_algorithm
+            measurement["relative_speed"] = (baseline / duration if baseline > 0 and duration > 0
+                                               and measurement["correct"] else None)
+            if measurement["relative_speed"] is not None and not isfinite(measurement["relative_speed"]):
+                measurement["relative_speed"] = None
