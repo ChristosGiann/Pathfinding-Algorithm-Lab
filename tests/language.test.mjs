@@ -271,3 +271,13 @@ test('education renders localized structure, supplied content and missing fallba
   assert.doesNotMatch(missing,/O\(|WHAT/);assert.match(missing,language==='el'?/μη διαθέσιμο/:/unavailable/);
  }
 });
+
+
+test('custom benchmark requires trusted acknowledgement and explains local limits in both languages',async()=>{
+ const {CustomBenchmark}=await import('../src/components/CustomPython/CustomBenchmark.tsx');
+ for (const language of ['el','en']) {
+  const html=renderToStaticMarkup(createElement(CustomBenchmark,{source:'def solve(values): return sorted(values)',language}));
+  assert.match(html,/ENABLE_TRUSTED_CUSTOM_EXECUTION/);assert.match(html,/<button disabled=""/);
+  assert.match(html,language==='el'?/δικός μου trusted/:/my own trusted/);
+ }
+});
