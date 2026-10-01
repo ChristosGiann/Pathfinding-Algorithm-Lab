@@ -1,6 +1,6 @@
 # Roadmap
 
-Τρέχον dev, 2026-10-01: sorting comparison/persistence/statistics/education/visualization/custom execution και CI υλοποιήθηκαν (#58–#64/#66–#68). Το #65 προετοιμάζει το pathfinding evaluation contract. Τα παλιά #1–#10 παραμένουν ξεχωριστά ανοικτά issues.
+Τρέχον snapshot, 2026-10-01: sorting comparison/persistence/statistics/education/visualization/custom execution και CI υλοποιήθηκαν (#58–#64/#66–#68). Το #65 προετοιμάζει το pathfinding evaluation contract. Τα παλιά #1–#10 παραμένουν ξεχωριστά ανοικτά issues.
 
 ## Main development path
 
