@@ -166,7 +166,7 @@ npm run build
 git diff --check
 ```
 
-Το integrated snapshot έχει 81 backend tests και 14 frontend tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
+Το integrated snapshot επαληθεύεται με 109 backend tests και 29 frontend tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
 
 ## Περιορισμοί MVP
 
@@ -175,8 +175,8 @@ git diff --check
 - Το benchmark είναι synchronous, με 10 runs και όριο 1.000 στοιχείων, χωρίς warm-up exclusion ή απομονωμένο performance environment.
 - Τα reviews είναι κοινά ανά implementation στο single-user local MVP, χωρίς account isolation.
 - Το pathfinding grid είναι foundation· BFS/DFS execution και animation παραμένουν μελλοντικά.
-- Ο language selector αλλάζει το UI μεταξύ Ελληνικών και Αγγλικών. Η επιλογή ισχύει μέχρι το refresh, που επιστρέφει στα Ελληνικά. Catalogue descriptions και δικές σου σημειώσεις εμφανίζονται όπως έχουν αποθηκευτεί.
-- **Custom code execution δεν είναι public-safe χωρίς πραγματικό sandbox**, όπως κατάλληλα περιορισμένο Docker environment. Ένα subprocess και ένα timeout δεν αποτελούν sandbox. Το PR #38 προσθέτει static validation και ρητή developer-only CLI εκτέλεση, όχι ασφαλή δημόσια εκτέλεση.
+- Ο language selector αλλάζει το UI μεταξύ Ελληνικών και Αγγλικών. Η επιλογή ισχύει μέχρι το refresh, που επιστρέφει στα Ελληνικά. Το εκπαιδευτικό catalogue είναι el/en· οι δικές σου σημειώσεις παραμένουν όπως έχουν αποθηκευτεί.
+- **Custom code execution δεν είναι public-safe χωρίς πραγματικό sandbox**, όπως κατάλληλα περιορισμένο Docker environment. Ένα subprocess και ένα timeout δεν αποτελούν sandbox. Τα #67/#68 προσθέτουν opt-in trusted local HTTP execution/comparison, απενεργοποιημένο από προεπιλογή.
 - Το local setup δεν αποτελεί production deployment configuration.
 
 ## Roadmap
@@ -187,8 +187,9 @@ git diff --check
 | Υλοποιημένο στο dev | Custom Python validation (#22 / PR #38). |
 | Τρέχουσα τεκμηρίωση | Portfolio-ready README (#12 / PR #39), με πραγματικό screenshot, setup και scope. |
 | Υλοποιημένο στο παρόν feature snapshot | Language selector Ελληνικά / English (#11), με διατήρηση φόρμας και αποτελεσμάτων κατά την αλλαγή. |
-| Επόμενη λειτουργική επέκταση | Σχεδιασμός της πλήρους MVP integration: πολλαπλές εκτελέσιμες implementations, αποθήκευση αποτελεσμάτων και comparison. |
-| Μελλοντικά | Sorting visualization, searching, graph/pathfinding και άλλες algorithm families. |
+| Υλοποιημένο στο dev | Sorting comparison/history/statistics, educational Library, visualization, trusted local custom comparison και CI (#58–#64/#66–#68). |
+| Foundation στο dev | Pathfinding input/result/evaluation contract (#65), [αναλυτικά](docs/PATHFINDING.md). |
+| Μελλοντικά | BFS/DFS/Dijkstra/A* implementations και animation (#1–#10), searching και άλλες οικογένειες. |
 
 Το [Roadmap](docs/ROADMAP.md) καταγράφει τις φάσεις και το [Progress](docs/PROGRESS.md) το τρέχον snapshot. Οι μελλοντικοί στόχοι δεν παρουσιάζονται ως έτοιμες λειτουργίες.
 

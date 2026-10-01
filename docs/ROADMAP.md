@@ -1,5 +1,7 @@
 # Roadmap
 
+Τρέχον dev, 2026-10-01: sorting comparison/persistence/statistics/education/visualization/custom execution και CI υλοποιήθηκαν (#58–#64/#66–#68). Το #65 προετοιμάζει το pathfinding evaluation contract. Τα παλιά #1–#10 παραμένουν ξεχωριστά ανοικτά issues.
+
 ## Main development path
 
 ```text
@@ -174,8 +176,7 @@ Delivered scope:
 - provide explicit local CLI execution with a 2-second subprocess timeout,
 - keep arbitrary custom-code execution local-development-only until a real sandbox exists.
 
-The HTTP API performs static checks only. Execution requires the local CLI flag;
-custom-code persistence and benchmark integration remain future work.
+Η αρχική υλοποίηση #22 ήταν static-only HTTP. Τα #67/#68 προσθέτουν opt-in trusted local execution/comparison. Custom persistence παραμένει μελλοντικό.
 See [Custom Python](CUSTOM_PYTHON.md).
 
 ## Future milestone — MVP Integration Review
@@ -210,9 +211,9 @@ Review:
 
 ## Phase 9 — Visualization
 
-Status: **Future**
+Status: **Sorting implemented in #64; pathfinding animation remains future**
 
-Planned controls:
+Sorting controls:
 
 - Play
 - Pause
@@ -220,7 +221,7 @@ Planned controls:
 - Reset
 - Speed
 
-Sorting visualizations may show comparisons, swaps, active indices, and sorted regions.
+Sorting visualization δείχνει comparisons, swaps/writes και active indices.
 
 The existing pathfinding grid can later support graph algorithms.
 
@@ -239,13 +240,13 @@ Possible order:
 Possible future features:
 
 - custom datasets
-- experiment history
+- experiment history (implemented #47/#62)
 - experiment replay
 - CSV/JSON export
-- richer benchmark statistics
+- richer benchmark statistics (implemented #63)
 - algorithm ranking views
 - memory measurements
-- custom implementations
+- custom implementations (trusted local execution implemented #67/#68; persistence/public sandbox future)
 - AI-assisted result explanation
 
 These are outside the first MVP.
@@ -372,3 +373,8 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Mixed custom/built-in comparison (#68)
 
 Το υπάρχον POST sorting/compare/ δέχεται optional custom_source και trusted:true μαζί με 1–4 distinct built-ins (χωρίς custom παραμένει 2–5). Μία generation, ανεξάρτητες copies σε parent/worker, ίδιο configuration και metrics helper. Το πρώτο selected built-in είναι το ρητό baseline· custom row έχει source_type:custom και algorithm:custom-python. Failure/timeout/disabled/invalid custom δεν ακυρώνουν τις built-in μετρήσεις και δεν δημιουργούν metrics. Το UI προσθέτει προαιρετική built-in επιλογή στη custom φόρμα και επαναχρησιμοποιεί ComparisonResults/table/common scale/relative speed. Mixed results δεν παίρνουν save_token: custom persistence είναι εκτός scope. Process startup δεν χρονομετρείται· ο worker έχει ξεχωριστό process context, επομένως οι χρόνοι δεν αποδεικνύουν γενική ανωτερότητα. Backend tests καλύπτουν same dataset/fresh copies/πραγματικό worker/errors, frontend tests mixed identities/scales/failed rows.
+
+
+## Pathfinding foundation (#65)
+
+Κοινό GridInput/Search/PathfindingResult για bfs/dfs/dijkstra/astar, adapter από υπάρχον UI grid χωρίς DOM, frozen copies, cardinal unit-cost neighbours και same-grid evaluation utility. Found/no-path/invalid/runner error έχουν διακριτό contract. Timing μόνο του search call· path length σε ακμές, null όταν δεν υπάρχει path. Δεν προστίθενται ακόμη οι τέσσερις algorithms, animation ή persistence και δεν κλείνουν τα #1–#10. Αναλυτικό contract και όρια στο [Pathfinding](PATHFINDING.md). Tests καλύπτουν input validation, walls/markers, same-cell/no-path, invalid trace, timing boundary και copy isolation· το sorting regression suite παραμένει ενεργό.
