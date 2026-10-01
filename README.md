@@ -21,11 +21,11 @@
 | Custom Python validation | Static validation και opt-in trusted local benchmark/comparison σε ξεχωριστό process με timeout 2 s. Disabled by default· δεν αποτελεί δημόσιο sandbox. |
 | Pathfinding foundation | Grid, walls και clear/reset controls. Τα algorithm execution/animation controls παραμένουν ανενεργά. |
 
-Το παρόν snapshot περιλαμβάνει τα ολοκληρωμένα #11, #12, #16–#22 και #41/#43/#45/#47: δίγλωσσο UI, custom Python validation, πέντε trusted sorters και πλήρη ροή saved experiments με ιστορικό. Τα σχετικά PR #38–#48 ενσωματώθηκαν στο dev για την προώθηση στη main.
+Το παρόν snapshot περιλαμβάνει τα ολοκληρωμένα #11, #12, #16–#22 και #41/#43/#45/#47: δίγλωσσο UI, custom Python validation, πέντε trusted sorters και πλήρη ροή saved experiments με ιστορικό. Τα σχετικά PR #38–#48 αποτελούν προηγούμενο στάδιο της υλοποίησης.
 
 ## Νέο sorting evaluation flow
 
-Στο dev προστέθηκαν τα #58–#64 και #66–#68: κοινό comparison dataset, πίνακας/γράφημα, catalogue Big-O, mean/population standard deviation, ρητό baseline ratio, signed snapshot persistence, εκπαιδευτικά κείμενα, ανεξάρτητο sorting animation και opt-in custom comparison. GitHub Actions ελέγχει backend/frontend σε κάθε PR. Το main ενημερώνεται μόνο με ρητή εντολή. Για ενεργοποίηση custom execution δες [Custom Python](docs/CUSTOM_PYTHON.md#trusted-custom-benchmark-67).
+Περιλαμβάνονται τα #58–#64 και #66–#68: κοινό comparison dataset, πίνακας/γράφημα, catalogue Big-O, mean/population standard deviation, ρητό baseline ratio, signed snapshot persistence, εκπαιδευτικά κείμενα, ανεξάρτητο sorting animation και opt-in custom comparison. Το #65 προσθέτει το pathfinding input/result/evaluation foundation, χωρίς ακόμη algorithms ή animation. GitHub Actions ελέγχει backend/frontend σε κάθε PR. Το main ενημερώνεται μόνο με ρητή εντολή. Για ενεργοποίηση custom execution δες [Custom Python](docs/CUSTOM_PYTHON.md#trusted-custom-benchmark-67).
 
 ## Benchmarking και visualization
 

@@ -4,11 +4,11 @@ Last verified: **2026-10-01**
 
 ## Current phase
 
-Το dev περιλαμβάνει το ολοκληρωμένο sorting evaluation scope #58–#64/#66–#68:
+Το παρόν snapshot περιλαμβάνει το ολοκληρωμένο sorting evaluation scope #58–#64/#66–#68:
 comparison, αποθήκευση/ιστορικό, statistics/baseline, Big-O context, educational
 Library, visualization, trusted local custom execution και CI. Το #65 προσθέτει
 το pathfinding input/result/evaluation foundation, χωρίς ακόμη algorithms ή animation.
-Main παραμένει στο προηγούμενο release snapshot μέχρι ρητή εντολή προώθησης.
+Η προώθηση από dev σε main γίνεται μόνο με ρητή εντολή· τα δύο branches παραμένουν μόνιμα.
 
 Οι επόμενες ενότητες διατηρούν το ιστορικό ανά issue· οι παλιότερες test counts
 και ενδιάμεσες καταστάσεις αφορούν την ημερομηνία τους.
