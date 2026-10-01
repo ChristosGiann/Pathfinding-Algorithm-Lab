@@ -10,7 +10,7 @@ MAX_AGE = 3600
 
 
 def sign_comparison(result):
-    if all(row["status"] == "completed" for row in result["results"]):
+    if all(row["status"] == "completed" and row.get("source_type", "built_in") == "built_in" for row in result["results"]):
         return signing.dumps(result, salt=SALT, compress=True)
     return None
 

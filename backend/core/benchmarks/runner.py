@@ -63,8 +63,9 @@ def run_bubble_sort_benchmark(size: int, seed: int = 42,
     return run_sorting_benchmark("bubble-sort", size, seed, dataset_type)
 
 
-def compare_sorting(algorithms, size, seed=42, dataset_type="random"):
-    if (not isinstance(algorithms, list) or not 2 <= len(algorithms) <= 5
+def compare_sorting(algorithms, size, seed=42, dataset_type="random", custom_source=None, custom_allowed=False):
+    minimum, maximum = (1, 4) if custom_source is not None else (2, 5)
+    if (not isinstance(algorithms, list) or not minimum <= len(algorithms) <= maximum
             or any(not isinstance(item, str) for item in algorithms)
             or len(set(algorithms)) != len(algorithms)):
         raise ValueError("Select 2–5 distinct trusted algorithms")
@@ -74,9 +75,12 @@ def compare_sorting(algorithms, size, seed=42, dataset_type="random"):
     for algorithm, sorter in sorters:
         try:
             measurement = measure_sorter(algorithm, sorter, dataset)
-            results.append({"algorithm": algorithm, "status": "completed", "measurement": measurement})
+            results.append({"algorithm": algorithm, "source_type": "built_in", "status": "completed", "measurement": measurement})
         except Exception:
-            results.append({"algorithm": algorithm, "status": "error", "error": "runner_error"})
+            results.append({"algorithm": algorithm, "source_type": "built_in", "status": "error", "error": "runner_error"})
+    if custom_source is not None:
+        from core.custom_python.benchmark import measure_custom, error_result
+        results.append(measure_custom(custom_source, dataset) if custom_allowed else error_result("execution_disabled"))
     add_relative_statistics(results, algorithms[0])
     return {"baseline_algorithm": algorithms[0], "dataset_type": dataset_type, "size": size, "seed": seed, "results": results}
 

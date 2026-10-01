@@ -9,3 +9,5 @@
 .benchmark__correct { color: #166534; font-weight: 600; }
 .benchmark__incorrect, .benchmark [role="alert"] { color: #b91c1c; }
 .benchmark__hint { color: #475569; line-height: 1.6; font-size: .9rem; }
+.benchmark label:has(> input[type="checkbox"]) { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+.benchmark input[type="checkbox"] { flex: none; width: 18px; height: 18px; margin: 0; }
