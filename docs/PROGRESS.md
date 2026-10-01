@@ -1,12 +1,17 @@
 # Project Progress
 
-Last verified: **2026-09-29**
+Last verified: **2026-10-01**
 
 ## Current phase
 
-Issues #17–#21 are completed and closed.
-They were integrated into `dev` through PRs #28–#32 and promoted together to `main` through PR #33 on 2026-09-23.
-PR #50 promoted the subsequent sorting/experiment snapshot to main on 2026-09-29. That promotion established the shared baseline. The current release snapshot also includes custom Python validation, el/en selection, Bubble/Insertion benchmarks, persisted experiment execution, experiment UI and paginated history (PRs #38–#48).
+Το dev περιλαμβάνει το ολοκληρωμένο sorting evaluation scope #58–#64/#66–#68:
+comparison, αποθήκευση/ιστορικό, statistics/baseline, Big-O context, educational
+Library, visualization, trusted local custom execution και CI. Το #65 προσθέτει
+το pathfinding input/result/evaluation foundation, χωρίς ακόμη algorithms ή animation.
+Main παραμένει στο προηγούμενο release snapshot μέχρι ρητή εντολή προώθησης.
+
+Οι επόμενες ενότητες διατηρούν το ιστορικό ανά issue· οι παλιότερες test counts
+και ενδιάμεσες καταστάσεις αφορούν την ημερομηνία τους.
 
 ## Git state
 
@@ -62,7 +67,7 @@ server response or an automated unmount test. See [Testing](TESTING.md).
 
 ## Next
 
-1. Προτεραιότητα παραμένει το sorting lab: ολοκλήρωση MVP integration review και προσδιορισμός των επόμενων κενών σε σχετικά GitHub issues πριν από υλοποίηση. Τα pathfinding #1–#10 παραμένουν μελλοντικά.
+1. Το ζητημένο sorting scope ολοκληρώθηκε. Το pathfinding foundation #65 προετοιμάζει την επόμενη φάση· τα #1–#10 παραμένουν ανοικτά και απαιτούν ξεχωριστή υλοποίηση. Νέα κενά καταγράφονται σε issue πριν από εργασία.
 2. Keep `dev` as the permanent integration branch for subsequent issue branches.
 3. Keep documentation synchronized in the same PR whenever feature status, API contracts, architecture, or roadmap change.
 
@@ -241,3 +246,8 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Mixed custom/built-in comparison (#68)
 
 Το υπάρχον POST sorting/compare/ δέχεται optional custom_source και trusted:true μαζί με 1–4 distinct built-ins (χωρίς custom παραμένει 2–5). Μία generation, ανεξάρτητες copies σε parent/worker, ίδιο configuration και metrics helper. Το πρώτο selected built-in είναι το ρητό baseline· custom row έχει source_type:custom και algorithm:custom-python. Failure/timeout/disabled/invalid custom δεν ακυρώνουν τις built-in μετρήσεις και δεν δημιουργούν metrics. Το UI προσθέτει προαιρετική built-in επιλογή στη custom φόρμα και επαναχρησιμοποιεί ComparisonResults/table/common scale/relative speed. Mixed results δεν παίρνουν save_token: custom persistence είναι εκτός scope. Process startup δεν χρονομετρείται· ο worker έχει ξεχωριστό process context, επομένως οι χρόνοι δεν αποδεικνύουν γενική ανωτερότητα. Backend tests καλύπτουν same dataset/fresh copies/πραγματικό worker/errors, frontend tests mixed identities/scales/failed rows.
+
+
+## Pathfinding foundation (#65)
+
+Κοινό GridInput/Search/PathfindingResult για bfs/dfs/dijkstra/astar, adapter από υπάρχον UI grid χωρίς DOM, frozen copies, cardinal unit-cost neighbours και same-grid evaluation utility. Found/no-path/invalid/runner error έχουν διακριτό contract. Timing μόνο του search call· path length σε ακμές, null όταν δεν υπάρχει path. Δεν προστίθενται ακόμη οι τέσσερις algorithms, animation ή persistence και δεν κλείνουν τα #1–#10. Αναλυτικό contract και όρια στο [Pathfinding](PATHFINDING.md). Tests καλύπτουν input validation, walls/markers, same-cell/no-path, invalid trace, timing boundary και copy isolation· το sorting regression suite παραμένει ενεργό.

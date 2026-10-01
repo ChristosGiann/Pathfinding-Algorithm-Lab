@@ -47,8 +47,12 @@ function shape(value) {
   return Object.fromEntries(Object.entries(value).map(([key, item]) => [key,
     typeof item === 'object' ? shape(item) : typeof item]));
 }
-test('all UI dictionaries have matching non-empty Greek and English entries', () => {
-  for (const texts of [translations, reviewTexts, benchmarkTexts, customPythonTexts, experimentTexts]) {
+test('all UI dictionaries have matching non-empty Greek and English entries', async () => {
+  const additional=[];
+  for(const file of ['comparison','comparisonSave','complexity','education','visualization','customExecution']) {
+    const module=await import(`../src/i18n/${file}.ts`); additional.push(...Object.values(module).filter(value=>value?.el&&value?.en));
+  }
+  for (const texts of [translations, reviewTexts, benchmarkTexts, customPythonTexts, experimentTexts,...additional]) {
     assert.deepEqual(shape(texts.el), shape(texts.en));
     assert.doesNotMatch(JSON.stringify(texts), /:""/);
   }
@@ -293,4 +297,49 @@ test('mixed comparison identifies custom, retains built-in timings and failed ro
   assert.match(html,/Quick Sort · Built-in/);assert.match(html,/Custom Python · Custom/);assert.match(html,/width:50%/);
   if(status!=='completed')assert.match(html,/<td>—<\/td>/);
  }
+});
+
+
+test('grid adapter validates endpoints and snapshots the existing UI without DOM',async()=>{
+ const {gridToInput,neighbours,snapshotInput}=await import('../src/pathfinding/evaluation.ts');
+ const {createGrid}=await import('../src/utils/createGrid.ts');
+ const grid=createGrid(20,30), input=gridToInput(grid);
+ assert.equal(input.start,305);assert.equal(input.end,324);assert.equal(input.walls.length,600);
+ grid[0][0].type='wall';assert.equal(input.walls[0],false);
+ const tiny={rows:2,cols:3,start:0,end:5,walls:[false,true,false,false,false,false]};
+ assert.deepEqual(neighbours(tiny,0),[3]);assert.deepEqual(neighbours(tiny,3),[0,4]);
+ assert.deepEqual(neighbours(tiny,2),[5]);assert.deepEqual(neighbours(tiny,1),[]);
+ assert.ok(Object.isFrozen(snapshotInput(tiny).walls));
+ for(const bad of [{...tiny,start:1},{...tiny,end:8},{...tiny,rows:0},{...tiny,walls:Array(6)},{...tiny,cols:2}])assert.throws(()=>snapshotInput(bad));
+ assert.throws(()=>gridToInput([]));assert.throws(()=>gridToInput([[{row:0,col:0,type:'start'}]]));
+ const miniature=[[{row:0,col:0,type:'start'},{row:0,col:1,type:'visited'},{row:0,col:2,type:'end'}]];
+ assert.deepEqual(gridToInput(miniature).walls,[false,false,false]);
+ miniature[0][1].type='start';assert.throws(()=>gridToInput(miniature));
+});
+
+test('pathfinding result measures only search and separates no-path, invalid and runner errors',async()=>{
+ const {evaluatePathfinding}=await import('../src/pathfinding/evaluation.ts');
+ const input={rows:1,cols:3,start:0,end:2,walls:[false,false,false]}, events=[];
+ const times=[10,12.5];
+ const result=evaluatePathfinding('bfs',input,()=>{events.push('search');return {found:true,visited:[0,1,2],path:[0,1,2]}},()=>{events.push('clock');return times.shift()});
+ assert.deepEqual(events,['clock','search','clock']);assert.equal(result.executionTimeMs,2.5);assert.equal(result.pathLength,2);assert.equal(result.visitedNodeCount,3);
+ const noPath=evaluatePathfinding('dfs',{...input,walls:[false,true,false]},()=>({found:false,visited:[0],path:[]}),()=>1);
+ assert.equal(noPath.found,false);assert.equal(noPath.pathLength,null);assert.equal(noPath.executionTimeMs,0);
+ const same=evaluatePathfinding('astar',{rows:1,cols:1,start:0,end:0,walls:[false]},()=>({found:true,visited:[0],path:[0]}),()=>1);
+ assert.equal(same.pathLength,0);
+ for(const trace of [{found:true,visited:[0,2],path:[0,2]},{found:true,visited:[0,1,2],path:[2,1,0]},{found:false,visited:[0,0],path:[]},{found:false,visited:[99],path:[]},{found:false,visited:[],path:[0]}]) {
+  const bad=evaluatePathfinding('bfs',input,()=>trace,()=>1);assert.equal(bad.error,'invalid_result');assert.equal(bad.executionTimeMs,undefined);
+ }
+ assert.equal(evaluatePathfinding('bfs',input,()=>{throw Error('private detail')}).error,'runner_error');
+ assert.equal(evaluatePathfinding('bfs',input,()=>({found:false,visited:[],path:[]}),()=>NaN).error,'invalid_clock');
+});
+
+test('same-grid comparison isolates mutation and continues after failure',async()=>{
+ const {comparePathfinding}=await import('../src/pathfinding/evaluation.ts');
+ const input={rows:1,cols:2,start:0,end:1,walls:[false,false]},copies=[];
+ const success=fresh=>{copies.push(fresh);return {found:true,visited:[0,1],path:[0,1]}};
+ const results=comparePathfinding(input,[{algorithm:'bfs',search:fresh=>{copies.push(fresh);fresh.walls[0]=true;}},{algorithm:'dijkstra',search:success},{algorithm:'astar',search:success}],()=>1);
+ assert.equal(results[0].error,'runner_error');assert.equal(results[1].found,true);assert.equal(results[2].pathLength,1);
+ assert.equal(new Set(copies.map(item=>item.walls)).size,3);assert.deepEqual(input.walls,[false,false]);
+ assert.throws(()=>comparePathfinding(input,[{algorithm:'bfs',search:success},{algorithm:'bfs',search:success}]));
 });
