@@ -1,5 +1,5 @@
 import { registerHooks } from 'node:module';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 import { test } from 'node:test';
@@ -10,14 +10,16 @@ import { renderToStaticMarkup } from 'react-dom/server';
 // Transpile source for Node's test runner; no new test dependency required.
 registerHooks({
   resolve(specifier, context, next) {
-    if (specifier.endsWith('/i18n/benchmark')) specifier += '.ts';
+    if (specifier.startsWith('.') && context.parentURL) {
+      for (const suffix of ['.ts', '.tsx']) if (existsSync(fileURLToPath(new URL(specifier + suffix, context.parentURL)))) return next(specifier + suffix, context);
+    }
     return next(specifier, context);
   },
   load(url, context, next) {
     if (url.endsWith('.css')) return { format: 'module', source: '', shortCircuit: true };
     if (/\.(ts|tsx)$/.test(url)) return {
       format: 'module', shortCircuit: true,
-      source: ts.transpileModule(readFileSync(fileURLToPath(url), 'utf8'), {
+      source: ts.transpileModule(readFileSync(fileURLToPath(url), 'utf8').replaceAll('import.meta.env', '({VITE_API_BASE_URL: "http://127.0.0.1:8000"})'), {
         compilerOptions: { module: ts.ModuleKind.ESNext, jsx: ts.JsxEmit.ReactJSX },
       }).outputText,
     };
@@ -49,7 +51,7 @@ test('failures and timeouts have no invented timing or correctness', () => {
   assert.match(html, /Η εκτέλεση απέτυχε/);
   assert.match(html, /30 δευτερόλεπτα/);
   assert.doesNotMatch(html, /results__plot|Σωστή ταξινόμηση/);
-  assert.equal((html.match(/<td>—<\/td>/g) ?? []).length, 8);
+  assert.equal((html.match(/<td>—<\/td>/g) ?? []).length, 12);
 });
 test('incorrect output stays labelled and zero timings stay finite', () => {
   const html = render([{ id: 1, input, status: 'completed', result: {

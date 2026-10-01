@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
 import "./App.css";
+import { SortingVisualization } from "./components/SortingVisualization/SortingVisualization";
+import { Comparison } from "./components/Comparison/Comparison";
 
 import { AlgorithmLibrary } from "./components/AlgorithmLibrary/AlgorithmLibrary";
 import { AppHeader } from "./components/AppHeader/AppHeader";
@@ -60,8 +62,10 @@ function App() {
 
       <BackendStatus texts={texts.backendStatus} />
       <Benchmark language={language} />
+      <Comparison language={language} />
       <Experiments language={language} />
       <CustomPython language={language} />
+      <SortingVisualization language={language} />
 
       <Toolbar
         texts={texts.toolbar}

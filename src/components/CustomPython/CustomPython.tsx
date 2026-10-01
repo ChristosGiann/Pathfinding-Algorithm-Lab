@@ -6,6 +6,7 @@ import { customPythonTexts } from "../../i18n/customPython";
 import { validatePythonSource } from "../../services/apiClient";
 import type { PythonValidationResult } from "../../types/customPython";
 import "./CustomPython.css";
+import { CustomBenchmark } from "./CustomBenchmark";
 
 export function CustomPython({ language }: { language: Language }) {
   const texts = customPythonTexts[language];
@@ -55,5 +56,6 @@ export function CustomPython({ language }: { language: Language }) {
         {item.line != null && ` (${texts.line} ${item.line}${item.column != null ? `, ${texts.column} ${item.column}` : ""})`}
       </li>)}
     </ul></div>}
+    <CustomBenchmark key={source} source={source} language={language} />
   </section>;
 }

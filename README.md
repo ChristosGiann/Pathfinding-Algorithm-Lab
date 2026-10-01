@@ -4,7 +4,7 @@
 
 Το project εξελίχθηκε από ένα pathfinding visualizer σε εργαστήριο για testing, benchmarking, visualization, comparison και προσωπική αξιολόγηση algorithm implementations. Το GitHub repository διατηρεί το όνομα `Pathfinding-Algorithm-Lab`.
 
-Σήμερα μπορείς να εξερευνήσεις sorting algorithms, να τρέξεις Bubble Sort, Insertion Sort, Selection Sort, Merge Sort ή Quick Sort σε ελεγχόμενα datasets και να εξετάσεις ορθότητα και χρόνους εκτέλεσης. Το UI είναι προεπιλεγμένα στα Ελληνικά· το header χρησιμοποιεί τη συντομότερη ονομασία «Εργαστήριο Αλγορίθμων».
+Σήμερα μπορείς να εξερευνήσεις εκπαιδευτικό el/en sorting catalogue, να δεις step visualization, να συγκρίνεις 2–5 algorithms στα ίδια δεδομένα, να αποθηκεύσεις και να ξανανοίξεις comparisons, να τρέξεις Bubble Sort, Insertion Sort, Selection Sort, Merge Sort ή Quick Sort σε ελεγχόμενα datasets και να εξετάσεις ορθότητα και χρόνους εκτέλεσης. Το UI είναι προεπιλεγμένα στα Ελληνικά· το header χρησιμοποιεί τη συντομότερη ονομασία «Εργαστήριο Αλγορίθμων».
 
 [Τοπική εγκατάσταση](#quick-start) · [Αρχιτεκτονική](#architecture) · [Roadmap](docs/ROADMAP.md) · [API](docs/API.md)
 
@@ -18,10 +18,14 @@
 | Results dashboard | Πίνακας και chart για τις τελευταίες 20 προσπάθειες της τρέχουσας συνεδρίας, μαζί με error/timeout states. |
 | Experiment API | Δημιουργία draft definitions, bounded execution και ανάκτηση persisted results μέσω API. |
 | Implementation reviews | Προσωπικές βαθμολογίες και σημειώσεις ανά implementation, με αποθήκευση και επεξεργασία. |
-| Custom Python validation | Ελληνική φόρμα για syntax/solve(values)/size checks χωρίς εκτέλεση. Ρητή τοπική CLI εκτέλεση δικού μας κώδικα με timeout 2 δευτερολέπτων. |
+| Custom Python validation | Static validation και opt-in trusted local benchmark/comparison σε ξεχωριστό process με timeout 2 s. Disabled by default· δεν αποτελεί δημόσιο sandbox. |
 | Pathfinding foundation | Grid, walls και clear/reset controls. Τα algorithm execution/animation controls παραμένουν ανενεργά. |
 
-Το παρόν snapshot περιλαμβάνει τα ολοκληρωμένα #11, #12, #16–#22 και #41/#43/#45/#47: δίγλωσσο UI, custom Python validation, πέντε trusted sorters και πλήρη ροή saved experiments με ιστορικό. Τα σχετικά PR #38–#48 ενσωματώθηκαν στο dev για την προώθηση στη main.
+Το παρόν snapshot περιλαμβάνει τα ολοκληρωμένα #11, #12, #16–#22 και #41/#43/#45/#47: δίγλωσσο UI, custom Python validation, πέντε trusted sorters και πλήρη ροή saved experiments με ιστορικό. Τα σχετικά PR #38–#48 αποτελούν προηγούμενο στάδιο της υλοποίησης.
+
+## Νέο sorting evaluation flow
+
+Περιλαμβάνονται τα #58–#64 και #66–#68: κοινό comparison dataset, πίνακας/γράφημα, catalogue Big-O, mean/population standard deviation, ρητό baseline ratio, signed snapshot persistence, εκπαιδευτικά κείμενα, ανεξάρτητο sorting animation και opt-in custom comparison. Το #65 προσθέτει το pathfinding input/result/evaluation foundation, χωρίς ακόμη algorithms ή animation. GitHub Actions ελέγχει backend/frontend σε κάθε PR. Το main ενημερώνεται μόνο με ρητή εντολή. Για ενεργοποίηση custom execution δες [Custom Python](docs/CUSTOM_PYTHON.md#trusted-custom-benchmark-67).
 
 ## Benchmarking και visualization
 
@@ -162,7 +166,7 @@ npm run build
 git diff --check
 ```
 
-Το integrated snapshot έχει 81 backend tests και 14 frontend tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
+Το integrated snapshot επαληθεύεται με 109 backend tests και 29 frontend tests. Η κάλυψη περιλαμβάνει dataset reproducibility, ανεξάρτητα input copies, benchmark correctness/timing boundaries, API validation, experiment persistence και reviews. Τα frontend tests δεν αποτελούν πλήρες end-to-end suite. Αναλυτικά στο [Testing guide](docs/TESTING.md).
 
 ## Περιορισμοί MVP
 
@@ -171,8 +175,8 @@ git diff --check
 - Το benchmark είναι synchronous, με 10 runs και όριο 1.000 στοιχείων, χωρίς warm-up exclusion ή απομονωμένο performance environment.
 - Τα reviews είναι κοινά ανά implementation στο single-user local MVP, χωρίς account isolation.
 - Το pathfinding grid είναι foundation· BFS/DFS execution και animation παραμένουν μελλοντικά.
-- Ο language selector αλλάζει το UI μεταξύ Ελληνικών και Αγγλικών. Η επιλογή ισχύει μέχρι το refresh, που επιστρέφει στα Ελληνικά. Catalogue descriptions και δικές σου σημειώσεις εμφανίζονται όπως έχουν αποθηκευτεί.
-- **Custom code execution δεν είναι public-safe χωρίς πραγματικό sandbox**, όπως κατάλληλα περιορισμένο Docker environment. Ένα subprocess και ένα timeout δεν αποτελούν sandbox. Το PR #38 προσθέτει static validation και ρητή developer-only CLI εκτέλεση, όχι ασφαλή δημόσια εκτέλεση.
+- Ο language selector αλλάζει το UI μεταξύ Ελληνικών και Αγγλικών. Η επιλογή ισχύει μέχρι το refresh, που επιστρέφει στα Ελληνικά. Το εκπαιδευτικό catalogue είναι el/en· οι δικές σου σημειώσεις παραμένουν όπως έχουν αποθηκευτεί.
+- **Custom code execution δεν είναι public-safe χωρίς πραγματικό sandbox**, όπως κατάλληλα περιορισμένο Docker environment. Ένα subprocess και ένα timeout δεν αποτελούν sandbox. Τα #67/#68 προσθέτουν opt-in trusted local HTTP execution/comparison, απενεργοποιημένο από προεπιλογή.
 - Το local setup δεν αποτελεί production deployment configuration.
 
 ## Roadmap
@@ -183,8 +187,9 @@ git diff --check
 | Υλοποιημένο στο dev | Custom Python validation (#22 / PR #38). |
 | Τρέχουσα τεκμηρίωση | Portfolio-ready README (#12 / PR #39), με πραγματικό screenshot, setup και scope. |
 | Υλοποιημένο στο παρόν feature snapshot | Language selector Ελληνικά / English (#11), με διατήρηση φόρμας και αποτελεσμάτων κατά την αλλαγή. |
-| Επόμενη λειτουργική επέκταση | Σχεδιασμός της πλήρους MVP integration: πολλαπλές εκτελέσιμες implementations, αποθήκευση αποτελεσμάτων και comparison. |
-| Μελλοντικά | Sorting visualization, searching, graph/pathfinding και άλλες algorithm families. |
+| Υλοποιημένο στο dev | Sorting comparison/history/statistics, educational Library, visualization, trusted local custom comparison και CI (#58–#64/#66–#68). |
+| Foundation στο dev | Pathfinding input/result/evaluation contract (#65), [αναλυτικά](docs/PATHFINDING.md). |
+| Μελλοντικά | BFS/DFS/Dijkstra/A* implementations και animation (#1–#10), searching και άλλες οικογένειες. |
 
 Το [Roadmap](docs/ROADMAP.md) καταγράφει τις φάσεις και το [Progress](docs/PROGRESS.md) το τρέχον snapshot. Οι μελλοντικοί στόχοι δεν παρουσιάζονται ως έτοιμες λειτουργίες.
 

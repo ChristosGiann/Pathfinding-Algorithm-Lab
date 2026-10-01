@@ -1,3 +1,5 @@
+import { useCatalogue } from "../../hooks/useCatalogue";
+import { ComplexityContext } from "./ComplexityContext";
 import type { Language } from "../../i18n/translations";
 import { benchmarkTexts } from "../../i18n/benchmark";
 import type { BenchmarkRequest, BenchmarkResult } from "../../types/benchmark";
@@ -11,8 +13,9 @@ export type ResultEntry = { id: number; input: BenchmarkRequest } & (
 export function ResultsDashboard({ entries, running, language, onClear }: {
   entries: ResultEntry[]; running: boolean; language: Language; onClear: () => void;
 }) {
+  const catalogue = useCatalogue();
   const texts = benchmarkTexts[language];
-  const format = (ns: number) => (ns / 1_000_000).toLocaleString(language, { maximumSignificantDigits: 6 });
+  const format = (ns: number | undefined) => ns === undefined || !Number.isFinite(ns) ? "—" : (ns / 1_000_000).toLocaleString(language, { maximumSignificantDigits: 6 });
   const measured = entries.flatMap(entry => entry.status === "completed" ? [entry] : []);
   const max = Math.max(0, ...measured.map(entry => entry.result.max_ns));
   return <section className="results" aria-labelledby="results-title" aria-busy={running}>
@@ -26,14 +29,14 @@ export function ResultsDashboard({ entries, running, language, onClear }: {
         <table>
           <caption>{texts.sessionResults}</caption>
           <thead><tr>{["#", texts.implementation, texts.dataset, texts.size, texts.seed, texts.runs,
-            texts.status, `${texts.median} (ms)`, `${texts.min} (ms)`, `${texts.max} (ms)`].map(label => <th key={label} scope="col">{label}</th>)}</tr></thead>
+            texts.status, `${texts.median} (ms)`, `${texts.min} (ms)`, `${texts.max} (ms)`, `${texts.mean} (ms)`, `${texts.stddev} (ms)`].map(label => <th key={label} scope="col">{label}</th>)}</tr></thead>
           <tbody>{entries.map(entry => <tr key={entry.id}>
-            <th scope="row">{entry.id}</th><td>{texts.algorithms[entry.input.algorithm]} · Python</td>
+            <th scope="row">{entry.id}</th><td>{texts.algorithms[entry.input.algorithm]} · Python<ComplexityContext slug={entry.input.algorithm} catalogue={catalogue} language={language} /></td>
             <td>{texts.types[entry.input.dataset_type]}</td><td>{entry.input.size}</td><td>{entry.input.seed}</td>
             <td>{entry.status === "completed" ? entry.result.runs : "—"}</td>
             <td className={entry.status === "completed" && entry.result.correct ? "benchmark__correct" : "benchmark__incorrect"}>
               {entry.status === "completed" ? (entry.result.correct ? texts.correct : texts.incorrect) : texts[entry.status]}</td>
-            {(["median_ns", "min_ns", "max_ns"] as const).map(key => <td key={key}>{entry.status === "completed" ? format(entry.result[key]) : "—"}</td>)}
+            {(["median_ns", "min_ns", "max_ns", "mean_ns", "stddev_ns"] as const).map(key => <td key={key}>{entry.status === "completed" ? format(entry.result[key]) : "—"}</td>)}
           </tr>)}</tbody>
         </table>
       </div>
