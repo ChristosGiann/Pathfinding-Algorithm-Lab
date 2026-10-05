@@ -119,3 +119,56 @@ test('BFS handles same-cell and reversed endpoints through the evaluation contra
   assert.equal(result.visitedNodeCount, 4);
   assert.equal(result.executionTimeMs, 1);
 });
+
+test('BFS matches independent all-pairs distances for every 3x3 wall layout', () => {
+  let cases = 0;
+  for (let mask = 0; mask < 512; mask++) {
+    const walls = Array.from({ length: 9 }, (_, id) => Boolean(mask & (1 << id)));
+    const distance = Array.from({ length: 9 }, (_, a) => Array.from({ length: 9 }, (_, b) => {
+      if (walls[a] || walls[b]) return Infinity;
+      if (a === b) return 0;
+      const manhattan = Math.abs(Math.floor(a / 3) - Math.floor(b / 3)) + Math.abs(a % 3 - b % 3);
+      return manhattan === 1 ? 1 : Infinity;
+    }));
+    // Floyd–Warshall oracle: no production neighbours, queue or reconstruction.
+    for (let k = 0; k < 9; k++) for (let a = 0; a < 9; a++) for (let b = 0; b < 9; b++) {
+      distance[a][b] = Math.min(distance[a][b], distance[a][k] + distance[k][b]);
+    }
+    for (let start = 0; start < 9; start++) for (let end = 0; end < 9; end++) {
+      if (walls[start] || walls[end]) continue;
+      const input = snapshotInput({ rows: 3, cols: 3, start, end, walls });
+      const result = bfs(input);
+      const label = `mask=${mask}, start=${start}, end=${end}`;
+      assert.equal(result.found, Number.isFinite(distance[start][end]), label);
+      assert.equal(new Set(result.visited).size, result.visited.length, label);
+      assert.equal(result.visited[0], start, label);
+      assert.ok(result.visited.every(id => !walls[id]), label);
+      if (result.found) {
+        assert.equal(result.path.length - 1, distance[start][end], label);
+        assert.equal(result.path[0], start, label);
+        assert.equal(result.path.at(-1), end, label);
+        assert.ok(result.path.every(id => result.visited.includes(id)), label);
+        for (let i = 1; i < result.path.length; i++) {
+          const a = result.path[i - 1], b = result.path[i];
+          assert.equal(Math.abs(Math.floor(a / 3) - Math.floor(b / 3)) + Math.abs(a % 3 - b % 3), 1, label);
+        }
+      } else {
+        assert.deepEqual(result.path, [], label);
+        assert.deepEqual([...result.visited].sort((a, b) => a - b),
+          distance[start].flatMap((value, id) => Number.isFinite(value) ? [id] : []), label);
+      }
+      cases++;
+    }
+  }
+  assert.equal(cases, 11520);
+});
+
+test('BFS handles the maximum supported grid without duplicate visits or input mutation', () => {
+  const input = grid(100, 100);
+  const result = bfs(input);
+  assert.equal(result.found, true);
+  assert.equal(result.path.length - 1, 198);
+  assert.equal(result.visited.length, 10000);
+  assert.equal(new Set(result.visited).size, 10000);
+  assert.deepEqual(input, grid(100, 100));
+});

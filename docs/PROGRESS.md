@@ -264,3 +264,7 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Issue #1 — BFS
 
 Προστέθηκε καθαρός BFS με deterministic traversal, shortest path σε unit-cost grid, walls/no-path/same-cell handling και συμβατότητα με evaluation metrics. Τα tests ελέγχουν processing order, route, isolation και reversed endpoints. Το UI παραμένει ανενεργό μέχρι το animation issue #4.
+
+## Issue #10 — Pathfinding tests
+
+Το dedicated suite καλύπτει neighbours, BFS paths/walls/no-path και ανεξάρτητη επαλήθευση σε 11.520 μικρά grid cases, συν το μέγιστο grid 10.000 cells. Εκτελείται με npm test και το υπάρχον CI. Η συνέχεια είναι η UI οπτικοποίηση (#4).
