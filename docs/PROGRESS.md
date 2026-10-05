@@ -1,13 +1,14 @@
 # Project Progress
 
-Last verified: **2026-10-01**
+Last verified: **2026-10-05**
 
 ## Current phase
 
 Το παρόν snapshot περιλαμβάνει το ολοκληρωμένο sorting evaluation scope #58–#64/#66–#68:
 comparison, αποθήκευση/ιστορικό, statistics/baseline, Big-O context, educational
 Library, visualization, trusted local custom execution και CI. Το #65 προσθέτει
-το pathfinding input/result/evaluation foundation, χωρίς ακόμη algorithms ή animation.
+το pathfinding input/result/evaluation foundation. Τα #2/#3/#1 παρέχουν neighbours,
+reconstruction και pure BFS. Η UI σύνδεση και το animation ακολουθούν στο #4.
 Η προώθηση από dev σε main γίνεται μόνο με ρητή εντολή· τα δύο branches παραμένουν μόνιμα.
 
 Οι επόμενες ενότητες διατηρούν το ιστορικό ανά issue· οι παλιότερες test counts
@@ -259,3 +260,7 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Issue #3 — Path reconstruction
 
 Υλοποιήθηκε καθαρό iterative reconstructPath με previous node references, start→end IDs, no-path/cycle handling και tests. Δεν προστίθεται ακόμη algorithm ή UI execution.
+
+## Issue #1 — BFS
+
+Προστέθηκε καθαρός BFS με deterministic traversal, shortest path σε unit-cost grid, walls/no-path/same-cell handling και συμβατότητα με evaluation metrics. Τα tests ελέγχουν processing order, route, isolation και reversed endpoints. Το UI παραμένει ανενεργό μέχρι το animation issue #4.

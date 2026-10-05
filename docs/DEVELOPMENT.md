@@ -129,7 +129,7 @@ curl.exe http://127.0.0.1:8000/api/algorithms/
 
 ## Προτεραιότητα και καταγραφή εργασιών
 
-Προτεραιότητα ήταν η ολοκλήρωση του sorting scope #58–#64/#66–#68. Μετά την ενσωμάτωσή του, το #65 ξεκινά μόνο το pathfinding foundation. Τα #1–#10 παραμένουν ξεχωριστή μελλοντική εργασία.
+Προτεραιότητα ήταν η ολοκλήρωση του sorting scope #58–#64/#66–#68. Μετά την ενσωμάτωσή του, το #65 ξεκινά μόνο το pathfinding foundation. Η συνέχεια υλοποιείται ανά issue: neighbours (#2), reconstruction (#3), BFS (#1), tests (#10), και έπειτα UI/animation/controls/statistics/DFS/comparison (#4–#9).
 Για εργασία χωρίς υπάρχον GitHub issue, δημιουργούμε σχετικό issue με scope και
 acceptance criteria πριν από την υλοποίηση. Κάθε issue ακολουθεί ξεχωριστό branch/PR προς dev.
 

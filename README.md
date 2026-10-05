@@ -25,7 +25,7 @@
 
 ## Νέο sorting evaluation flow
 
-Περιλαμβάνονται τα #58–#64 και #66–#68: κοινό comparison dataset, πίνακας/γράφημα, catalogue Big-O, mean/population standard deviation, ρητό baseline ratio, signed snapshot persistence, εκπαιδευτικά κείμενα, ανεξάρτητο sorting animation και opt-in custom comparison. Το #65 προσθέτει το pathfinding input/result/evaluation foundation, χωρίς ακόμη algorithms ή animation. GitHub Actions ελέγχει backend/frontend σε κάθε PR. Το main ενημερώνεται μόνο με ρητή εντολή. Για ενεργοποίηση custom execution δες [Custom Python](docs/CUSTOM_PYTHON.md#trusted-custom-benchmark-67).
+Περιλαμβάνονται τα #58–#64 και #66–#68: κοινό comparison dataset, πίνακας/γράφημα, catalogue Big-O, mean/population standard deviation, ρητό baseline ratio, signed snapshot persistence, εκπαιδευτικά κείμενα, ανεξάρτητο sorting animation και opt-in custom comparison. Το #65 παρέχει το pathfinding evaluation foundation και τα #2/#3/#1 προσθέτουν ελεγμένα neighbours, reconstruction και pure BFS. Η UI εκτέλεση/animation παραμένει επόμενο βήμα. GitHub Actions ελέγχει backend/frontend σε κάθε PR. Το main ενημερώνεται μόνο με ρητή εντολή. Για ενεργοποίηση custom execution δες [Custom Python](docs/CUSTOM_PYTHON.md#trusted-custom-benchmark-67).
 
 ## Benchmarking και visualization
 

@@ -2,8 +2,8 @@
 
 Το sorting evaluation είναι διαθέσιμο στο dev. Η επόμενη οικογένεια ξεκινά με
 καθαρό TypeScript domain στο `src/pathfinding/evaluation.ts`, χωρίς DOM dependency.
-Δεν υπάρχουν ακόμη πραγματικές BFS/DFS/Dijkstra/A* implementations ή ενεργά
-execution/animation controls. Το #2 καλύπτεται από το υπάρχον `neighbours` και
+Ο BFS (#1) είναι διαθέσιμος ως καθαρό search function· DFS/Dijkstra/A* και τα UI
+execution/animation controls ακολουθούν σε επόμενα issues. Το #2 καλύπτεται από το υπάρχον `neighbours` και
 ξεχωριστό regression suite· τα υπόλοιπα pathfinding issues ακολουθούν σταδιακά.
 
 ## Input και algorithm contract
@@ -67,7 +67,7 @@ search call με `performance.now()` σε milliseconds. Αντιγραφή/valid
 `comparePathfinding` δέχεται 1–4 διαφορετικές identities με injected search
 functions. Παίρνει κοινό snapshot και δίνει νέο frozen copy σε κάθε εκτέλεση.
 Exception ενός algorithm δεν ακυρώνει τα υπόλοιπα. Δεν υπάρχει production
-registry με placeholder implementations ή προσποίηση έτοιμων algorithms.
+registry με placeholder implementations. Ο BFS μπορεί να δοθεί ως injected search.
 
 Η μελλοντική UI σύνδεση είναι: existing Grid → adapter → trusted algorithm registry
 → evaluation → result → ανεξάρτητη animation των visited/path. Animation delays
@@ -81,3 +81,7 @@ invalid/no-path/same-cell inputs, walls, neighbour ordering και copy isolatio
 ## Ανακατασκευή διαδρομής (#3)
 
 Το reconstructPath(start, end) στο src/pathfinding/reconstructPath.ts ακολουθεί SearchNode.previous references και επιστρέφει row-major IDs από start προς end. Τα nodes είναι τοπικά στο search, όχι UI nodes. Η αρχή αναγνωρίζεται από την ίδια object reference· start=end δίνει ένα ID. Null end, disconnected chain ή cycle δίνουν []. Iterative O(k) χρόνος/χώρος, χωρίς recursion ή mutation. Το utility δεν ελέγχει walls/adjacency: αυτά ανήκουν στον search και στο evaluation contract. Tests: διαδρομή, same-node, no-path/cycle, isolation και 10.000-node chain.
+
+## BFS (#1)
+
+Το bfs στο src/pathfinding/bfs.ts δέχεται validated GridInput (από gridToInput/snapshotInput ή μέσω evaluatePathfinding). FIFO queue με head cursor, discovery στο enqueue και previous references· κάθε cell μπαίνει μία φορά. Επιστρέφει processed visited nodes μέχρι και το end, found και shortest path σε unit-cost cardinal grid. No-path δίνει found:false/path:[], start=end δίνει [start]. O(V+E) χρόνος και O(V) χώρος. Δεν μεταβάλλει input ούτε αγγίζει React/DOM/timers. Η UI σύνδεση και το animation είναι το #4.
