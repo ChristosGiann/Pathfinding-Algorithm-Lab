@@ -255,3 +255,7 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Issue #2 — Pathfinding neighbours
 
 Το υπάρχον neighbours του #65 καλύπτει τα cardinal neighbours χωρίς walls/out-of-grid ή UI logic. Προστέθηκε ξεχωριστό regression suite για edges/corners, narrow grids, invalid origins και copy isolation. Δεν προστέθηκε duplicate utility.
+
+## Issue #3 — Path reconstruction
+
+Υλοποιήθηκε καθαρό iterative reconstructPath με previous node references, start→end IDs, no-path/cycle handling και tests. Δεν προστίθεται ακόμη algorithm ή UI execution.

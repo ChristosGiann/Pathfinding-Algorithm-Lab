@@ -382,3 +382,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Ενεργή συνέχεια pathfinding
 
 Μετά την ολοκλήρωση του sorting scope, σειρά εξαρτήσεων: #2 neighbours → #3 reconstruction → #1 BFS → #10 algorithm tests. Ακολουθούν animation/controls/statistics και DFS/comparison. Το #2 έχει ελεγχθεί με dedicated regression tests.
+
+Το #3 παρέχει το reconstruction utility και τα tests του. Επόμενη εξάρτηση: BFS (#1).
