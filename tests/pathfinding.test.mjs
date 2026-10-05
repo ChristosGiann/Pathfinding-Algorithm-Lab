@@ -172,3 +172,50 @@ test('BFS handles the maximum supported grid without duplicate visits or input m
   assert.equal(new Set(result.visited).size, 10000);
   assert.deepEqual(input, grid(100, 100));
 });
+
+const { idlePlayback, startPlayback, advancePlayback, ANIMATION_DELAYS } = await import('../src/pathfinding/playback.ts');
+const { evaluatePathfinding, gridToInput } = await import('../src/pathfinding/evaluation.ts');
+const uiGrid = () => [['start', 'empty', 'end'], ['wall', 'empty', 'empty']]
+  .map((row, r) => row.map((type, c) => ({ row: r, col: c, type })));
+
+test('playback paints visited then path in result order without changing markers or input', () => {
+  const grid = uiGrid();
+  const result = evaluatePathfinding('bfs', gridToInput(grid), bfs);
+  let state = startPlayback(grid, result);
+  assert.deepEqual(state.frames.map(frame => frame.id), [...result.visited, ...result.path]);
+  assert.ok(state.frames.slice(0, result.visited.length).every(frame => frame.type === 'visited'));
+  assert.ok(state.frames.slice(result.visited.length).every(frame => frame.type === 'path'));
+  for (let step = 0; step < state.frames.length; step++) {
+    const previous = state;
+    state = advancePlayback(state);
+    assert.equal(state.cursor, step + 1);
+    assert.equal(previous.cursor, step);
+    assert.equal(state.grid[0][0].type, 'start');
+    assert.equal(state.grid[0][2].type, 'end');
+    assert.equal(state.grid[1][0].type, 'wall');
+    if (step < result.visited.length) assert.equal(state.grid.flat().some(node => node.type === 'path'), false);
+  }
+  assert.equal(state.status, 'completed');
+  assert.equal(state.grid[0][1].type, 'path');
+  assert.equal(advancePlayback(state), state);
+  assert.equal(state.result, result);
+  assert.deepEqual(grid, uiGrid());
+  assert.deepEqual(idlePlayback(state.grid).grid, grid);
+  assert.deepEqual(startPlayback(state.grid, result).grid, grid);
+});
+
+test('playback terminates for no-path and errors; speed changes delays, not results', () => {
+  const grid = uiGrid();
+  grid[0][1].type = 'wall';
+  const result = evaluatePathfinding('bfs', gridToInput(grid), bfs);
+  let state = startPlayback(grid, result);
+  while (state.status === 'running') state = advancePlayback(state);
+  assert.equal(state.result.found, false);
+  assert.equal(state.grid.flat().some(node => node.type === 'path'), false);
+  const error = startPlayback(grid, { algorithm: 'bfs', status: 'error', error: 'runner_error' });
+  assert.equal(error.status, 'error');
+  assert.equal(error.result, null);
+  assert.equal(advancePlayback(error), error);
+  assert.ok(ANIMATION_DELAYS.slow > ANIMATION_DELAYS.normal);
+  assert.ok(ANIMATION_DELAYS.normal > ANIMATION_DELAYS.fast);
+});

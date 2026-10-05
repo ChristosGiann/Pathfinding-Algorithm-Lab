@@ -8,7 +8,7 @@ Last verified: **2026-10-05**
 comparison, αποθήκευση/ιστορικό, statistics/baseline, Big-O context, educational
 Library, visualization, trusted local custom execution και CI. Το #65 προσθέτει
 το pathfinding input/result/evaluation foundation. Τα #2/#3/#1 παρέχουν neighbours,
-reconstruction και pure BFS. Η UI σύνδεση και το animation ακολουθούν στο #4.
+reconstruction και pure BFS. Το #4 προσθέτει την UI σύνδεση και το animation του BFS.
 Η προώθηση από dev σε main γίνεται μόνο με ρητή εντολή· τα δύο branches παραμένουν μόνιμα.
 
 Οι επόμενες ενότητες διατηρούν το ιστορικό ανά issue· οι παλιότερες test counts
@@ -268,3 +268,7 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Issue #10 — Pathfinding tests
 
 Το dedicated suite καλύπτει neighbours, BFS paths/walls/no-path και ανεξάρτητη επαλήθευση σε 11.520 μικρά grid cases, συν το μέγιστο grid 10.000 cells. Εκτελείται με npm test και το υπάρχον CI. Η συνέχεια είναι η UI οπτικοποίηση (#4).
+
+## Issue #4 — BFS animation
+
+Ενεργό BFS visualization με ανεξάρτητο timer playback, visited πριν από path, speed selector και el/en feedback. Input markers/walls διατηρούνται. 43 frontend tests και lint/build επιτυχή. Χειροκίνητος έλεγχος στο production build μέσω localhost preview· ο Vite dev server δεν απαντούσε στο συγκεκριμένο session.

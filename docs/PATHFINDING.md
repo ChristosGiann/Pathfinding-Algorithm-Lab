@@ -2,8 +2,8 @@
 
 Το sorting evaluation είναι διαθέσιμο στο dev. Η επόμενη οικογένεια ξεκινά με
 καθαρό TypeScript domain στο `src/pathfinding/evaluation.ts`, χωρίς DOM dependency.
-Ο BFS (#1) είναι διαθέσιμος ως καθαρό search function· DFS/Dijkstra/A* και τα UI
-execution/animation controls ακολουθούν σε επόμενα issues. Το #2 καλύπτεται από το υπάρχον `neighbours` και
+Ο BFS (#1) είναι διαθέσιμος ως καθαρό search function και το #4 τον συνδέει με
+visited/path animation στο UI. DFS/Dijkstra/A* παραμένουν μελλοντικά. Το #2 καλύπτεται από το υπάρχον `neighbours` και
 ξεχωριστό regression suite· τα υπόλοιπα pathfinding issues ακολουθούν σταδιακά.
 
 ## Input και algorithm contract
@@ -85,3 +85,7 @@ invalid/no-path/same-cell inputs, walls, neighbour ordering και copy isolatio
 ## BFS (#1)
 
 Το bfs στο src/pathfinding/bfs.ts δέχεται validated GridInput (από gridToInput/snapshotInput ή μέσω evaluatePathfinding). FIFO queue με head cursor, discovery στο enqueue και previous references· κάθε cell μπαίνει μία φορά. Επιστρέφει processed visited nodes μέχρι και το end, found και shortest path σε unit-cost cardinal grid. No-path δίνει found:false/path:[], start=end δίνει [start]. O(V+E) χρόνος και O(V) χώρος. Δεν μεταβάλλει input ούτε αγγίζει React/DOM/timers. Η UI σύνδεση και το animation είναι το #4.
+
+## BFS animation (#4)
+
+Το Pathfinding component κατέχει το grid και το playback state. Ο BFS/evaluation εκτελείται μία φορά πριν από timers· κατόπιν τα visited και path IDs γίνονται frames, με αυτή τη σειρά. Slow/normal/fast: 80/25/5 ms ανά frame (όχι εγγύηση wall-clock διάρκειας). Το advancePlayback αλλάζει μόνο React state, διατηρώντας start/end/walls. Idle/running/found/no-path/error μηνύματα είναι el/en. Νέο run καθαρίζει παλιό trace· reset/edit ακυρώνει playback και stale callbacks αγνοούνται με state identity. Effect cleanup ακυρώνει timer σε αλλαγή state/unmount. Στο #5 τα controls θα κλειδώνουν όσο τρέχει. DFS/Dijkstra/A* επιλογές και comparison παραμένουν disabled.

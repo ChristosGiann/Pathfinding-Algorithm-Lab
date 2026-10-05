@@ -7,6 +7,13 @@ export const translations = {
         "Οπτικοποίησε, δοκίμασε και σύγκρινε αλγορίθμους.",
     },
 
+    pathfinding: {
+      title: "Pathfinding — BFS", description: "Μπλε: εξερεύνηση · Κίτρινο: διαδρομή. Η ταχύτητα αφορά μόνο το animation, όχι τη μέτρηση του αλγορίθμου.",
+      idle: "Σχεδίασε εμπόδια και πάτησε Οπτικοποίηση. Προς το παρόν διατίθεται μόνο BFS.",
+      running: "Η αναζήτηση οπτικοποιείται…", found: "Βρέθηκε διαδρομή.",
+      noPath: "Δεν υπάρχει διαδρομή.", error: "Δεν ήταν δυνατή η εκτέλεση. Έλεγξε το grid και δοκίμασε ξανά.",
+    },
+
     grid: { cell: (row: number, col: number) => `Κελί γραμμής ${row}, στήλης ${col}` },
 
     backendStatus: {
@@ -65,6 +72,13 @@ export const translations = {
       language: "Language", greek: "Ελληνικά", english: "English",
       subtitle:
         "Visualize, test and compare algorithms.",
+    },
+
+    pathfinding: {
+      title: "Pathfinding — BFS", description: "Blue: exploration · Yellow: path. Speed affects animation only, not algorithm measurement.",
+      idle: "Draw walls and press Visualize. Only BFS is available for now.",
+      running: "Animating the search…", found: "Path found.",
+      noPath: "No path exists.", error: "The search could not run. Check the grid and try again.",
     },
 
     grid: { cell: (row: number, col: number) => `Cell row ${row}, column ${col}` },
