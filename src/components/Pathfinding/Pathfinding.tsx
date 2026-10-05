@@ -10,11 +10,13 @@ import type { AnimationSpeed } from "../../pathfinding/playback";
 import { createGrid } from "../../utils/createGrid";
 import { clearWalls } from "../../utils/clearWalls";
 import { toggleWall } from "../../utils/toggleWall";
+import type { Grid as GridType } from "../../types/grid";
 
 export function Pathfinding({ language }: { language: Language }) {
   const texts = translations[language];
   const [state, setState] = useState(() => idlePlayback(createGrid(20, 30)));
   const [speed, setSpeed] = useState<AnimationSpeed>("normal");
+  const running = state.status === "running";
 
   useEffect(() => {
     if (state.status !== "running") return;
@@ -26,6 +28,7 @@ export function Pathfinding({ language }: { language: Language }) {
   }, [state, speed]);
 
   function visualize() {
+    if (running) return;
     try {
       const result = evaluatePathfinding("bfs", gridToInput(state.grid), bfs);
       setState(startPlayback(state.grid, result));
@@ -34,19 +37,24 @@ export function Pathfinding({ language }: { language: Language }) {
     }
   }
 
+  function editGrid(transform: (grid: GridType) => GridType) {
+    setState(current => current.status === "running" ? current : idlePlayback(transform(current.grid)));
+  }
+
   const message = state.status === "completed"
     ? state.result?.found ? texts.pathfinding.found : texts.pathfinding.noPath
     : texts.pathfinding[state.status];
 
-  return <section aria-label={texts.pathfinding.title}>
+  return <section aria-label={texts.pathfinding.title} aria-busy={running}>
     <h2>{texts.pathfinding.title}</h2>
     <p>{texts.pathfinding.description}</p>
     <Toolbar texts={texts.toolbar} algorithms={texts.algorithms} speed={texts.speed}
-      selectedSpeed={speed} onSpeedChange={setSpeed} onVisualize={visualize}
-      onResetGrid={() => setState(idlePlayback(createGrid(20, 30)))}
-      onClearWalls={() => setState(idlePlayback(clearWalls(state.grid)))} />
+      disabled={running} selectedSpeed={speed}
+      onSpeedChange={value => { if (!running) setSpeed(value); }} onVisualize={visualize}
+      onResetGrid={() => editGrid(() => createGrid(20, 30))}
+      onClearWalls={() => editGrid(clearWalls)} />
     <p role="status">{message}</p>
-    <Grid grid={state.grid} texts={texts.grid}
-      onNodeClick={(row, col) => setState(idlePlayback(toggleWall(state.grid, row, col)))} />
+    <Grid grid={state.grid} texts={texts.grid} disabled={running}
+      onNodeClick={(row, col) => editGrid(grid => toggleWall(grid, row, col))} />
   </section>;
 }

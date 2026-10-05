@@ -5,12 +5,14 @@ type GridNodeProps = {
   node: GridNodeType;
   texts: AppTexts["grid"];
   onNodeClick: (row: number, col: number) => void;
+  disabled?: boolean;
 };
 
-export function GridNode({ node, texts, onNodeClick }: GridNodeProps) {
+export function GridNode({ node, texts, onNodeClick, disabled = false }: GridNodeProps) {
   return (
     <button
       type="button"
+      disabled={disabled}
       className={`grid-node grid-node--${node.type}`}
       title={texts.cell(node.row, node.col)}
       aria-label={texts.cell(node.row, node.col)}

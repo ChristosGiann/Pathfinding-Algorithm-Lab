@@ -357,3 +357,19 @@ test('pathfinding renders localized BFS controls and keeps future algorithms una
     assert.equal((html.match(/class="grid-node /g) || []).length, 600);
   }
 });
+
+test('pathfinding toolbar and grid disable every editable control while running', async () => {
+  const { Toolbar } = await import('../src/components/Toolbar/Toolbar.tsx');
+  const { Grid } = await import('../src/components/Grid/Grid.tsx');
+  for (const language of ['el', 'en']) for (const disabled of [false, true]) {
+    const texts = translations[language];
+    const toolbar = render(Toolbar, { texts: texts.toolbar, algorithms: texts.algorithms, speed: texts.speed,
+      selectedSpeed: 'normal', onSpeedChange() {}, onVisualize() {}, onResetGrid() {}, onClearWalls() {}, disabled });
+    const controls = toolbar.match(/<(?:button|select)\b[^>]*>/g);
+    assert.equal(controls.length, 6);
+    assert.equal(controls.filter(tag => tag.includes('disabled')).length, disabled ? 6 : 1);
+    const html = render(Grid, { grid: [[{ row: 0, col: 0, type: 'start' }, { row: 0, col: 1, type: 'empty' }]],
+      texts: texts.grid, onNodeClick() {}, disabled });
+    assert.equal((html.match(/disabled=""/g) || []).length, disabled ? 2 : 0);
+  }
+});
