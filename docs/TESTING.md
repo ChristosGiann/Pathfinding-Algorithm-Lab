@@ -432,3 +432,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Pathfinding correctness (#10)
 
 Το npm test περιλαμβάνει tests/pathfinding.test.mjs: cardinal neighbours/edges/walls, reconstruction/no-path/cycles, BFS processing order, shortest route, blocked paths, same-cell/reversed endpoints και isolation. Ανεξάρτητο Floyd–Warshall oracle (χωρίς production neighbours/reconstruction) ελέγχει και τα 512 layouts grid 3×3, όλα τα walkable start/end pairs: 11.520 cases. Ελέγχονται reachability, shortest length, adjacency, visited uniqueness και πλήρης reachable component όταν δεν υπάρχει path. Επιπλέον open grid 100×100 καλύπτει το όριο 10.000 cells, χωρίς wall-clock performance assertion. Δεν αποδεικνύει όλους τους μελλοντικούς algorithms ή UI animation.
+
+Το #4 προσθέτει tests για frame order, markers/walls, immutability, completion/no-path/error, restart cleanup και localized BFS controls. Manual smoke ελέγχει το πραγματικό production build.

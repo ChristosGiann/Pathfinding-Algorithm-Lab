@@ -343,3 +343,17 @@ test('same-grid comparison isolates mutation and continues after failure',async(
  assert.equal(new Set(copies.map(item=>item.walls)).size,3);assert.deepEqual(input.walls,[false,false]);
  assert.throws(()=>comparePathfinding(input,[{algorithm:'bfs',search:success},{algorithm:'bfs',search:success}]));
 });
+
+test('pathfinding renders localized BFS controls and keeps future algorithms unavailable', async () => {
+  const { Pathfinding } = await import('../src/components/Pathfinding/Pathfinding.tsx');
+  for (const language of ['el', 'en']) {
+    const html = render(Pathfinding, { language });
+    assert.ok(html.includes(translations[language].pathfinding.idle));
+    assert.ok(html.includes(translations[language].pathfinding.description));
+    assert.match(html, /value="dfs" disabled/);
+    assert.match(html, /value="dijkstra" disabled/);
+    assert.match(html, /value="astar" disabled/);
+    assert.match(html, /role="status"/);
+    assert.equal((html.match(/class="grid-node /g) || []).length, 600);
+  }
+});
