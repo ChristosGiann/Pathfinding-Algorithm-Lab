@@ -251,3 +251,7 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Pathfinding foundation (#65)
 
 Κοινό GridInput/Search/PathfindingResult για bfs/dfs/dijkstra/astar, adapter από υπάρχον UI grid χωρίς DOM, frozen copies, cardinal unit-cost neighbours και same-grid evaluation utility. Found/no-path/invalid/runner error έχουν διακριτό contract. Timing μόνο του search call· path length σε ακμές, null όταν δεν υπάρχει path. Δεν προστίθενται ακόμη οι τέσσερις algorithms, animation ή persistence και δεν κλείνουν τα #1–#10. Αναλυτικό contract και όρια στο [Pathfinding](PATHFINDING.md). Tests καλύπτουν input validation, walls/markers, same-cell/no-path, invalid trace, timing boundary και copy isolation· το sorting regression suite παραμένει ενεργό.
+
+## Issue #2 — Pathfinding neighbours
+
+Το υπάρχον neighbours του #65 καλύπτει τα cardinal neighbours χωρίς walls/out-of-grid ή UI logic. Προστέθηκε ξεχωριστό regression suite για edges/corners, narrow grids, invalid origins και copy isolation. Δεν προστέθηκε duplicate utility.

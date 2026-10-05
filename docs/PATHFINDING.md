@@ -3,7 +3,8 @@
 Το sorting evaluation είναι διαθέσιμο στο dev. Η επόμενη οικογένεια ξεκινά με
 καθαρό TypeScript domain στο `src/pathfinding/evaluation.ts`, χωρίς DOM dependency.
 Δεν υπάρχουν ακόμη πραγματικές BFS/DFS/Dijkstra/A* implementations ή ενεργά
-execution/animation controls. Τα issues #1–#10 παραμένουν ξεχωριστά και ανοικτά.
+execution/animation controls. Το #2 καλύπτεται από το υπάρχον `neighbours` και
+ξεχωριστό regression suite· τα υπόλοιπα pathfinding issues ακολουθούν σταδιακά.
 
 ## Input και algorithm contract
 
@@ -36,6 +37,11 @@ up/right/down/left, χωρίς wrapping ή diagonals. Edge cost είναι 1· w
 grids θα χρειαστούν ρητή επέκταση. Οι τέσσερις identities ταιριάζουν στο Toolbar:
 `bfs`, `dfs`, `dijkstra`, `astar`. BFS/DFS δουλεύουν με την ίδια είσοδο, Dijkstra
 με unit costs και A* μπορεί αργότερα να χρησιμοποιεί Manhattan heuristic.
+
+Το #2 επαληθεύεται στο `tests/pathfinding.test.mjs` με `npm test`: κέντρο,
+γωνίες/άκρες χωρίς row wrapping, walls, invalid origins, single cell/row/column
+και ανεξάρτητα result arrays. Το utility παραμένει στο pathfinding feature,
+χωρίς UI logic και χωρίς δεύτερη, ασύμβατη αναπαράσταση γειτόνων.
 
 ## Result και μέτρηση
 
