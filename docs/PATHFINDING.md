@@ -77,3 +77,7 @@ pathfinding benchmarks και animation suite είναι μελλοντικό sc
 Tests χρησιμοποιούν μικρά injected traces για contract validation, clock boundaries,
 invalid/no-path/same-cell inputs, walls, neighbour ordering και copy isolation.
 Το πλήρες frontend suite συνεχίζει να ελέγχει το sorting flow.
+
+## Ανακατασκευή διαδρομής (#3)
+
+Το reconstructPath(start, end) στο src/pathfinding/reconstructPath.ts ακολουθεί SearchNode.previous references και επιστρέφει row-major IDs από start προς end. Τα nodes είναι τοπικά στο search, όχι UI nodes. Η αρχή αναγνωρίζεται από την ίδια object reference· start=end δίνει ένα ID. Null end, disconnected chain ή cycle δίνουν []. Iterative O(k) χρόνος/χώρος, χωρίς recursion ή mutation. Το utility δεν ελέγχει walls/adjacency: αυτά ανήκουν στον search και στο evaluation contract. Tests: διαδρομή, same-node, no-path/cycle, isolation και 10.000-node chain.

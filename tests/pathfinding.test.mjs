@@ -25,6 +25,7 @@ registerHooks({
 });
 
 const { neighbours, snapshotInput } = await import('../src/pathfinding/evaluation.ts');
+const { reconstructPath } = await import('../src/pathfinding/reconstructPath.ts');
 const grid = (rows, cols, walls = [], start = 0, end = rows * cols - 1) => snapshotInput({
   rows, cols, start, end,
   walls: Array.from({ length: rows * cols }, (_, id) => walls.includes(id)),
@@ -55,4 +56,34 @@ test('neighbours handles single cells, rows and columns', () => {
   assert.deepEqual(neighbours(grid(1, 3), 1), [2, 0]);
   assert.deepEqual(neighbours(grid(3, 1), 1), [0, 2]);
   assert.deepEqual(neighbours(grid(1, 3, [1]), 0), []);
+});
+
+test('reconstruction follows previous references from end to the exact start', () => {
+  const start = Object.freeze({ id: 2, previous: null });
+  const middle = Object.freeze({ id: 5, previous: start });
+  const end = Object.freeze({ id: 8, previous: middle });
+  assert.deepEqual(reconstructPath(start, end), [2, 5, 8]);
+  assert.deepEqual(reconstructPath(start, start), [2]);
+  const path = reconstructPath(start, end);
+  path.reverse();
+  assert.deepEqual(reconstructPath(start, end), [2, 5, 8]);
+  assert.equal(end.previous, middle);
+});
+
+test('reconstruction returns empty for absent, disconnected or cyclic chains', () => {
+  const start = { id: 0, previous: null };
+  assert.deepEqual(reconstructPath(start, null), []);
+  assert.deepEqual(reconstructPath(start, { id: 1, previous: null }), []);
+  assert.deepEqual(reconstructPath(start, { id: 0, previous: null }), []);
+  const a = { id: 1, previous: null };
+  const b = { id: 2, previous: a };
+  a.previous = b;
+  assert.deepEqual(reconstructPath(start, b), []);
+});
+
+test('reconstruction handles long chains without recursive stack growth', () => {
+  const start = { id: 0, previous: null };
+  let end = start;
+  for (let id = 1; id < 10000; id++) end = { id, previous: end };
+  assert.deepEqual(reconstructPath(start, end), Array.from({ length: 10000 }, (_, id) => id));
 });
