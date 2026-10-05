@@ -388,3 +388,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #1 προσθέτει πραγματικό BFS ως pure function. Η σύνδεση με UI/animation παραμένει στο #4· ακολουθεί ενίσχυση correctness tests (#10).
 
 Το #10 ολοκληρώνει το algorithm correctness suite. Επόμενο βήμα: BFS animation (#4) και προστασία controls (#5).
+
+Το #5 ολοκληρώνει την προστασία pathfinding controls κατά το animation. Ακολουθούν clear path (#6), statistics (#7), DFS (#8) και comparison (#9).

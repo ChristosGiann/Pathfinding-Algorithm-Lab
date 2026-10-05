@@ -272,3 +272,7 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Issue #4 — BFS animation
 
 Ενεργό BFS visualization με ανεξάρτητο timer playback, visited πριν από path, speed selector και el/en feedback. Input markers/walls διατηρούνται. 43 frontend tests και lint/build επιτυχή. Χειροκίνητος έλεγχος στο production build μέσω localhost preview· ο Vite dev server δεν απαντούσε στο συγκεκριμένο session.
+
+## Issue #5 — Animation controls
+
+Τα pathfinding cells/buttons/selects κλειδώνουν κατά το running state και επανέρχονται όταν τελειώσει το playback. Handler guards αποτρέπουν grid edits και νέο run. UI state παραμένει ξεχωριστό από BFS logic, με aria-busy στην ενότητα. Οι υπόλοιπες ενότητες δεν κλειδώνουν.
