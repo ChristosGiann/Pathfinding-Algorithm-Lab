@@ -428,3 +428,7 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Pathfinding foundation (#65)
 
 Κοινό GridInput/Search/PathfindingResult για bfs/dfs/dijkstra/astar, adapter από υπάρχον UI grid χωρίς DOM, frozen copies, cardinal unit-cost neighbours και same-grid evaluation utility. Found/no-path/invalid/runner error έχουν διακριτό contract. Timing μόνο του search call· path length σε ακμές, null όταν δεν υπάρχει path. Δεν προστίθενται ακόμη οι τέσσερις algorithms, animation ή persistence και δεν κλείνουν τα #1–#10. Αναλυτικό contract και όρια στο [Pathfinding](PATHFINDING.md). Tests καλύπτουν input validation, walls/markers, same-cell/no-path, invalid trace, timing boundary και copy isolation· το sorting regression suite παραμένει ενεργό.
+
+## Pathfinding correctness (#10)
+
+Το npm test περιλαμβάνει tests/pathfinding.test.mjs: cardinal neighbours/edges/walls, reconstruction/no-path/cycles, BFS processing order, shortest route, blocked paths, same-cell/reversed endpoints και isolation. Ανεξάρτητο Floyd–Warshall oracle (χωρίς production neighbours/reconstruction) ελέγχει και τα 512 layouts grid 3×3, όλα τα walkable start/end pairs: 11.520 cases. Ελέγχονται reachability, shortest length, adjacency, visited uniqueness και πλήρης reachable component όταν δεν υπάρχει path. Επιπλέον open grid 100×100 καλύπτει το όριο 10.000 cells, χωρίς wall-clock performance assertion. Δεν αποδεικνύει όλους τους μελλοντικούς algorithms ή UI animation.

@@ -386,3 +386,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #3 παρέχει το reconstruction utility και τα tests του. Επόμενη εξάρτηση: BFS (#1).
 
 Το #1 προσθέτει πραγματικό BFS ως pure function. Η σύνδεση με UI/animation παραμένει στο #4· ακολουθεί ενίσχυση correctness tests (#10).
+
+Το #10 ολοκληρώνει το algorithm correctness suite. Επόμενο βήμα: BFS animation (#4) και προστασία controls (#5).
