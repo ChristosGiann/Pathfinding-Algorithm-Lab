@@ -23,6 +23,10 @@
   outline: none;
 }
 
+.grid-node:disabled {
+  cursor: not-allowed;
+}
+
 .grid-node--empty {
   background: #f9fafb;
 }

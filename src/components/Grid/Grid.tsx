@@ -7,9 +7,10 @@ type GridProps = {
   grid: GridType;
   texts: AppTexts["grid"];
   onNodeClick: (row: number, col: number) => void;
+  disabled?: boolean;
 };
 
-export function Grid({ grid, texts, onNodeClick }: GridProps) {
+export function Grid({ grid, texts, onNodeClick, disabled = false }: GridProps) {
   return (
     <div className="grid">
       {grid.map((row, rowIndex) => (
@@ -20,6 +21,7 @@ export function Grid({ grid, texts, onNodeClick }: GridProps) {
               node={node}
               texts={texts}
               onNodeClick={onNodeClick}
+              disabled={disabled}
             />
           ))}
         </div>

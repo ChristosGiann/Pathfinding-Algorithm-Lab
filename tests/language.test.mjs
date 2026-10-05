@@ -343,3 +343,33 @@ test('same-grid comparison isolates mutation and continues after failure',async(
  assert.equal(new Set(copies.map(item=>item.walls)).size,3);assert.deepEqual(input.walls,[false,false]);
  assert.throws(()=>comparePathfinding(input,[{algorithm:'bfs',search:success},{algorithm:'bfs',search:success}]));
 });
+
+test('pathfinding renders localized BFS controls and keeps future algorithms unavailable', async () => {
+  const { Pathfinding } = await import('../src/components/Pathfinding/Pathfinding.tsx');
+  for (const language of ['el', 'en']) {
+    const html = render(Pathfinding, { language });
+    assert.ok(html.includes(translations[language].pathfinding.idle));
+    assert.ok(html.includes(translations[language].pathfinding.description));
+    assert.match(html, /value="dfs" disabled/);
+    assert.match(html, /value="dijkstra" disabled/);
+    assert.match(html, /value="astar" disabled/);
+    assert.match(html, /role="status"/);
+    assert.equal((html.match(/class="grid-node /g) || []).length, 600);
+  }
+});
+
+test('pathfinding toolbar and grid disable every editable control while running', async () => {
+  const { Toolbar } = await import('../src/components/Toolbar/Toolbar.tsx');
+  const { Grid } = await import('../src/components/Grid/Grid.tsx');
+  for (const language of ['el', 'en']) for (const disabled of [false, true]) {
+    const texts = translations[language];
+    const toolbar = render(Toolbar, { texts: texts.toolbar, algorithms: texts.algorithms, speed: texts.speed,
+      selectedSpeed: 'normal', onSpeedChange() {}, onVisualize() {}, onResetGrid() {}, onClearWalls() {}, disabled });
+    const controls = toolbar.match(/<(?:button|select)\b[^>]*>/g);
+    assert.equal(controls.length, 6);
+    assert.equal(controls.filter(tag => tag.includes('disabled')).length, disabled ? 6 : 1);
+    const html = render(Grid, { grid: [[{ row: 0, col: 0, type: 'start' }, { row: 0, col: 1, type: 'empty' }]],
+      texts: texts.grid, onNodeClick() {}, disabled });
+    assert.equal((html.match(/disabled=""/g) || []).length, disabled ? 2 : 0);
+  }
+});

@@ -2,8 +2,9 @@
 
 Το sorting evaluation είναι διαθέσιμο στο dev. Η επόμενη οικογένεια ξεκινά με
 καθαρό TypeScript domain στο `src/pathfinding/evaluation.ts`, χωρίς DOM dependency.
-Δεν υπάρχουν ακόμη πραγματικές BFS/DFS/Dijkstra/A* implementations ή ενεργά
-execution/animation controls. Τα issues #1–#10 παραμένουν ξεχωριστά και ανοικτά.
+Ο BFS (#1) είναι διαθέσιμος ως καθαρό search function και το #4 τον συνδέει με
+visited/path animation στο UI. DFS/Dijkstra/A* παραμένουν μελλοντικά. Το #2 καλύπτεται από το υπάρχον `neighbours` και
+ξεχωριστό regression suite· τα υπόλοιπα pathfinding issues ακολουθούν σταδιακά.
 
 ## Input και algorithm contract
 
@@ -37,6 +38,11 @@ grids θα χρειαστούν ρητή επέκταση. Οι τέσσερις
 `bfs`, `dfs`, `dijkstra`, `astar`. BFS/DFS δουλεύουν με την ίδια είσοδο, Dijkstra
 με unit costs και A* μπορεί αργότερα να χρησιμοποιεί Manhattan heuristic.
 
+Το #2 επαληθεύεται στο `tests/pathfinding.test.mjs` με `npm test`: κέντρο,
+γωνίες/άκρες χωρίς row wrapping, walls, invalid origins, single cell/row/column
+και ανεξάρτητα result arrays. Το utility παραμένει στο pathfinding feature,
+χωρίς UI logic και χωρίς δεύτερη, ασύμβατη αναπαράσταση γειτόνων.
+
 ## Result και μέτρηση
 
 `evaluatePathfinding(identity,input,search,clock?)` μετρά μόνο το synchronous
@@ -61,7 +67,7 @@ search call με `performance.now()` σε milliseconds. Αντιγραφή/valid
 `comparePathfinding` δέχεται 1–4 διαφορετικές identities με injected search
 functions. Παίρνει κοινό snapshot και δίνει νέο frozen copy σε κάθε εκτέλεση.
 Exception ενός algorithm δεν ακυρώνει τα υπόλοιπα. Δεν υπάρχει production
-registry με placeholder implementations ή προσποίηση έτοιμων algorithms.
+registry με placeholder implementations. Ο BFS μπορεί να δοθεί ως injected search.
 
 Η μελλοντική UI σύνδεση είναι: existing Grid → adapter → trusted algorithm registry
 → evaluation → result → ανεξάρτητη animation των visited/path. Animation delays
@@ -71,3 +77,15 @@ pathfinding benchmarks και animation suite είναι μελλοντικό sc
 Tests χρησιμοποιούν μικρά injected traces για contract validation, clock boundaries,
 invalid/no-path/same-cell inputs, walls, neighbour ordering και copy isolation.
 Το πλήρες frontend suite συνεχίζει να ελέγχει το sorting flow.
+
+## Ανακατασκευή διαδρομής (#3)
+
+Το reconstructPath(start, end) στο src/pathfinding/reconstructPath.ts ακολουθεί SearchNode.previous references και επιστρέφει row-major IDs από start προς end. Τα nodes είναι τοπικά στο search, όχι UI nodes. Η αρχή αναγνωρίζεται από την ίδια object reference· start=end δίνει ένα ID. Null end, disconnected chain ή cycle δίνουν []. Iterative O(k) χρόνος/χώρος, χωρίς recursion ή mutation. Το utility δεν ελέγχει walls/adjacency: αυτά ανήκουν στον search και στο evaluation contract. Tests: διαδρομή, same-node, no-path/cycle, isolation και 10.000-node chain.
+
+## BFS (#1)
+
+Το bfs στο src/pathfinding/bfs.ts δέχεται validated GridInput (από gridToInput/snapshotInput ή μέσω evaluatePathfinding). FIFO queue με head cursor, discovery στο enqueue και previous references· κάθε cell μπαίνει μία φορά. Επιστρέφει processed visited nodes μέχρι και το end, found και shortest path σε unit-cost cardinal grid. No-path δίνει found:false/path:[], start=end δίνει [start]. O(V+E) χρόνος και O(V) χώρος. Δεν μεταβάλλει input ούτε αγγίζει React/DOM/timers. Η UI σύνδεση και το animation είναι το #4.
+
+## BFS animation (#4)
+
+Το Pathfinding component κατέχει το grid και το playback state. Ο BFS/evaluation εκτελείται μία φορά πριν από timers· κατόπιν τα visited και path IDs γίνονται frames, με αυτή τη σειρά. Slow/normal/fast: 80/25/5 ms ανά frame (όχι εγγύηση wall-clock διάρκειας). Το advancePlayback αλλάζει μόνο React state, διατηρώντας start/end/walls. Idle/running/found/no-path/error μηνύματα είναι el/en. Νέο run καθαρίζει παλιό trace· reset/edit ακυρώνει playback και stale callbacks αγνοούνται με state identity. Effect cleanup ακυρώνει timer σε αλλαγή state/unmount. Το #5 κλειδώνει cells, toolbar buttons και selects όσο status=running. Native disabled props και handler guards προστατεύουν το grid· σε completion/no-path/error ενεργοποιούνται ξανά. Το comparison και οι μη υλοποιημένοι algorithms παραμένουν disabled ανεξάρτητα από playback. DFS/Dijkstra/A* επιλογές και comparison παραμένουν disabled.

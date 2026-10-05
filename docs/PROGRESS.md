@@ -1,13 +1,14 @@
 # Project Progress
 
-Last verified: **2026-10-01**
+Last verified: **2026-10-05**
 
 ## Current phase
 
 Το παρόν snapshot περιλαμβάνει το ολοκληρωμένο sorting evaluation scope #58–#64/#66–#68:
 comparison, αποθήκευση/ιστορικό, statistics/baseline, Big-O context, educational
 Library, visualization, trusted local custom execution και CI. Το #65 προσθέτει
-το pathfinding input/result/evaluation foundation, χωρίς ακόμη algorithms ή animation.
+το pathfinding input/result/evaluation foundation. Τα #2/#3/#1 παρέχουν neighbours,
+reconstruction και pure BFS. Το #4 προσθέτει την UI σύνδεση και το animation του BFS.
 Η προώθηση από dev σε main γίνεται μόνο με ρητή εντολή· τα δύο branches παραμένουν μόνιμα.
 
 Οι επόμενες ενότητες διατηρούν το ιστορικό ανά issue· οι παλιότερες test counts
@@ -251,3 +252,27 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Pathfinding foundation (#65)
 
 Κοινό GridInput/Search/PathfindingResult για bfs/dfs/dijkstra/astar, adapter από υπάρχον UI grid χωρίς DOM, frozen copies, cardinal unit-cost neighbours και same-grid evaluation utility. Found/no-path/invalid/runner error έχουν διακριτό contract. Timing μόνο του search call· path length σε ακμές, null όταν δεν υπάρχει path. Δεν προστίθενται ακόμη οι τέσσερις algorithms, animation ή persistence και δεν κλείνουν τα #1–#10. Αναλυτικό contract και όρια στο [Pathfinding](PATHFINDING.md). Tests καλύπτουν input validation, walls/markers, same-cell/no-path, invalid trace, timing boundary και copy isolation· το sorting regression suite παραμένει ενεργό.
+
+## Issue #2 — Pathfinding neighbours
+
+Το υπάρχον neighbours του #65 καλύπτει τα cardinal neighbours χωρίς walls/out-of-grid ή UI logic. Προστέθηκε ξεχωριστό regression suite για edges/corners, narrow grids, invalid origins και copy isolation. Δεν προστέθηκε duplicate utility.
+
+## Issue #3 — Path reconstruction
+
+Υλοποιήθηκε καθαρό iterative reconstructPath με previous node references, start→end IDs, no-path/cycle handling και tests. Δεν προστίθεται ακόμη algorithm ή UI execution.
+
+## Issue #1 — BFS
+
+Προστέθηκε καθαρός BFS με deterministic traversal, shortest path σε unit-cost grid, walls/no-path/same-cell handling και συμβατότητα με evaluation metrics. Τα tests ελέγχουν processing order, route, isolation και reversed endpoints. Το UI παραμένει ανενεργό μέχρι το animation issue #4.
+
+## Issue #10 — Pathfinding tests
+
+Το dedicated suite καλύπτει neighbours, BFS paths/walls/no-path και ανεξάρτητη επαλήθευση σε 11.520 μικρά grid cases, συν το μέγιστο grid 10.000 cells. Εκτελείται με npm test και το υπάρχον CI. Η συνέχεια είναι η UI οπτικοποίηση (#4).
+
+## Issue #4 — BFS animation
+
+Ενεργό BFS visualization με ανεξάρτητο timer playback, visited πριν από path, speed selector και el/en feedback. Input markers/walls διατηρούνται. 43 frontend tests και lint/build επιτυχή. Χειροκίνητος έλεγχος στο production build μέσω localhost preview· ο Vite dev server δεν απαντούσε στο συγκεκριμένο session.
+
+## Issue #5 — Animation controls
+
+Τα pathfinding cells/buttons/selects κλειδώνουν κατά το running state και επανέρχονται όταν τελειώσει το playback. Handler guards αποτρέπουν grid edits και νέο run. UI state παραμένει ξεχωριστό από BFS logic, με aria-busy στην ενότητα. Οι υπόλοιπες ενότητες δεν κλειδώνουν.

@@ -1,6 +1,6 @@
 # Roadmap
 
-Τρέχον snapshot, 2026-10-01: sorting comparison/persistence/statistics/education/visualization/custom execution και CI υλοποιήθηκαν (#58–#64/#66–#68). Το #65 προετοιμάζει το pathfinding evaluation contract. Τα παλιά #1–#10 παραμένουν ξεχωριστά ανοικτά issues.
+Τρέχον snapshot, 2026-10-05: sorting comparison/persistence/statistics/education/visualization/custom execution και CI υλοποιήθηκαν (#58–#64/#66–#68). Το #65 προετοιμάζει το pathfinding evaluation contract. Τα #2/#3/#1 παρέχουν neighbours, reconstruction και pure BFS. Το #10 καλύπτει τα tests και το #4 το BFS animation. Ακολουθούν controls/statistics/DFS/comparison (#5–#9).
 
 ## Main development path
 
@@ -378,3 +378,15 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Pathfinding foundation (#65)
 
 Κοινό GridInput/Search/PathfindingResult για bfs/dfs/dijkstra/astar, adapter από υπάρχον UI grid χωρίς DOM, frozen copies, cardinal unit-cost neighbours και same-grid evaluation utility. Found/no-path/invalid/runner error έχουν διακριτό contract. Timing μόνο του search call· path length σε ακμές, null όταν δεν υπάρχει path. Δεν προστίθενται ακόμη οι τέσσερις algorithms, animation ή persistence και δεν κλείνουν τα #1–#10. Αναλυτικό contract και όρια στο [Pathfinding](PATHFINDING.md). Tests καλύπτουν input validation, walls/markers, same-cell/no-path, invalid trace, timing boundary και copy isolation· το sorting regression suite παραμένει ενεργό.
+
+## Ενεργή συνέχεια pathfinding
+
+Μετά την ολοκλήρωση του sorting scope, σειρά εξαρτήσεων: #2 neighbours → #3 reconstruction → #1 BFS → #10 algorithm tests. Ακολουθούν animation/controls/statistics και DFS/comparison. Το #2 έχει ελεγχθεί με dedicated regression tests.
+
+Το #3 παρέχει το reconstruction utility και τα tests του. Επόμενη εξάρτηση: BFS (#1).
+
+Το #1 προσθέτει πραγματικό BFS ως pure function. Η σύνδεση με UI/animation παραμένει στο #4· ακολουθεί ενίσχυση correctness tests (#10).
+
+Το #10 ολοκληρώνει το algorithm correctness suite. Επόμενο βήμα: BFS animation (#4) και προστασία controls (#5).
+
+Το #5 ολοκληρώνει την προστασία pathfinding controls κατά το animation. Ακολουθούν clear path (#6), statistics (#7), DFS (#8) και comparison (#9).

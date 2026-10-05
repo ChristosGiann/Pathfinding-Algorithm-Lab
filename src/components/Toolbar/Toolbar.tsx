@@ -1,5 +1,6 @@
 import type { AppTexts } from "../../i18n/translations";
 import "./Toolbar.css";
+import type { AnimationSpeed } from "../../pathfinding/playback";
 
 type ToolbarProps = {
   texts: AppTexts["toolbar"];
@@ -7,6 +8,10 @@ type ToolbarProps = {
   speed: AppTexts["speed"];
   onResetGrid: () => void;
   onClearWalls: () => void;
+  onVisualize: () => void;
+  selectedSpeed: AnimationSpeed;
+  onSpeedChange: (speed: AnimationSpeed) => void;
+  disabled?: boolean;
 };
 
 export function Toolbar({
@@ -15,6 +20,10 @@ export function Toolbar({
   speed,
   onResetGrid,
   onClearWalls,
+  onVisualize,
+  selectedSpeed,
+  onSpeedChange,
+  disabled = false,
 }: ToolbarProps) {
   return (
     <section className="toolbar" aria-label={texts.ariaLabel}>
@@ -23,11 +32,11 @@ export function Toolbar({
           {texts.algorithmLabel}
         </label>
 
-        <select id="algorithm-select" className="toolbar-select" defaultValue="bfs">
+        <select id="algorithm-select" className="toolbar-select" defaultValue="bfs" disabled={disabled}>
           <option value="bfs">{algorithms.bfs}</option>
-          <option value="dfs">{algorithms.dfs}</option>
-          <option value="dijkstra">{algorithms.dijkstra}</option>
-          <option value="astar">{algorithms.astar}</option>
+          <option value="dfs" disabled>{algorithms.dfs}</option>
+          <option value="dijkstra" disabled>{algorithms.dijkstra}</option>
+          <option value="astar" disabled>{algorithms.astar}</option>
         </select>
       </div>
 
@@ -39,7 +48,9 @@ export function Toolbar({
         <select
           id="speed-select"
           className="toolbar-select"
-          defaultValue="normal"
+          value={selectedSpeed}
+          disabled={disabled}
+          onChange={event => onSpeedChange(event.target.value as AnimationSpeed)}
         >
           <option value="slow">{speed.slow}</option>
           <option value="normal">{speed.normal}</option>
@@ -51,7 +62,8 @@ export function Toolbar({
         <button
           className="toolbar-button toolbar-button--primary"
           type="button"
-          disabled
+          onClick={onVisualize}
+          disabled={disabled}
         >
           {texts.visualize}
         </button>
@@ -60,11 +72,11 @@ export function Toolbar({
           {texts.compare}
         </button>
 
-        <button className="toolbar-button" type="button" onClick={onClearWalls}>
+        <button className="toolbar-button" type="button" onClick={onClearWalls} disabled={disabled}>
           {texts.clearWalls}
         </button>
 
-        <button className="toolbar-button" type="button" onClick={onResetGrid}>
+        <button className="toolbar-button" type="button" onClick={onResetGrid} disabled={disabled}>
           {texts.resetGrid}
         </button>
       </div>
