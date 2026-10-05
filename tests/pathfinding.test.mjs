@@ -26,6 +26,7 @@ registerHooks({
 
 const { neighbours, snapshotInput } = await import('../src/pathfinding/evaluation.ts');
 const { reconstructPath } = await import('../src/pathfinding/reconstructPath.ts');
+const { bfs } = await import('../src/pathfinding/bfs.ts');
 const grid = (rows, cols, walls = [], start = 0, end = rows * cols - 1) => snapshotInput({
   rows, cols, start, end,
   walls: Array.from({ length: rows * cols }, (_, id) => walls.includes(id)),
@@ -86,4 +87,35 @@ test('reconstruction handles long chains without recursive stack growth', () => 
   let end = start;
   for (let id = 1; id < 10000; id++) end = { id, previous: end };
   assert.deepEqual(reconstructPath(start, end), Array.from({ length: 10000 }, (_, id) => id));
+});
+
+test('BFS returns deterministic breadth-first processing and a shortest path', () => {
+  const input = grid(3, 3);
+  const result = bfs(input);
+  assert.deepEqual(result, {
+    found: true, visited: [0, 1, 3, 2, 4, 6, 5, 7, 8], path: [0, 1, 2, 5, 8],
+  });
+  assert.deepEqual(bfs(input), result);
+  result.path.reverse();
+  assert.deepEqual(bfs(input).path, [0, 1, 2, 5, 8]);
+  assert.deepEqual(input, grid(3, 3));
+});
+
+test('BFS respects walls and reports no path without inventing a route', () => {
+  assert.deepEqual(bfs(grid(3, 3, [1, 4])).path, [0, 3, 6, 7, 8]);
+  assert.deepEqual(bfs(grid(3, 3, [1, 3])), { found: false, visited: [0], path: [] });
+  assert.deepEqual(bfs(grid(1, 3, [1])), { found: false, visited: [0], path: [] });
+});
+
+test('BFS handles same-cell and reversed endpoints through the evaluation contract', async () => {
+  const { evaluatePathfinding } = await import('../src/pathfinding/evaluation.ts');
+  assert.deepEqual(bfs(grid(1, 1)), { found: true, visited: [0], path: [0] });
+  const input = grid(1, 4, [], 3, 0);
+  let tick = 0;
+  const result = evaluatePathfinding('bfs', input, bfs, () => tick++);
+  assert.equal(result.status, 'completed');
+  assert.deepEqual(result.path, [3, 2, 1, 0]);
+  assert.equal(result.pathLength, 3);
+  assert.equal(result.visitedNodeCount, 4);
+  assert.equal(result.executionTimeMs, 1);
 });

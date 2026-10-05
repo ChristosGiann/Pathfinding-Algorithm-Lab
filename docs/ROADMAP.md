@@ -1,6 +1,6 @@
 # Roadmap
 
-Τρέχον snapshot, 2026-10-01: sorting comparison/persistence/statistics/education/visualization/custom execution και CI υλοποιήθηκαν (#58–#64/#66–#68). Το #65 προετοιμάζει το pathfinding evaluation contract. Τα παλιά #1–#10 παραμένουν ξεχωριστά ανοικτά issues.
+Τρέχον snapshot, 2026-10-05: sorting comparison/persistence/statistics/education/visualization/custom execution και CI υλοποιήθηκαν (#58–#64/#66–#68). Το #65 προετοιμάζει το pathfinding evaluation contract. Τα #2/#3/#1 παρέχουν neighbours, reconstruction και pure BFS. Ακολουθούν tests (#10) και UI/animation (#4–#9).
 
 ## Main development path
 
@@ -384,3 +384,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Μετά την ολοκλήρωση του sorting scope, σειρά εξαρτήσεων: #2 neighbours → #3 reconstruction → #1 BFS → #10 algorithm tests. Ακολουθούν animation/controls/statistics και DFS/comparison. Το #2 έχει ελεγχθεί με dedicated regression tests.
 
 Το #3 παρέχει το reconstruction utility και τα tests του. Επόμενη εξάρτηση: BFS (#1).
+
+Το #1 προσθέτει πραγματικό BFS ως pure function. Η σύνδεση με UI/animation παραμένει στο #4· ακολουθεί ενίσχυση correctness tests (#10).
