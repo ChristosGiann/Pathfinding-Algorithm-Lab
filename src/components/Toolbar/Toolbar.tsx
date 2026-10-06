@@ -8,6 +8,7 @@ type ToolbarProps = {
   speed: AppTexts["speed"];
   onResetGrid: () => void;
   onClearWalls: () => void;
+  onClearPath: () => void;
   onVisualize: () => void;
   selectedSpeed: AnimationSpeed;
   onSpeedChange: (speed: AnimationSpeed) => void;
@@ -20,6 +21,7 @@ export function Toolbar({
   speed,
   onResetGrid,
   onClearWalls,
+  onClearPath,
   onVisualize,
   selectedSpeed,
   onSpeedChange,
@@ -70,6 +72,10 @@ export function Toolbar({
 
         <button className="toolbar-button" type="button" disabled>
           {texts.compare}
+        </button>
+
+        <button className="toolbar-button" type="button" onClick={onClearPath} disabled={disabled}>
+          {texts.clearPath}
         </button>
 
         <button className="toolbar-button" type="button" onClick={onClearWalls} disabled={disabled}>

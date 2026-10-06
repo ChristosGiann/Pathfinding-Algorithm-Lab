@@ -1,5 +1,6 @@
 import type { Grid } from "../types/grid";
 import type { PathfindingResult } from "./evaluation";
+import { clearPath } from "./clearPath";
 
 export const ANIMATION_DELAYS = { slow: 80, normal: 25, fast: 5 } as const;
 export type AnimationSpeed = keyof typeof ANIMATION_DELAYS;
@@ -14,9 +15,7 @@ export interface Playback {
 
 export function idlePlayback(grid: Grid): Playback {
   return {
-    grid: grid.map(row => row.map(node => ({
-      ...node, type: node.type === "visited" || node.type === "path" ? "empty" : node.type,
-    }))),
+    grid: clearPath(grid),
     frames: [], cursor: 0, status: "idle", result: null,
   };
 }

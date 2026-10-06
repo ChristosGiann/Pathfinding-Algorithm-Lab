@@ -219,3 +219,15 @@ test('playback terminates for no-path and errors; speed changes delays, not resu
   assert.ok(ANIMATION_DELAYS.slow > ANIMATION_DELAYS.normal);
   assert.ok(ANIMATION_DELAYS.normal > ANIMATION_DELAYS.fast);
 });
+
+test('clearPath removes only trace marks, preserves the layout and resets playback', async () => {
+  const { clearPath } = await import('../src/pathfinding/clearPath.ts');
+  const grid = [['start', 'visited', 'path', 'wall', 'end', 'empty']]
+    .map((row, r) => Object.freeze(row.map((type, c) => Object.freeze({ row: r, col: c, type }))));
+  Object.freeze(grid);
+  const clean = clearPath(grid);
+  assert.deepEqual(clean[0].map(node => node.type), ['start', 'empty', 'empty', 'wall', 'end', 'empty']);
+  assert.deepEqual(grid[0].map(node => node.type), ['start', 'visited', 'path', 'wall', 'end', 'empty']);
+  assert.deepEqual(clearPath(clean), clean);
+  assert.deepEqual(idlePlayback(grid), { grid: clean, frames: [], cursor: 0, status: 'idle', result: null });
+});
