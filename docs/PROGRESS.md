@@ -276,3 +276,7 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Issue #5 — Animation controls
 
 Τα pathfinding cells/buttons/selects κλειδώνουν κατά το running state και επανέρχονται όταν τελειώσει το playback. Handler guards αποτρέπουν grid edits και νέο run. UI state παραμένει ξεχωριστό από BFS logic, με aria-busy στην ενότητα. Οι υπόλοιπες ενότητες δεν κλειδώνουν.
+
+## Issue #6 — Clear path
+
+Προστέθηκαν clearPath utility και el/en κουμπί, με διατήρηση walls/endpoints και μηδενισμό προηγούμενου playback. Tests καλύπτουν immutable input, idempotence και disabled toolbar.

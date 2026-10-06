@@ -89,3 +89,7 @@ invalid/no-path/same-cell inputs, walls, neighbour ordering και copy isolatio
 ## BFS animation (#4)
 
 Το Pathfinding component κατέχει το grid και το playback state. Ο BFS/evaluation εκτελείται μία φορά πριν από timers· κατόπιν τα visited και path IDs γίνονται frames, με αυτή τη σειρά. Slow/normal/fast: 80/25/5 ms ανά frame (όχι εγγύηση wall-clock διάρκειας). Το advancePlayback αλλάζει μόνο React state, διατηρώντας start/end/walls. Idle/running/found/no-path/error μηνύματα είναι el/en. Νέο run καθαρίζει παλιό trace· reset/edit ακυρώνει playback και stale callbacks αγνοούνται με state identity. Effect cleanup ακυρώνει timer σε αλλαγή state/unmount. Το #5 κλειδώνει cells, toolbar buttons και selects όσο status=running. Native disabled props και handler guards προστατεύουν το grid· σε completion/no-path/error ενεργοποιούνται ξανά. Το comparison και οι μη υλοποιημένοι algorithms παραμένουν disabled ανεξάρτητα από playback. DFS/Dijkstra/A* επιλογές και comparison παραμένουν disabled.
+
+## Clear path (#6)
+
+Το clearPath utility αφαιρεί μόνο visited/path marks με immutable copies. Το κουμπί Καθαρισμός διαδρομής επαναφέρει idle playback/result, κρατώντας walls/start/end και την ταχύτητα. Χρησιμοποιείται και από το υπάρχον idlePlayback για κοινή συμπεριφορά. Disabled όσο τρέχει animation, χωρίς DOM manipulation.

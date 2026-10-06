@@ -52,6 +52,7 @@ export function Pathfinding({ language }: { language: Language }) {
       disabled={running} selectedSpeed={speed}
       onSpeedChange={value => { if (!running) setSpeed(value); }} onVisualize={visualize}
       onResetGrid={() => editGrid(() => createGrid(20, 30))}
+      onClearPath={() => editGrid(grid => grid)}
       onClearWalls={() => editGrid(clearWalls)} />
     <p role="status">{message}</p>
     <Grid grid={state.grid} texts={texts.grid} disabled={running}
