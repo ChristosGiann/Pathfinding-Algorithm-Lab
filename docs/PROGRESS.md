@@ -1,6 +1,6 @@
 # Project Progress
 
-Last verified: **2026-10-05**
+Last verified: **2026-10-06**
 
 ## Current phase
 
@@ -8,7 +8,8 @@ Last verified: **2026-10-05**
 comparison, αποθήκευση/ιστορικό, statistics/baseline, Big-O context, educational
 Library, visualization, trusted local custom execution και CI. Το #65 προσθέτει
 το pathfinding input/result/evaluation foundation. Τα #2/#3/#1 παρέχουν neighbours,
-reconstruction και pure BFS. Το #4 προσθέτει την UI σύνδεση και το animation του BFS.
+reconstruction και pure BFS. Το #4 προσθέτει την UI σύνδεση και το animation του BFS. Τα #5/#6/#7 καλύπτουν
+control locking, clear path και panel στατιστικών μετά το animation.
 Η προώθηση από dev σε main γίνεται μόνο με ρητή εντολή· τα δύο branches παραμένουν μόνιμα.
 
 Οι επόμενες ενότητες διατηρούν το ιστορικό ανά issue· οι παλιότερες test counts
@@ -280,3 +281,7 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Issue #6 — Clear path
 
 Προστέθηκαν clearPath utility και el/en κουμπί, με διατήρηση walls/endpoints και μηδενισμό προηγούμενου playback. Tests καλύπτουν immutable input, idempotence και disabled toolbar.
+
+## Issue #7 — Pathfinding statistics
+
+Panel μετά το τέλος του animation με BFS identity, found/no-path, visited count, μήκος σε βήματα και χρόνο μόνο του search. Δίγλωσσα labels και locale numbers, διακριτό null/zero, χωρίς παλιά metrics σε νέο run ή clear. Tests καλύπτουν rendering και lifecycle visibility.

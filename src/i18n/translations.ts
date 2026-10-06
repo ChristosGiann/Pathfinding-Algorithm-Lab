@@ -12,6 +12,11 @@ export const translations = {
       idle: "Σχεδίασε εμπόδια και πάτησε Οπτικοποίηση. Προς το παρόν διατίθεται μόνο BFS.",
       running: "Η αναζήτηση οπτικοποιείται…", found: "Βρέθηκε διαδρομή.",
       noPath: "Δεν υπάρχει διαδρομή.", error: "Δεν ήταν δυνατή η εκτέλεση. Έλεγξε το grid και δοκίμασε ξανά.",
+      statistics: {
+        title: "Στατιστικά διαδρομής", algorithm: "Αλγόριθμος", found: "Βρέθηκε διαδρομή",
+        yes: "Ναι", no: "Όχι", visited: "Visited nodes", length: "Μήκος διαδρομής (βήματα)", time: "Χρόνος εκτέλεσης",
+        note: "Το μήκος μετρά βήματα μεταξύ cells· — σημαίνει ότι δεν υπάρχει διαδρομή. Ο χρόνος αφορά μόνο τον αλγόριθμο, χωρίς animation ή rendering. Μία μέτρηση δεν αποτελεί γενικό συμπέρασμα απόδοσης.",
+      },
     },
 
     grid: { cell: (row: number, col: number) => `Κελί γραμμής ${row}, στήλης ${col}` },
@@ -79,6 +84,11 @@ export const translations = {
       idle: "Draw walls and press Visualize. Only BFS is available for now.",
       running: "Animating the search…", found: "Path found.",
       noPath: "No path exists.", error: "The search could not run. Check the grid and try again.",
+      statistics: {
+        title: "Path statistics", algorithm: "Algorithm", found: "Path found",
+        yes: "Yes", no: "No", visited: "Visited nodes", length: "Path length (steps)", time: "Execution time",
+        note: "Length counts steps between cells; — means no path exists. Time measures the algorithm only, excluding animation and rendering. A single measurement is not a general performance conclusion.",
+      },
     },
 
     grid: { cell: (row: number, col: number) => `Cell row ${row}, column ${col}` },

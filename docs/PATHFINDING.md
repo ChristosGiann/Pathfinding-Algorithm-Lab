@@ -93,3 +93,7 @@ invalid/no-path/same-cell inputs, walls, neighbour ordering και copy isolatio
 ## Clear path (#6)
 
 Το clearPath utility αφαιρεί μόνο visited/path marks με immutable copies. Το κουμπί Καθαρισμός διαδρομής επαναφέρει idle playback/result, κρατώντας walls/start/end και την ταχύτητα. Χρησιμοποιείται και από το υπάρχον idlePlayback για κοινή συμπεριφορά. Disabled όσο τρέχει animation, χωρίς DOM manipulation.
+
+## Στατιστικά μετά το animation (#7)
+
+Το PathfindingStatistics δέχεται μόνο playback status και measured result. Εμφανίζεται στο completed, ποτέ σε idle/running/error: algorithm, found, visitedNodeCount, pathLength σε ακμές και executionTimeMs. Null length εμφανίζεται ως —, μηδέν ως 0. Ο χρόνος αποκλείει animation/rendering και μορφοποιείται με έως 6 δεκαδικά σε el/en. Clear/reset/edit ή νέο run κρύβει προηγούμενα στοιχεία· αλλαγή γλώσσας μεταφράζει το ίδιο αποτέλεσμα χωρίς rerun. Δεν γίνεται DOM inspection, persistence ή αλλαγή του timing contract.

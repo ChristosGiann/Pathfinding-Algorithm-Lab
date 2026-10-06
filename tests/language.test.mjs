@@ -373,3 +373,46 @@ test('pathfinding toolbar and grid disable every editable control while running'
     assert.equal((html.match(/disabled=""/g) || []).length, disabled ? 2 : 0);
   }
 });
+
+test('path statistics show measured results after playback in both languages', async () => {
+  const { PathfindingStatistics } = await import('../src/components/Pathfinding/PathfindingStatistics.tsx');
+  const result = { algorithm: 'bfs', status: 'completed', found: true, visitedNodeCount: 4,
+    pathLength: 3, executionTimeMs: 1.234567, visited: [0, 1, 2, 3], path: [0, 1, 2, 3] };
+  for (const language of ['el', 'en']) {
+    const texts = translations[language].pathfinding.statistics;
+    const html = render(PathfindingStatistics, { status: 'completed', result, language });
+    assert.ok(html.includes(texts.title));
+    assert.ok(html.includes(texts.note));
+    assert.ok(html.includes(texts.yes));
+    assert.match(html, /<dd>BFS<\/dd>/);
+    assert.match(html, /<dd>4<\/dd>/);
+    assert.match(html, /<dd>3<\/dd>/);
+    assert.ok(html.includes(language === 'el' ? '1,234567 ms' : '1.234567 ms'));
+  }
+  assert.equal(result.executionTimeMs, 1.234567);
+});
+
+test('path statistics distinguish no-path from zero-length and zero-time results', async () => {
+  const { PathfindingStatistics } = await import('../src/components/Pathfinding/PathfindingStatistics.tsx');
+  for (const language of ['el', 'en']) {
+    const result = { algorithm: 'bfs', status: 'completed', found: false, visitedNodeCount: 1,
+      pathLength: null, executionTimeMs: 0, visited: [0], path: [] };
+    const html = render(PathfindingStatistics, { status: 'completed', result, language });
+    assert.ok(html.includes(translations[language].pathfinding.statistics.no));
+    assert.match(html, /<dd>—<\/dd>/);
+    assert.match(html, /0 ms/);
+    const sameCell = render(PathfindingStatistics, { status: 'completed', result: { ...result, found: true, pathLength: 0, path: [0] }, language });
+    assert.match(sameCell, /<dd>0<\/dd>/);
+    assert.doesNotMatch(sameCell, /<dd>—<\/dd>/);
+  }
+});
+
+test('statistics remain hidden before completion and after clear or errors', async () => {
+  const { PathfindingStatistics } = await import('../src/components/Pathfinding/PathfindingStatistics.tsx');
+  const result = { algorithm: 'bfs', status: 'completed', found: true, visitedNodeCount: 1,
+    pathLength: 0, executionTimeMs: 2, visited: [0], path: [0] };
+  for (const status of ['idle', 'running', 'error']) {
+    assert.equal(render(PathfindingStatistics, { status, result, language: 'el' }), '');
+  }
+  assert.equal(render(PathfindingStatistics, { status: 'completed', result: null, language: 'el' }), '');
+});

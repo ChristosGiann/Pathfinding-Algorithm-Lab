@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Grid } from "../Grid/Grid";
 import { Toolbar } from "../Toolbar/Toolbar";
+import { PathfindingStatistics } from "./PathfindingStatistics";
 import { translations } from "../../i18n/translations";
 import type { Language } from "../../i18n/translations";
 import { bfs } from "../../pathfinding/bfs";
@@ -55,6 +56,7 @@ export function Pathfinding({ language }: { language: Language }) {
       onClearPath={() => editGrid(grid => grid)}
       onClearWalls={() => editGrid(clearWalls)} />
     <p role="status">{message}</p>
+    <PathfindingStatistics status={state.status} result={state.result} language={language} />
     <Grid grid={state.grid} texts={texts.grid} disabled={running}
       onNodeClick={(row, col) => editGrid(grid => toggleWall(grid, row, col))} />
   </section>;
