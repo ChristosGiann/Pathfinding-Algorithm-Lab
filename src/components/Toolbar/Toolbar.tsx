@@ -1,6 +1,7 @@
 import type { AppTexts } from "../../i18n/translations";
 import "./Toolbar.css";
 import type { AnimationSpeed } from "../../pathfinding/playback";
+import type { AvailablePathfindingAlgorithm } from "../../pathfinding/registry";
 
 type ToolbarProps = {
   texts: AppTexts["toolbar"];
@@ -11,6 +12,8 @@ type ToolbarProps = {
   onClearPath: () => void;
   onVisualize: () => void;
   selectedSpeed: AnimationSpeed;
+  selectedAlgorithm: AvailablePathfindingAlgorithm;
+  onAlgorithmChange: (algorithm: AvailablePathfindingAlgorithm) => void;
   onSpeedChange: (speed: AnimationSpeed) => void;
   disabled?: boolean;
 };
@@ -24,6 +27,8 @@ export function Toolbar({
   onClearPath,
   onVisualize,
   selectedSpeed,
+  selectedAlgorithm,
+  onAlgorithmChange,
   onSpeedChange,
   disabled = false,
 }: ToolbarProps) {
@@ -34,9 +39,13 @@ export function Toolbar({
           {texts.algorithmLabel}
         </label>
 
-        <select id="algorithm-select" className="toolbar-select" defaultValue="bfs" disabled={disabled}>
+        <select id="algorithm-select" className="toolbar-select" value={selectedAlgorithm} disabled={disabled}
+          onChange={event => {
+            const value = event.target.value;
+            if (value === "bfs" || value === "dfs") onAlgorithmChange(value);
+          }}>
           <option value="bfs">{algorithms.bfs}</option>
-          <option value="dfs" disabled>{algorithms.dfs}</option>
+          <option value="dfs">{algorithms.dfs}</option>
           <option value="dijkstra" disabled>{algorithms.dijkstra}</option>
           <option value="astar" disabled>{algorithms.astar}</option>
         </select>

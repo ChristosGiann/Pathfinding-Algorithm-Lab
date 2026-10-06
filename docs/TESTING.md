@@ -438,3 +438,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #5 ελέγχει σε el/en ότι όλα τα grid/toolbar controls γίνονται disabled κατά το running και διαθέσιμα εκτός animation (με comparison μονίμως unavailable μέχρι #9). Browser smoke ελέγχει running/completion/no-path και αλλαγή γλώσσας χωρίς απώλεια playback.
 
 Το #7 προσθέτει el/en rendering tests για algorithm identity, measured fields, decimal formatting, no-path/null έναντι zero-length/zero-time και hidden panel σε idle/running/error. Τα metrics διαβάζονται από result, χωρίς DOM counting ή animation timing.
+
+Το #8 προσθέτει DFS deterministic order και μεγαλύτερη route από BFS, wall/no-path/same-cell/reversed inputs και 10.000-node chain χωρίς recursion. Η exhaustive suite επαληθεύει DFS reachability και structural path validity για τα ίδια 11.520 cases, χωρίς απαίτηση shortest path. Rendering tests καλύπτουν DFS selector/result identity σε el/en.

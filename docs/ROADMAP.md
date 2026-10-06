@@ -394,3 +394,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #6 προσθέτει dedicated clear-path control. Επόμενο το statistics panel (#7).
 
 Το #7 προσθέτει statistics panel. Επόμενα pathfinding βήματα: DFS (#8) και same-grid comparison (#9).
+
+Το #8 ενεργοποιεί DFS με το ίδιο UI/result contract. Επόμενο το comparison (#9).

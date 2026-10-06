@@ -8,8 +8,9 @@ export const translations = {
     },
 
     pathfinding: {
-      title: "Pathfinding — BFS", description: "Μπλε: εξερεύνηση · Κίτρινο: διαδρομή. Η ταχύτητα αφορά μόνο το animation, όχι τη μέτρηση του αλγορίθμου.",
-      idle: "Σχεδίασε εμπόδια και πάτησε Οπτικοποίηση. Προς το παρόν διατίθεται μόνο BFS.",
+      title: "Pathfinding — BFS / DFS", description: "Μπλε: εξερεύνηση · Κίτρινο: διαδρομή. Η ταχύτητα αφορά μόνο το animation, όχι τη μέτρηση του αλγορίθμου.",
+      idle: "Σχεδίασε εμπόδια, επίλεξε BFS ή DFS και πάτησε Οπτικοποίηση.",
+      searchNote: "Ο BFS βρίσκει τη συντομότερη διαδρομή σε αυτό το grid. Ο DFS εξερευνά πρώτα σε βάθος και δεν εγγυάται τη συντομότερη διαδρομή.",
       running: "Η αναζήτηση οπτικοποιείται…", found: "Βρέθηκε διαδρομή.",
       noPath: "Δεν υπάρχει διαδρομή.", error: "Δεν ήταν δυνατή η εκτέλεση. Έλεγξε το grid και δοκίμασε ξανά.",
       statistics: {
@@ -80,8 +81,9 @@ export const translations = {
     },
 
     pathfinding: {
-      title: "Pathfinding — BFS", description: "Blue: exploration · Yellow: path. Speed affects animation only, not algorithm measurement.",
-      idle: "Draw walls and press Visualize. Only BFS is available for now.",
+      title: "Pathfinding — BFS / DFS", description: "Blue: exploration · Yellow: path. Speed affects animation only, not algorithm measurement.",
+      idle: "Draw walls, choose BFS or DFS and press Visualize.",
+      searchNote: "BFS finds a shortest path on this grid. DFS explores depth first and does not guarantee a shortest path.",
       running: "Animating the search…", found: "Path found.",
       noPath: "No path exists.", error: "The search could not run. Check the grid and try again.",
       statistics: {
