@@ -392,3 +392,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #5 ολοκληρώνει την προστασία pathfinding controls κατά το animation. Ακολουθούν clear path (#6), statistics (#7), DFS (#8) και comparison (#9).
 
 Το #6 προσθέτει dedicated clear-path control. Επόμενο το statistics panel (#7).
+
+Το #7 προσθέτει statistics panel. Επόμενα pathfinding βήματα: DFS (#8) και same-grid comparison (#9).
