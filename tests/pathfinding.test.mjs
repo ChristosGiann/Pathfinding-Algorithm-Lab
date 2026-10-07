@@ -29,6 +29,7 @@ const { reconstructPath } = await import('../src/pathfinding/reconstructPath.ts'
 const { bfs } = await import('../src/pathfinding/bfs.ts');
 const { dfs } = await import('../src/pathfinding/dfs.ts');
 const { dijkstra } = await import('../src/pathfinding/dijkstra.ts');
+const { astar, manhattanHeuristic } = await import('../src/pathfinding/astar.ts');
 const grid = (rows, cols, walls = [], start = 0, end = rows * cols - 1) => snapshotInput({
   rows, cols, start, end,
   walls: Array.from({ length: rows * cols }, (_, id) => walls.includes(id)),
@@ -346,7 +347,7 @@ test('weighted snapshots validate and isolate costs before the timed search', as
   assert.equal(playback.result.algorithm,'dijkstra');
 });
 
-test('Dijkstra costs match an independent all-pairs oracle on deterministic weighted grids', () => {
+test('Dijkstra and A* match an independent weighted oracle; Manhattan is admissible and consistent', () => {
   let seed = 90;
   const next = () => { seed = (Math.imul(seed,1664525)+1013904223) >>> 0; return seed; };
   for (let sample=0; sample<80; sample++) {
@@ -361,12 +362,73 @@ test('Dijkstra costs match an independent all-pairs oracle on deterministic weig
     for(let start=0;start<9;start++)for(let end=0;end<9;end++){
       if(walls[start]||walls[end])continue;
       const input=snapshotInput({rows:3,cols:3,start,end,walls,costs});
-      const result=evaluatePathfinding('dijkstra',input,dijkstra,()=>0);
-      const label=`sample=${sample}, start=${start}, end=${end}`;
-      assert.equal(result.status,'completed',label);
-      assert.equal(result.found,Number.isFinite(distance[start][end]),label);
-      if(result.found)assert.equal(pathCost(input,result.path),distance[start][end],label);
-      assert.equal(new Set(result.visited).size,result.visited.length,label);
+      for (const [algorithm, search] of [['dijkstra', dijkstra], ['astar', astar]]) {
+        const result=evaluatePathfinding(algorithm,input,search,()=>0);
+        const label=`sample=${sample}, start=${start}, end=${end}`;
+        assert.equal(result.status,'completed',label);
+        assert.equal(result.found,Number.isFinite(distance[start][end]),label);
+        if(result.found)assert.equal(pathCost(input,result.path),distance[start][end],label);
+        assert.equal(new Set(result.visited).size,result.visited.length,label);
+        const heuristic = manhattanHeuristic(input);
+        assert.ok(heuristic(start) <= distance[start][end],label);
+        assert.equal(heuristic(end),0,label);
+        for(let a=0;a<9;a++)for(let b=0;b<9;b++){
+          if(!walls[a]&&!walls[b]&&Math.abs(Math.floor(a/3)-Math.floor(b/3))+Math.abs(a%3-b%3)===1)
+            assert.ok(heuristic(a)<=costs[b]+heuristic(b),label);
+        }
+      }
     }
+  }
+});
+
+test('A* preserves optimal costs, deterministic traces and input/output isolation', () => {
+  for (const input of [grid(3,3), grid(3,3,[1,3]), grid(1,1),
+    snapshotInput({...grid(3,3,[],0,2),costs:[8,10,1,1,1,1,1,1,1]}),
+    snapshotInput({...grid(3,3,[4]),costs:Array(9).fill(0)}),
+    snapshotInput({...grid(2,3,[],0,2),costs:[9,2,0.25,0.25,0.25,0.25]})]) {
+    const before=structuredClone(input), expected=dijkstra(input), result=astar(input);
+    assert.equal(result.found,expected.found);
+    if(result.found)assert.equal(pathCost(input,result.path),pathCost(input,expected.path));
+    assert.deepEqual(astar(input),result);
+    result.path.push(99); result.visited.reverse();
+    assert.deepEqual(input,before);
+    assert.ok(!astar(input).path.includes(99));
+    assert.equal(evaluatePathfinding('astar',input,astar,()=>0).status,'completed');
+  }
+  assert.deepEqual(astar(grid(1,1)),{found:true,visited:[0],path:[0]});
+  assert.deepEqual(astar(grid(3,3,[1,3])),{found:false,visited:[0],path:[]});
+  assert.equal(astar(grid(1,10000)).path.length,10000);
+});
+
+test('Manhattan scales down for fractions and zero costs and excludes wall costs', () => {
+  assert.equal(manhattanHeuristic(grid(3,3))(0),4);
+  const fractional=snapshotInput({...grid(2,3,[],0,2),costs:[9,2,0.25,0.25,0.25,0.25]});
+  assert.equal(manhattanHeuristic(fractional)(0),0.5);
+  assert.deepEqual(astar(fractional).path,[0,3,4,5,2]);
+  const zero=snapshotInput({...grid(3,3),costs:Array(9).fill(0)});
+  assert.equal(manhattanHeuristic(zero)(0),0);
+  assert.deepEqual(astar(zero),dijkstra(zero));
+  const wall=snapshotInput({...grid(3,3,[4]),costs:[2,2,2,2,0,2,2,2,2]});
+  assert.equal(manhattanHeuristic(wall)(0),8);
+  const adjacent=grid(20,30,[],305,324);
+  assert.equal(astar(adjacent).path.length,bfs(adjacent).path.length);
+  assert.ok(astar(adjacent).visited.length < dijkstra(adjacent).visited.length);
+});
+
+test('A* uses the common comparison, timing and playback contracts', async () => {
+  const { comparePathfinding } = await import('../src/pathfinding/evaluation.ts');
+  const input=snapshotInput({...grid(2,3,[],0,2),costs:[8,10,1,1,1,1]});
+  const ticks=[0,1,2,4,5,8];
+  const result=comparePathfinding(input,[{algorithm:'bfs',search:bfs},{algorithm:'dijkstra',search:dijkstra},{algorithm:'astar',search:astar}],()=>ticks.shift());
+  assert.deepEqual(result.map(r=>r.algorithm),['bfs','dijkstra','astar']);
+  assert.deepEqual(result.map(r=>r.executionTimeMs),[1,2,3]);
+  assert.deepEqual(result.map(r=>r.pathLength),[2,4,4]);
+  assert.equal(ticks.length,0);
+  const playback=startPlayback([[{row:0,col:0,type:'start'},{row:0,col:1,type:'end'}]],evaluatePathfinding('astar',grid(1,2),astar,()=>0));
+  assert.equal(playback.result.algorithm,'astar');
+  for(const costs of [[-1,1],[NaN,1],[Infinity,1],Array(2)]){
+    let called=false;
+    assert.throws(()=>evaluatePathfinding('astar',{...grid(1,2),costs},()=>{called=true;},()=>{called=true;}),/invalid_costs/);
+    assert.equal(called,false);
   }
 });

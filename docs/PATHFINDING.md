@@ -3,7 +3,7 @@
 Το sorting evaluation είναι διαθέσιμο στο dev. Η επόμενη οικογένεια ξεκινά με
 καθαρό TypeScript domain στο `src/pathfinding/evaluation.ts`, χωρίς DOM dependency.
 Ο BFS (#1) είναι διαθέσιμος ως καθαρό search function και το #4 τον συνδέει με
-visited/path animation στο UI. Ο DFS (#8) χρησιμοποιεί το ίδιο playback/statistics flow. Ο Dijkstra (#90) είναι διαθέσιμος ως pure weighted search· η UI ένταξή του και ο A* ακολουθούν. Το #2 καλύπτεται από το υπάρχον `neighbours` και
+visited/path animation στο UI. Ο DFS (#8) χρησιμοποιεί το ίδιο playback/statistics flow. Dijkstra (#90) και A* (#91) είναι διαθέσιμοι ως pure weighted searches· η UI ένταξή τους ακολουθεί στο #92. Το #2 καλύπτεται από το υπάρχον `neighbours` και
 ξεχωριστό regression suite· τα υπόλοιπα pathfinding issues ακολουθούν σταδιακά.
 
 ## Input και algorithm contract
@@ -35,7 +35,7 @@ Visited/path UI colors αγνοούνται ως animation state και γίνο
 
 `neighbours` επιστρέφει walkable cardinal neighbours σε σταθερή σειρά
 up/right/down/left, χωρίς wrapping ή diagonals. Χωρίς costs, κάθε βήμα κοστίζει 1. Με costs, το κόστος ενός βήματος είναι το cost του cell προορισμού· το start δεν χρεώνεται. Οι τέσσερις identities ταιριάζουν στο Toolbar:
-`bfs`, `dfs`, `dijkstra`, `astar`. BFS/DFS αγνοούν costs και διατηρούν step-based semantics (μόνο ο BFS εγγυάται ελάχιστα βήματα). Ο Dijkstra ελαχιστοποιεί συνολικό κόστος. Ο A* ακολουθεί στο #91.
+`bfs`, `dfs`, `dijkstra`, `astar`. BFS/DFS αγνοούν costs και διατηρούν step-based semantics (μόνο ο BFS εγγυάται ελάχιστα βήματα). Ο Dijkstra ελαχιστοποιεί συνολικό κόστος. Ο A* (#91) χρησιμοποιεί scaled Manhattan heuristic.
 
 Το #2 επαληθεύεται στο `tests/pathfinding.test.mjs` με `npm test`: κέντρο,
 γωνίες/άκρες χωρίς row wrapping, walls, invalid origins, single cell/row/column
@@ -117,3 +117,13 @@ Grid edits, clear/reset, αλλαγή algorithm ή νέο visualization καθα
 Το snapshot αντιγράφει και παγώνει τα costs· κάθε comparison entry παίρνει νέο snapshot. Χωρίς costs διατηρείται ακριβώς το παλιό input shape/default unit cost. Ο gridToInput εξακολουθεί να παράγει uniform-cost input: δεν προσθέτει terrain αυτόματα. Ο Dijkstra μπορεί να δοθεί ως injected search σε evaluatePathfinding/comparePathfinding και το result του γίνεται δεκτό από το ίδιο playback. Το UI registry/selector παραμένει BFS/DFS μέχρι τη σύνδεση του weighted terrain (#92).
 
 Το pathLength εξακολουθεί να μετρά βήματα, όχι weighted cost. Για το returned path, το κόστος υπολογίζεται αθροίζοντας costs στα IDs μετά το start (ή 1 ανά βήμα όταν λείπουν). Το start=end δίνει κόστος/μήκος 0. Οι υπάρχουσες timing/result/error semantics δεν αλλάζουν. Το #91 ακολουθεί για A*, και το #92 για terrain editor και παρουσίαση costs.
+
+## A* και Manhattan heuristic (#91)
+
+Το `astar.ts` παρέχει pure Search με το ίδιο validated GridInput και found/visited/path αποτέλεσμα. Η προτεραιότητα είναι f=g+h: g το κόστος που έχει ήδη διανυθεί και h η εκτίμηση για ό,τι απομένει. Ίσα f λύνονται με insertion order, με σταθερή σειρά neighbours. Ο min-heap εξήχθη στο minHeap.ts και χρησιμοποιείται από δύο πραγματικούς consumers, Dijkstra/A*, χωρίς αλλαγή του Dijkstra ordering.
+
+Η h είναι Manhattan distance προς end × minimum walkable entering-cell cost (1 όταν λείπουν costs). Κάθε cardinal path χρειάζεται τουλάχιστον Manhattan βήματα και κάθε βήμα κοστίζει τουλάχιστον minimum, επομένως η h δεν υπερεκτιμά το υπόλοιπο κόστος (admissible). Σε γειτονικά cells η Manhattan μεταβάλλεται κατά ένα και το πραγματικό κόστος είναι ≥minimum, επομένως h(u)≤cost(v)+h(v) (consistent). Walls αποκλείονται από τον υπολογισμό minimum. Με zero minimum η h γίνεται 0 και η εκτέλεση ισοδυναμεί με Dijkstra. Fractions μικρότερες του 1 απαιτούν scaling· η απλή unscaled Manhattan μπορεί να υπερεκτιμήσει.
+
+Visited καταγράφει settlement, όχι enqueue. Strict improvements, stale-entry checks και parents από settled nodes αποφεύγουν duplicates/cycles. Η αναζήτηση τερματίζει όταν το end αφαιρεθεί από το heap, όχι όταν ανακαλυφθεί. Start=end επιστρέφει [start], no-path επιστρέφει empty path. Input validation/copying μένουν εκτός timing· η προετοιμασία της heuristic είναι μέρος του search και χρονομετρείται. Path length παραμένει αριθμός βημάτων, όχι weighted cost. Ισχύουν τα ίδια numeric limits/JavaScript Number semantics με Dijkstra.
+
+Worst-case O((V+E) log V) χρόνος και O(V+E) χώρος στο υποστηριζόμενο cardinal grid. Η heuristic μπορεί να μειώνει την εξερεύνηση, χωρίς εγγύηση ότι κάθε run είναι γρηγορότερο. Το UI registry παραμένει BFS/DFS μέχρι το terrain/UI issue #92· A* και Dijkstra χρησιμοποιούνται ήδη ως injected searches στο κοινό evaluation/comparison/playback contract. Δεν εισάγονται custom heuristics, diagonals ή persistence.
