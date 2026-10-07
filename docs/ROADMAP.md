@@ -398,3 +398,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #8 ενεργοποιεί DFS με το ίδιο UI/result contract. Επόμενο το comparison (#9).
 
 Το #9 ολοκληρώνει τη σύγκριση BFS/DFS στο ίδιο grid χωρίς animation. Το αρχικό pathfinding scope #1–#10 έχει καλυφθεί· Dijkstra/A* και persistence παραμένουν εκτός αυτού του scope.
+
+Το #90 προσθέτει weighted Dijkstra στο καθαρό domain. Ακολουθούν #91 A* → #92 terrain/UI integration → #93 education → #94 persistence. Τα νέα costs είναι opt-in στο input, όχι αυτόματη αλλαγή του UI grid.
