@@ -442,3 +442,7 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #8 προσθέτει DFS deterministic order και μεγαλύτερη route από BFS, wall/no-path/same-cell/reversed inputs και 10.000-node chain χωρίς recursion. Η exhaustive suite επαληθεύει DFS reachability και structural path validity για τα ίδια 11.520 cases, χωρίς απαίτηση shortest path. Rendering tests καλύπτουν DFS selector/result identity σε el/en.
 
 Browser smoke (#8, 2026-10-06): στο production build επιλέχθηκε DFS/fast, ο selector κλείδωσε κατά το animation και τα τελικά statistics έδειξαν DFS, found=true, 140 visited nodes και 139 βήματα στο default grid. Η αλλαγή σε BFS έκρυψε τα προηγούμενα statistics και νέο DFS run ολοκληρώθηκε κανονικά. Ο χρόνος εκτέλεσης είναι μεταβλητός και δεν χρησιμοποιείται ως assertion.
+
+Pathfinding comparison (#9): πραγματικό registry BFS/DFS σε found/no-path/same-cell grids, ίδιο input χωρίς mutation, ξεχωριστά outputs και injected-clock timings. El/en table tests για identities, lengths, visited, zero times, null length και error rows χωρίς πλαστά metrics. Toolbar comparison enabled σε idle και disabled σε running.
+
+Browser smoke (#9, 2026-10-07): production build, default grid BFS 19 βήματα/391 visited και DFS 139/140, χωρίς animation marks. Αλλαγή el/en διατήρησε τα ίδια metrics. Grid edit έκρυψε παλιό table· τέσσερα walls γύρω από start έδωσαν no-path/1 visited και στους δύο. Το Compare κλείδωσε στο animation και μετά καθάρισε trace/single-run statistics πριν εμφανίσει νέο table. 53 frontend tests, lint και build επιτυχή.

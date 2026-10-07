@@ -364,10 +364,10 @@ test('pathfinding toolbar and grid disable every editable control while running'
   for (const language of ['el', 'en']) for (const disabled of [false, true]) {
     const texts = translations[language];
     const toolbar = render(Toolbar, { texts: texts.toolbar, algorithms: texts.algorithms, speed: texts.speed,
-      selectedAlgorithm: 'bfs', onAlgorithmChange() {}, selectedSpeed: 'normal', onSpeedChange() {}, onVisualize() {}, onResetGrid() {}, onClearWalls() {}, onClearPath() {}, disabled });
+      selectedAlgorithm: 'bfs', onAlgorithmChange() {}, selectedSpeed: 'normal', onSpeedChange() {}, onVisualize() {}, onCompare() {}, onResetGrid() {}, onClearWalls() {}, onClearPath() {}, disabled });
     const controls = toolbar.match(/<(?:button|select)\b[^>]*>/g);
     assert.equal(controls.length, 7);
-    assert.equal(controls.filter(tag => tag.includes('disabled')).length, disabled ? 7 : 1);
+    assert.equal(controls.filter(tag => tag.includes('disabled')).length, disabled ? 7 : 0);
     const html = render(Grid, { grid: [[{ row: 0, col: 0, type: 'start' }, { row: 0, col: 1, type: 'empty' }]],
       texts: texts.grid, onNodeClick() {}, disabled });
     assert.equal((html.match(/disabled=""/g) || []).length, disabled ? 2 : 0);
@@ -424,7 +424,7 @@ test('DFS selection and statistics retain their identity in both languages', asy
     const texts = translations[language];
     const html = render(Toolbar, { texts: texts.toolbar, algorithms: texts.algorithms, speed: texts.speed,
       selectedAlgorithm: 'dfs', onAlgorithmChange() {}, selectedSpeed: 'fast', onSpeedChange() {},
-      onVisualize() {}, onClearPath() {}, onClearWalls() {}, onResetGrid() {} });
+      onVisualize() {}, onCompare() {}, onClearPath() {}, onClearWalls() {}, onResetGrid() {} });
     assert.match(html, /value="dfs" selected=""/);
     const stats = render(PathfindingStatistics, { language, status: 'completed', result: {
       algorithm: 'dfs', status: 'completed', found: true, visitedNodeCount: 8, pathLength: 7,
@@ -432,5 +432,36 @@ test('DFS selection and statistics retain their identity in both languages', asy
     } });
     assert.match(stats, /<dd>DFS<\/dd>/);
     assert.match(stats, /<dd>7<\/dd>/);
+  }
+});
+
+test('path comparison renders both algorithms, no-path, zero metrics and failures in el/en', async () => {
+  const { PathfindingComparison } = await import('../src/components/Pathfinding/PathfindingComparison.tsx');
+  const { compareAvailablePathfinding } = await import('../src/pathfinding/registry.ts');
+  const input = { rows: 3, cols: 3, start: 0, end: 3, walls: Array(9).fill(false) };
+  const results = compareAvailablePathfinding(input, () => 0);
+  for (const language of ['el', 'en']) {
+    const texts = translations[language].pathfinding;
+    const html = render(PathfindingComparison, { results, language });
+    assert.ok(html.includes(texts.comparison.title));
+    assert.ok(html.includes(texts.comparison.note));
+    assert.ok(html.includes(texts.statistics.note));
+    assert.match(html, /<th scope="row">BFS<\/th>/);
+    assert.match(html, /<th scope="row">DFS<\/th>/);
+    assert.match(html, /<td>1<\/td>/);
+    assert.match(html, /<td>7<\/td>/);
+    assert.equal((html.match(/0 ms/g) || []).length, 2);
+    assert.equal(render(PathfindingComparison, { results: null, language }), '');
+    const noPath = render(PathfindingComparison, { language, results: [{ ...results[0], found: false, pathLength: null }] });
+    assert.ok(noPath.includes(texts.statistics.no));
+    assert.match(noPath, /<td>—<\/td>/);
+    const zero = render(PathfindingComparison, { language, results: [{ ...results[0], pathLength: 0 }] });
+    assert.match(zero, /<td>0<\/td>/);
+    for (const error of ['runner_error', 'invalid_result', 'invalid_clock']) {
+      const failed = render(PathfindingComparison, { language, results: [{ algorithm: 'bfs', status: 'error', error }, results[1]] });
+      assert.ok(failed.includes(texts.comparison.errors[error]));
+      assert.match(failed, /colSpan="4"/i);
+      assert.equal((failed.match(/0 ms/g) || []).length, 1);
+    }
   }
 });

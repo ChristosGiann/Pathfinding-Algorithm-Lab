@@ -76,7 +76,7 @@ export function evaluatePathfinding(algorithm:PathfindingAlgorithm,input:GridInp
     visited:Object.freeze([...trace.visited]),path:Object.freeze([...trace.path])};
 }
 
-/** Foundation for same-grid comparison; actual algorithm registry is future work. */
+/** Same-grid comparison with isolated input copies and independent failures. */
 export function comparePathfinding(input:GridInput,entries:readonly {algorithm:PathfindingAlgorithm;search:Search}[],clock?:()=>number):PathfindingResult[] {
   const snapshot=snapshotInput(input);
   if(entries.length<1||entries.length>4||new Set(entries.map(item=>item.algorithm)).size!==entries.length

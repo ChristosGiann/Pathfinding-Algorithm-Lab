@@ -260,3 +260,24 @@ test('DFS avoids walls, handles no-path and same-cell, and needs no recursive st
   assert.equal(long.path.length, 10000);
   assert.equal(long.visited.length, 10000);
 });
+
+test('available comparison runs BFS and DFS on the same immutable layout with search-only timing', async () => {
+  const { compareAvailablePathfinding } = await import('../src/pathfinding/registry.ts');
+  for (const input of [grid(3,3,[],0,3), grid(3,3,[1,3]), grid(1,1)]) {
+    const before = structuredClone(input);
+    const ticks = [10,12,20,23];
+    const results = compareAvailablePathfinding(input, () => ticks.shift());
+    assert.deepEqual(results.map(r => r.algorithm), ['bfs','dfs']);
+    assert.deepEqual(results.map(r => r.executionTimeMs), [2,3]);
+    for (const [i, search] of [bfs,dfs].entries()) {
+      const trace = search(input);
+      assert.equal(results[i].status, 'completed');
+      assert.deepEqual(results[i].path, trace.path);
+      assert.deepEqual(results[i].visited, trace.visited);
+      assert.equal(results[i].found, trace.found);
+    }
+    assert.deepEqual(input, before);
+    assert.equal(ticks.length, 0);
+    assert.notEqual(results[0].visited, results[1].visited);
+  }
+});
