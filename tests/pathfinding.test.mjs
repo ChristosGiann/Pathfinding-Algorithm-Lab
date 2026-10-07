@@ -27,6 +27,8 @@ registerHooks({
 const { neighbours, snapshotInput } = await import('../src/pathfinding/evaluation.ts');
 const { reconstructPath } = await import('../src/pathfinding/reconstructPath.ts');
 const { bfs } = await import('../src/pathfinding/bfs.ts');
+const { dfs } = await import('../src/pathfinding/dfs.ts');
+const { dijkstra } = await import('../src/pathfinding/dijkstra.ts');
 const grid = (rows, cols, walls = [], start = 0, end = rows * cols - 1) => snapshotInput({
   rows, cols, start, end,
   walls: Array.from({ length: rows * cols }, (_, id) => walls.includes(id)),
@@ -157,6 +159,12 @@ test('BFS matches independent all-pairs distances for every 3x3 wall layout', ()
         assert.deepEqual([...result.visited].sort((a, b) => a - b),
           distance[start].flatMap((value, id) => Number.isFinite(value) ? [id] : []), label);
       }
+      const depth = dfs(input);
+      assert.equal(depth.found, result.found, label);
+      assert.equal(new Set(depth.visited).size, depth.visited.length, label);
+      const evaluated = evaluatePathfinding('dfs', input, dfs, () => 0);
+      assert.equal(evaluated.status, 'completed', label);
+      if (!depth.found) assert.deepEqual([...depth.visited].sort((a,b) => a-b), [...result.visited].sort((a,b) => a-b), label);
       cases++;
     }
   }
@@ -218,4 +226,147 @@ test('playback terminates for no-path and errors; speed changes delays, not resu
   assert.equal(advancePlayback(error), error);
   assert.ok(ANIMATION_DELAYS.slow > ANIMATION_DELAYS.normal);
   assert.ok(ANIMATION_DELAYS.normal > ANIMATION_DELAYS.fast);
+});
+
+test('clearPath removes only trace marks, preserves the layout and resets playback', async () => {
+  const { clearPath } = await import('../src/pathfinding/clearPath.ts');
+  const grid = [['start', 'visited', 'path', 'wall', 'end', 'empty']]
+    .map((row, r) => Object.freeze(row.map((type, c) => Object.freeze({ row: r, col: c, type }))));
+  Object.freeze(grid);
+  const clean = clearPath(grid);
+  assert.deepEqual(clean[0].map(node => node.type), ['start', 'empty', 'empty', 'wall', 'end', 'empty']);
+  assert.deepEqual(grid[0].map(node => node.type), ['start', 'visited', 'path', 'wall', 'end', 'empty']);
+  assert.deepEqual(clearPath(clean), clean);
+  assert.deepEqual(idlePlayback(grid), { grid: clean, frames: [], cursor: 0, status: 'idle', result: null });
+});
+
+test('DFS follows depth-first priority and can return a longer path than BFS', () => {
+  const input = grid(3, 3, [], 0, 3);
+  const depth = dfs(input);
+  assert.deepEqual(depth.visited, [0,1,2,5,8,7,4,3]);
+  assert.deepEqual(depth.path, [0,1,2,5,8,7,4,3]);
+  assert.equal(bfs(input).path.length, 2);
+  assert.deepEqual(dfs(input), depth);
+  depth.path.reverse();
+  assert.deepEqual(dfs(input).path, [0,1,2,5,8,7,4,3]);
+  assert.deepEqual(input, grid(3, 3, [], 0, 3));
+});
+
+test('DFS avoids walls, handles no-path and same-cell, and needs no recursive stack', () => {
+  assert.deepEqual(dfs(grid(3,3,[1,3])), { found:false, visited:[0], path:[] });
+  assert.deepEqual(dfs(grid(1,1)), { found:true, visited:[0], path:[0] });
+  assert.deepEqual(dfs(grid(1,4,[],3,0)).path, [3,2,1,0]);
+  assert.deepEqual(dfs(grid(3,3,[1,4])).path, [0,3,6,7,8]);
+  const long = dfs(grid(1,10000));
+  assert.equal(long.path.length, 10000);
+  assert.equal(long.visited.length, 10000);
+});
+
+test('available comparison runs BFS and DFS on the same immutable layout with search-only timing', async () => {
+  const { compareAvailablePathfinding } = await import('../src/pathfinding/registry.ts');
+  for (const input of [grid(3,3,[],0,3), grid(3,3,[1,3]), grid(1,1)]) {
+    const before = structuredClone(input);
+    const ticks = [10,12,20,23];
+    const results = compareAvailablePathfinding(input, () => ticks.shift());
+    assert.deepEqual(results.map(r => r.algorithm), ['bfs','dfs']);
+    assert.deepEqual(results.map(r => r.executionTimeMs), [2,3]);
+    for (const [i, search] of [bfs,dfs].entries()) {
+      const trace = search(input);
+      assert.equal(results[i].status, 'completed');
+      assert.deepEqual(results[i].path, trace.path);
+      assert.deepEqual(results[i].visited, trace.visited);
+      assert.equal(results[i].found, trace.found);
+    }
+    assert.deepEqual(input, before);
+    assert.equal(ticks.length, 0);
+    assert.notEqual(results[0].visited, results[1].visited);
+  }
+});
+
+const pathCost = (input, path) => path.slice(1).reduce((sum, id) => sum + (input.costs?.[id] ?? 1), 0);
+
+test('Dijkstra matches BFS on unit costs and finds a cheaper longer weighted detour', () => {
+  const plain = grid(3,3,[],0,2);
+  assert.deepEqual(dijkstra(plain), bfs(plain));
+  const input = snapshotInput({ ...plain, costs: [8,10,1,1,1,1,1,1,1] });
+  const before = structuredClone(input);
+  const result = dijkstra(input);
+  assert.deepEqual(result.path, [0,3,4,5,2]);
+  assert.equal(pathCost(input, result.path), 4);
+  assert.equal(pathCost(input, bfs(input).path), 11);
+  assert.deepEqual(bfs(input), bfs(plain));
+  assert.deepEqual(dijkstra(input), result);
+  result.path.reverse(); result.visited.push(99);
+  assert.deepEqual(dijkstra(input).path, [0,3,4,5,2]);
+  assert.deepEqual(input, before);
+  assert.deepEqual(dijkstra(grid(3,3,[1,3])), { found:false, visited:[0], path:[] });
+  assert.deepEqual(dijkstra(snapshotInput({ ...grid(1,1), costs:[99] })), { found:true, visited:[0], path:[0] });
+});
+
+test('Dijkstra supports zero-cost cycles, fractional costs, walls and maximum-sized paths', () => {
+  const zero = snapshotInput({ ...grid(3,3,[4]), costs:Array(9).fill(0) });
+  const result = dijkstra(zero);
+  assert.equal(result.found, true);
+  assert.equal(pathCost(zero, result.path), 0);
+  assert.equal(new Set(result.visited).size, result.visited.length);
+  assert.ok(!result.visited.includes(4));
+  assert.deepEqual(dijkstra(zero), result);
+  const fractions = snapshotInput({ ...grid(1,3), costs:[9,0.25,0.5] });
+  assert.equal(pathCost(fractions, dijkstra(fractions).path), 0.75);
+  const long = dijkstra(grid(1,10000));
+  assert.equal(long.path.length,10000);
+  assert.equal(long.visited.length,10000);
+});
+
+test('weighted snapshots validate and isolate costs before the timed search', async () => {
+  const { comparePathfinding } = await import('../src/pathfinding/evaluation.ts');
+  const original = { ...grid(1,2), costs:[0,2] };
+  const snapshot = snapshotInput(original);
+  original.costs[1] = 3;
+  assert.deepEqual(snapshot.costs,[0,2]);
+  assert.ok(Object.isFrozen(snapshot.costs));
+  for (const costs of [[1],[-1,1],[NaN,1],[Infinity,1],[1,'2'],Array(2),[Number.MAX_VALUE,1],null]) {
+    let invoked = false;
+    assert.throws(() => evaluatePathfinding('dijkstra',{ ...grid(1,2),costs },()=>{invoked=true;},()=>{invoked=true;}),/invalid_costs/);
+    assert.equal(invoked,false);
+  }
+  const inputs=[];
+  const results=comparePathfinding(snapshot,[
+    {algorithm:'bfs',search:input=>{inputs.push(input); input.costs[1]=0;}},
+    {algorithm:'dijkstra',search:input=>{inputs.push(input);return dijkstra(input);}},
+  ],()=>0);
+  assert.equal(results[0].error,'runner_error');
+  assert.equal(results[1].status,'completed');
+  assert.equal(results[1].pathLength,1);
+  assert.notEqual(inputs[0].costs, inputs[1].costs);
+  assert.deepEqual(inputs[1].costs,[0,2]);
+  const ui = [[{row:0,col:0,type:'start'},{row:0,col:1,type:'end'}]];
+  const playback = startPlayback(ui,results[1]);
+  assert.equal(playback.status,'running');
+  assert.equal(playback.result.algorithm,'dijkstra');
+});
+
+test('Dijkstra costs match an independent all-pairs oracle on deterministic weighted grids', () => {
+  let seed = 90;
+  const next = () => { seed = (Math.imul(seed,1664525)+1013904223) >>> 0; return seed; };
+  for (let sample=0; sample<80; sample++) {
+    const walls=Array.from({length:9},()=>next()%5===0);
+    const costs=Array.from({length:9},()=>next()%5);
+    const distance=Array.from({length:9},(_,a)=>Array.from({length:9},(_,b)=>{
+      if(walls[a]||walls[b])return Infinity;
+      if(a===b)return 0;
+      return Math.abs(Math.floor(a/3)-Math.floor(b/3))+Math.abs(a%3-b%3)===1 ? costs[b] : Infinity;
+    }));
+    for(let k=0;k<9;k++)for(let a=0;a<9;a++)for(let b=0;b<9;b++)distance[a][b]=Math.min(distance[a][b],distance[a][k]+distance[k][b]);
+    for(let start=0;start<9;start++)for(let end=0;end<9;end++){
+      if(walls[start]||walls[end])continue;
+      const input=snapshotInput({rows:3,cols:3,start,end,walls,costs});
+      const result=evaluatePathfinding('dijkstra',input,dijkstra,()=>0);
+      const label=`sample=${sample}, start=${start}, end=${end}`;
+      assert.equal(result.status,'completed',label);
+      assert.equal(result.found,Number.isFinite(distance[start][end]),label);
+      if(result.found)assert.equal(pathCost(input,result.path),distance[start][end],label);
+      assert.equal(new Set(result.visited).size,result.visited.length,label);
+    }
+  }
 });

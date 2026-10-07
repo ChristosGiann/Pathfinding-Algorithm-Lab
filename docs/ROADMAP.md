@@ -390,3 +390,13 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #10 ολοκληρώνει το algorithm correctness suite. Επόμενο βήμα: BFS animation (#4) και προστασία controls (#5).
 
 Το #5 ολοκληρώνει την προστασία pathfinding controls κατά το animation. Ακολουθούν clear path (#6), statistics (#7), DFS (#8) και comparison (#9).
+
+Το #6 προσθέτει dedicated clear-path control. Επόμενο το statistics panel (#7).
+
+Το #7 προσθέτει statistics panel. Επόμενα pathfinding βήματα: DFS (#8) και same-grid comparison (#9).
+
+Το #8 ενεργοποιεί DFS με το ίδιο UI/result contract. Επόμενο το comparison (#9).
+
+Το #9 ολοκληρώνει τη σύγκριση BFS/DFS στο ίδιο grid χωρίς animation. Το αρχικό pathfinding scope #1–#10 έχει καλυφθεί· Dijkstra/A* και persistence παραμένουν εκτός αυτού του scope.
+
+Το #90 προσθέτει weighted Dijkstra στο καθαρό domain. Ακολουθούν #91 A* → #92 terrain/UI integration → #93 education → #94 persistence. Τα νέα costs είναι opt-in στο input, όχι αυτόματη αλλαγή του UI grid.

@@ -2,13 +2,15 @@ import type { Grid } from "../types/grid";
 
 export const PATHFINDING_ALGORITHMS = ["bfs", "dfs", "dijkstra", "astar"] as const;
 export type PathfindingAlgorithm = typeof PATHFINDING_ALGORITHMS[number];
-/** Row-major IDs, four cardinal neighbours, unit edge costs, no diagonals. */
+/** Row-major IDs, four cardinal neighbours, no diagonals. Missing costs mean 1. */
 export interface GridInput {
   readonly rows: number;
   readonly cols: number;
   readonly start: number;
   readonly end: number;
   readonly walls: readonly boolean[];
+  /** Cost of entering each cell; the starting cell is not charged. */
+  readonly costs?: readonly number[];
 }
 export interface SearchTrace { found: boolean; visited: readonly number[]; path: readonly number[] }
 export type Search = (input: GridInput) => SearchTrace;
@@ -18,12 +20,17 @@ export type PathfindingResult = { algorithm: PathfindingAlgorithm } & (
 );
 
 export function snapshotInput(input: GridInput): GridInput {
-  const {rows,cols,start,end,walls}=input;
+  const {rows,cols,start,end,walls,costs}=input;
   const size=rows*cols;
   if (!Number.isInteger(rows)||!Number.isInteger(cols)||rows<1||cols<1||size>10000
     ||!Array.isArray(walls)||walls.length!==size||[...walls].some(wall=>typeof wall!=="boolean")
     ||![start,end].every(id=>Number.isInteger(id)&&id>=0&&id<size&&!walls[id])) throw new Error("invalid_grid");
-  return Object.freeze({rows,cols,start,end,walls:Object.freeze([...walls])});
+  // Bound sums for every supported simple path, including zero/fractional costs.
+  if (costs !== undefined && (!Array.isArray(costs) || costs.length !== size
+    || [...costs].some(cost => typeof cost !== "number" || !Number.isFinite(cost)
+      || cost < 0 || cost > Number.MAX_SAFE_INTEGER / size))) throw new Error("invalid_costs");
+  return Object.freeze({rows,cols,start,end,walls:Object.freeze([...walls]),
+    ...(costs === undefined ? {} : { costs: Object.freeze([...costs]) })});
 }
 
 /** Reuse the UI grid without keeping references or interpreting animation state as walls. */
@@ -76,7 +83,7 @@ export function evaluatePathfinding(algorithm:PathfindingAlgorithm,input:GridInp
     visited:Object.freeze([...trace.visited]),path:Object.freeze([...trace.path])};
 }
 
-/** Foundation for same-grid comparison; actual algorithm registry is future work. */
+/** Same-grid comparison with isolated input copies and independent failures. */
 export function comparePathfinding(input:GridInput,entries:readonly {algorithm:PathfindingAlgorithm;search:Search}[],clock?:()=>number):PathfindingResult[] {
   const snapshot=snapshotInput(input);
   if(entries.length<1||entries.length>4||new Set(entries.map(item=>item.algorithm)).size!==entries.length

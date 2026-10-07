@@ -19,7 +19,7 @@
 | Experiment API | Δημιουργία draft definitions, bounded execution και ανάκτηση persisted results μέσω API. |
 | Implementation reviews | Προσωπικές βαθμολογίες και σημειώσεις ανά implementation, με αποθήκευση και επεξεργασία. |
 | Custom Python validation | Static validation και opt-in trusted local benchmark/comparison σε ξεχωριστό process με timeout 2 s. Disabled by default· δεν αποτελεί δημόσιο sandbox. |
-| Pathfinding foundation | Grid, walls και clear/reset controls. BFS execution και visited/path animation με επιλογή ταχύτητας. |
+| Pathfinding foundation | Grid, walls και clear/reset controls. BFS/DFS execution και visited/path animation, control locking, clear path, στατιστικά εκτέλεσης και πίνακας σύγκρισης στο ίδιο grid χωρίς animation. Pure Dijkstra με optional costs στο domain· terrain UI ακολουθεί. |
 
 Το παρόν snapshot περιλαμβάνει τα ολοκληρωμένα #11, #12, #16–#22 και #41/#43/#45/#47: δίγλωσσο UI, custom Python validation, πέντε trusted sorters και πλήρη ροή saved experiments με ιστορικό. Τα σχετικά PR #38–#48 αποτελούν προηγούμενο στάδιο της υλοποίησης.
 
@@ -174,7 +174,7 @@ git diff --check
 - Τα experiments εκτελούνται και αποθηκεύουν μετρήσεις μέσω API. Το experiment UI έχει ιστορικό με pagination και άνοιγμα από λίστα ή μέσω ID.
 - Το benchmark είναι synchronous, με 10 runs και όριο 1.000 στοιχείων, χωρίς warm-up exclusion ή απομονωμένο performance environment.
 - Τα reviews είναι κοινά ανά implementation στο single-user local MVP, χωρίς account isolation.
-- Το pathfinding grid είναι foundation· BFS/DFS execution και animation παραμένουν μελλοντικά.
+- Το pathfinding υποστηρίζει BFS/DFS, animation και σύγκριση στο ίδιο grid. Ο Dijkstra είναι διαθέσιμος ως pure weighted search στο domain (#90). A*, terrain UI και pathfinding persistence ακολουθούν.
 - Ο language selector αλλάζει το UI μεταξύ Ελληνικών και Αγγλικών. Η επιλογή ισχύει μέχρι το refresh, που επιστρέφει στα Ελληνικά. Το εκπαιδευτικό catalogue είναι el/en· οι δικές σου σημειώσεις παραμένουν όπως έχουν αποθηκευτεί.
 - **Custom code execution δεν είναι public-safe χωρίς πραγματικό sandbox**, όπως κατάλληλα περιορισμένο Docker environment. Ένα subprocess και ένα timeout δεν αποτελούν sandbox. Τα #67/#68 προσθέτουν opt-in trusted local HTTP execution/comparison, απενεργοποιημένο από προεπιλογή.
 - Το local setup δεν αποτελεί production deployment configuration.
@@ -189,7 +189,7 @@ git diff --check
 | Υλοποιημένο στο παρόν feature snapshot | Language selector Ελληνικά / English (#11), με διατήρηση φόρμας και αποτελεσμάτων κατά την αλλαγή. |
 | Υλοποιημένο στο dev | Sorting comparison/history/statistics, educational Library, visualization, trusted local custom comparison και CI (#58–#64/#66–#68). |
 | Foundation στο dev | Pathfinding input/result/evaluation contract (#65), [αναλυτικά](docs/PATHFINDING.md). |
-| Μελλοντικά | BFS/DFS/Dijkstra/A* implementations και animation (#1–#10), searching και άλλες οικογένειες. |
+| Μελλοντικά | A*, weighted terrain/UI integration, pathfinding persistence, searching και άλλες οικογένειες. |
 
 Το [Roadmap](docs/ROADMAP.md) καταγράφει τις φάσεις και το [Progress](docs/PROGRESS.md) το τρέχον snapshot. Οι μελλοντικοί στόχοι δεν παρουσιάζονται ως έτοιμες λειτουργίες.
 

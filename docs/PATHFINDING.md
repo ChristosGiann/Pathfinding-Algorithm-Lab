@@ -3,7 +3,7 @@
 Το sorting evaluation είναι διαθέσιμο στο dev. Η επόμενη οικογένεια ξεκινά με
 καθαρό TypeScript domain στο `src/pathfinding/evaluation.ts`, χωρίς DOM dependency.
 Ο BFS (#1) είναι διαθέσιμος ως καθαρό search function και το #4 τον συνδέει με
-visited/path animation στο UI. DFS/Dijkstra/A* παραμένουν μελλοντικά. Το #2 καλύπτεται από το υπάρχον `neighbours` και
+visited/path animation στο UI. Ο DFS (#8) χρησιμοποιεί το ίδιο playback/statistics flow. Ο Dijkstra (#90) είναι διαθέσιμος ως pure weighted search· η UI ένταξή του και ο A* ακολουθούν. Το #2 καλύπτεται από το υπάρχον `neighbours` και
 ξεχωριστό regression suite· τα υπόλοιπα pathfinding issues ακολουθούν σταδιακά.
 
 ## Input και algorithm contract
@@ -17,6 +17,7 @@ interface GridInput {
   readonly start: number;
   readonly end: number;
   readonly walls: readonly boolean[];
+  readonly costs?: readonly number[];
 }
 type Search = (input: GridInput) => {
   found: boolean;
@@ -33,10 +34,8 @@ Visited/path UI colors αγνοούνται ως animation state και γίνο
 σημερινό UI node type δεν αναπαριστά δύο markers στο ίδιο cell.
 
 `neighbours` επιστρέφει walkable cardinal neighbours σε σταθερή σειρά
-up/right/down/left, χωρίς wrapping ή diagonals. Edge cost είναι 1· weighted
-grids θα χρειαστούν ρητή επέκταση. Οι τέσσερις identities ταιριάζουν στο Toolbar:
-`bfs`, `dfs`, `dijkstra`, `astar`. BFS/DFS δουλεύουν με την ίδια είσοδο, Dijkstra
-με unit costs και A* μπορεί αργότερα να χρησιμοποιεί Manhattan heuristic.
+up/right/down/left, χωρίς wrapping ή diagonals. Χωρίς costs, κάθε βήμα κοστίζει 1. Με costs, το κόστος ενός βήματος είναι το cost του cell προορισμού· το start δεν χρεώνεται. Οι τέσσερις identities ταιριάζουν στο Toolbar:
+`bfs`, `dfs`, `dijkstra`, `astar`. BFS/DFS αγνοούν costs και διατηρούν step-based semantics (μόνο ο BFS εγγυάται ελάχιστα βήματα). Ο Dijkstra ελαχιστοποιεί συνολικό κόστος. Ο A* ακολουθεί στο #91.
 
 Το #2 επαληθεύεται στο `tests/pathfinding.test.mjs` με `npm test`: κέντρο,
 γωνίες/άκρες χωρίς row wrapping, walls, invalid origins, single cell/row/column
@@ -66,10 +65,9 @@ search call με `performance.now()` σε milliseconds. Αντιγραφή/valid
 
 `comparePathfinding` δέχεται 1–4 διαφορετικές identities με injected search
 functions. Παίρνει κοινό snapshot και δίνει νέο frozen copy σε κάθε εκτέλεση.
-Exception ενός algorithm δεν ακυρώνει τα υπόλοιπα. Δεν υπάρχει production
-registry με placeholder implementations. Ο BFS μπορεί να δοθεί ως injected search.
+Exception ενός algorithm δεν ακυρώνει τα υπόλοιπα. Το registry.ts περιέχει μόνο τις πραγματικές bfs/dfs implementations, χωρίς placeholders.
 
-Η μελλοντική UI σύνδεση είναι: existing Grid → adapter → trusted algorithm registry
+Η UI σύνδεση είναι: existing Grid → adapter → trusted algorithm registry
 → evaluation → result → ανεξάρτητη animation των visited/path. Animation delays
 και rendering δεν εισέρχονται στο execution-time metric. Persistence, repeated
 pathfinding benchmarks και animation suite είναι μελλοντικό scope.
@@ -88,4 +86,34 @@ invalid/no-path/same-cell inputs, walls, neighbour ordering και copy isolatio
 
 ## BFS animation (#4)
 
-Το Pathfinding component κατέχει το grid και το playback state. Ο BFS/evaluation εκτελείται μία φορά πριν από timers· κατόπιν τα visited και path IDs γίνονται frames, με αυτή τη σειρά. Slow/normal/fast: 80/25/5 ms ανά frame (όχι εγγύηση wall-clock διάρκειας). Το advancePlayback αλλάζει μόνο React state, διατηρώντας start/end/walls. Idle/running/found/no-path/error μηνύματα είναι el/en. Νέο run καθαρίζει παλιό trace· reset/edit ακυρώνει playback και stale callbacks αγνοούνται με state identity. Effect cleanup ακυρώνει timer σε αλλαγή state/unmount. Το #5 κλειδώνει cells, toolbar buttons και selects όσο status=running. Native disabled props και handler guards προστατεύουν το grid· σε completion/no-path/error ενεργοποιούνται ξανά. Το comparison και οι μη υλοποιημένοι algorithms παραμένουν disabled ανεξάρτητα από playback. DFS/Dijkstra/A* επιλογές και comparison παραμένουν disabled.
+Το Pathfinding component κατέχει το grid και το playback state. Ο BFS/evaluation εκτελείται μία φορά πριν από timers· κατόπιν τα visited και path IDs γίνονται frames, με αυτή τη σειρά. Slow/normal/fast: 80/25/5 ms ανά frame (όχι εγγύηση wall-clock διάρκειας). Το advancePlayback αλλάζει μόνο React state, διατηρώντας start/end/walls. Idle/running/found/no-path/error μηνύματα είναι el/en. Νέο run καθαρίζει παλιό trace· reset/edit ακυρώνει playback και stale callbacks αγνοούνται με state identity. Effect cleanup ακυρώνει timer σε αλλαγή state/unmount. Το #5 κλειδώνει cells, toolbar buttons και selects όσο status=running. Native disabled props και handler guards προστατεύουν το grid· σε completion/no-path/error ενεργοποιούνται ξανά. Οι Dijkstra/A* επιλογές παραμένουν disabled. Το comparison (#9) είναι διαθέσιμο εκτός animation.
+
+## Clear path (#6)
+
+Το clearPath utility αφαιρεί μόνο visited/path marks με immutable copies. Το κουμπί Καθαρισμός διαδρομής επαναφέρει idle playback/result, κρατώντας walls/start/end και την ταχύτητα. Χρησιμοποιείται και από το υπάρχον idlePlayback για κοινή συμπεριφορά. Disabled όσο τρέχει animation, χωρίς DOM manipulation.
+
+## Στατιστικά μετά το animation (#7)
+
+Το PathfindingStatistics δέχεται μόνο playback status και measured result. Εμφανίζεται στο completed, ποτέ σε idle/running/error: algorithm, found, visitedNodeCount, pathLength σε ακμές και executionTimeMs. Null length εμφανίζεται ως —, μηδέν ως 0. Ο χρόνος αποκλείει animation/rendering και μορφοποιείται με έως 6 δεκαδικά σε el/en. Clear/reset/edit ή νέο run κρύβει προηγούμενα στοιχεία· αλλαγή γλώσσας μεταφράζει το ίδιο αποτέλεσμα χωρίς rerun. Δεν γίνεται DOM inspection, persistence ή αλλαγή του timing contract.
+
+## DFS (#8)
+
+Το dfs.ts υλοποιεί το ίδιο Search contract με BFS: validated immutable GridInput → found/visited/path. Iterative LIFO stack, processed set στο pop, reverse neighbour pushes για σταθερή up/right/down/left προτεραιότητα. Duplicate pending entries παραλείπονται όταν έχουν ήδη processed το ίδιο ID. Previous references ανακατασκευάζουν την πραγματική DFS route. O(V+E) χρόνος/χώρος· στο cardinal grid E≤4V, άρα O(V) χώρος. Δεν εγγυάται shortest path και δεν χρησιμοποιεί recursion.
+
+Το UI διαθέτει controlled BFS/DFS selector και dispatch μέσω typed registry. Η αλλαγή algorithm εκτός animation διατηρεί walls/endpoints/speed αλλά καθαρίζει trace/result ώστε να μη φαίνονται metrics άλλου algorithm. Κατά το animation ο selector κλειδώνει. Animation, statistics, clear path και el/en λειτουργούν κοινά, χωρίς algorithm-specific rendering.
+
+## Σύγκριση στο UI (#9)
+
+Το Compare τρέχει όλους τους διαθέσιμους algorithms του registry (BFS/DFS) μέσω comparePathfinding σε ανεξάρτητα immutable copies του ίδιου grid. Δεν δημιουργεί playback frames: καθαρίζει προηγούμενο trace και single-run statistics, διατηρώντας walls/endpoints/selector/speed. Ο πίνακας εμφανίζει algorithm, found, path length σε βήματα, visited count και execution time σε ms. Error rows έχουν μεταφρασμένο μήνυμα χωρίς επινοημένα metrics· οι υπόλοιπες εκτελέσεις συνεχίζουν.
+
+Grid edits, clear/reset, αλλαγή algorithm ή νέο visualization καθαρίζουν τη σύγκριση. Αλλαγή γλώσσας μεταφράζει το ίδιο αποτέλεσμα χωρίς rerun· αλλαγή speed δεν αλλάζει metrics. Ο χρόνος αφορά μόνο το search, χωρίς αντιγραφές, validation, animation ή rendering. Πρόκειται για μία μέτρηση ανά algorithm, χωρίς ισχυρισμό γενικής υπεροχής ή persistence.
+
+## Dijkstra και costs (#90)
+
+Το `dijkstra.ts` υλοποιεί το ίδιο Search contract πάνω σε validated input, χωρίς React/DOM/timers. Binary min-heap επιλέγει το μικρότερο tentative cost, με insertion order για deterministic ties και up/right/down/left neighbours. Τα visited καταγράφονται μόνο στο settlement. Strict improvement αποφεύγει parent cycles σε zero-cost περιοχές και stale entries παραλείπονται. Previous references χρησιμοποιούν το κοινό reconstructPath. Complexity O((V+E) log V) χρόνου και O(V+E) χώρου· στο cardinal grid E≤4V.
+
+Το optional `costs` έχει ακριβώς rows×cols numbers, finite και μη αρνητικά (επιτρέπονται 0 και fractions). Κάθε τιμή περιορίζεται σε Number.MAX_SAFE_INTEGER / (rows×cols), ώστε τα αθροίσματα απλών paths να μένουν σε πεπερασμένο ασφαλές εύρος. Όλες οι θέσεις, ακόμη και walls, ελέγχονται· walls παραμένουν μη προσβάσιμα ανεξάρτητα από cost. Sparse arrays, strings, NaN, infinity, αρνητικά ή υπερβολικά costs απορρίπτονται με invalid_costs πριν από timing/search. Οι αριθμητικές συγκρίσεις ακολουθούν JavaScript Number semantics, χωρίς υπόσχεση ακριβούς decimal arithmetic.
+
+Το snapshot αντιγράφει και παγώνει τα costs· κάθε comparison entry παίρνει νέο snapshot. Χωρίς costs διατηρείται ακριβώς το παλιό input shape/default unit cost. Ο gridToInput εξακολουθεί να παράγει uniform-cost input: δεν προσθέτει terrain αυτόματα. Ο Dijkstra μπορεί να δοθεί ως injected search σε evaluatePathfinding/comparePathfinding και το result του γίνεται δεκτό από το ίδιο playback. Το UI registry/selector παραμένει BFS/DFS μέχρι τη σύνδεση του weighted terrain (#92).
+
+Το pathLength εξακολουθεί να μετρά βήματα, όχι weighted cost. Για το returned path, το κόστος υπολογίζεται αθροίζοντας costs στα IDs μετά το start (ή 1 ανά βήμα όταν λείπουν). Το start=end δίνει κόστος/μήκος 0. Οι υπάρχουσες timing/result/error semantics δεν αλλάζουν. Το #91 ακολουθεί για A*, και το #92 για terrain editor και παρουσίαση costs.

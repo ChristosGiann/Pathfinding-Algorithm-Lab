@@ -436,3 +436,15 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #4 προσθέτει tests για frame order, markers/walls, immutability, completion/no-path/error, restart cleanup και localized BFS controls. Manual smoke ελέγχει το πραγματικό production build.
 
 Το #5 ελέγχει σε el/en ότι όλα τα grid/toolbar controls γίνονται disabled κατά το running και διαθέσιμα εκτός animation (με comparison μονίμως unavailable μέχρι #9). Browser smoke ελέγχει running/completion/no-path και αλλαγή γλώσσας χωρίς απώλεια playback.
+
+Το #7 προσθέτει el/en rendering tests για algorithm identity, measured fields, decimal formatting, no-path/null έναντι zero-length/zero-time και hidden panel σε idle/running/error. Τα metrics διαβάζονται από result, χωρίς DOM counting ή animation timing.
+
+Το #8 προσθέτει DFS deterministic order και μεγαλύτερη route από BFS, wall/no-path/same-cell/reversed inputs και 10.000-node chain χωρίς recursion. Η exhaustive suite επαληθεύει DFS reachability και structural path validity για τα ίδια 11.520 cases, χωρίς απαίτηση shortest path. Rendering tests καλύπτουν DFS selector/result identity σε el/en.
+
+Browser smoke (#8, 2026-10-06): στο production build επιλέχθηκε DFS/fast, ο selector κλείδωσε κατά το animation και τα τελικά statistics έδειξαν DFS, found=true, 140 visited nodes και 139 βήματα στο default grid. Η αλλαγή σε BFS έκρυψε τα προηγούμενα statistics και νέο DFS run ολοκληρώθηκε κανονικά. Ο χρόνος εκτέλεσης είναι μεταβλητός και δεν χρησιμοποιείται ως assertion.
+
+Pathfinding comparison (#9): πραγματικό registry BFS/DFS σε found/no-path/same-cell grids, ίδιο input χωρίς mutation, ξεχωριστά outputs και injected-clock timings. El/en table tests για identities, lengths, visited, zero times, null length και error rows χωρίς πλαστά metrics. Toolbar comparison enabled σε idle και disabled σε running.
+
+Browser smoke (#9, 2026-10-07): production build, default grid BFS 19 βήματα/391 visited και DFS 139/140, χωρίς animation marks. Αλλαγή el/en διατήρησε τα ίδια metrics. Grid edit έκρυψε παλιό table· τέσσερα walls γύρω από start έδωσαν no-path/1 visited και στους δύο. Το Compare κλείδωσε στο animation και μετά καθάρισε trace/single-run statistics πριν εμφανίσει νέο table. 53 frontend tests, lint και build επιτυχή.
+
+Dijkstra (#90): unit-cost agreement με BFS, weighted detour μικρότερου κόστους/περισσότερων βημάτων, zero-cost cycles, fractions, walls/no-path/start=end, repeated-run isolation και 10.000-cell path. Ανεξάρτητο Floyd–Warshall oracle σε 80 deterministic weighted 3×3 grids ελέγχει όλα τα walkable start/end pairs. Invalid costs απορρίπτονται πριν από clock/search, weighted snapshots είναι frozen/isolated, comparison συνεχίζει μετά από mutation failure και Dijkstra result γίνεται δεκτό από playback. Συνολικά 57 frontend tests. Δεν προστίθεται UI feature στο #90· terrain/controls ακολουθούν στο #92.

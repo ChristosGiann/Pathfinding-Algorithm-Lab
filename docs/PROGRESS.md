@@ -1,6 +1,6 @@
 # Project Progress
 
-Last verified: **2026-10-05**
+Last verified: **2026-10-07**
 
 ## Current phase
 
@@ -8,7 +8,9 @@ Last verified: **2026-10-05**
 comparison, αποθήκευση/ιστορικό, statistics/baseline, Big-O context, educational
 Library, visualization, trusted local custom execution και CI. Το #65 προσθέτει
 το pathfinding input/result/evaluation foundation. Τα #2/#3/#1 παρέχουν neighbours,
-reconstruction και pure BFS. Το #4 προσθέτει την UI σύνδεση και το animation του BFS.
+reconstruction και pure BFS. Το #4 προσθέτει την UI σύνδεση και το animation του BFS. Τα #5/#6/#7 καλύπτουν
+control locking, clear path και panel στατιστικών μετά το animation. Το #8 προσθέτει
+DFS στον κοινό selector και στο ίδιο result/playback flow. Το #9 προσθέτει πίνακα σύγκρισης BFS/DFS στο ίδιο grid χωρίς animation. Το #90 προσθέτει pure Dijkstra και optional validated costs στο domain, χωρίς αλλαγή του UI.
 Η προώθηση από dev σε main γίνεται μόνο με ρητή εντολή· τα δύο branches παραμένουν μόνιμα.
 
 Οι επόμενες ενότητες διατηρούν το ιστορικό ανά issue· οι παλιότερες test counts
@@ -276,3 +278,23 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Issue #5 — Animation controls
 
 Τα pathfinding cells/buttons/selects κλειδώνουν κατά το running state και επανέρχονται όταν τελειώσει το playback. Handler guards αποτρέπουν grid edits και νέο run. UI state παραμένει ξεχωριστό από BFS logic, με aria-busy στην ενότητα. Οι υπόλοιπες ενότητες δεν κλειδώνουν.
+
+## Issue #6 — Clear path
+
+Προστέθηκαν clearPath utility και el/en κουμπί, με διατήρηση walls/endpoints και μηδενισμό προηγούμενου playback. Tests καλύπτουν immutable input, idempotence και disabled toolbar.
+
+## Issue #7 — Pathfinding statistics
+
+Panel μετά το τέλος του animation με BFS identity, found/no-path, visited count, μήκος σε βήματα και χρόνο μόνο του search. Δίγλωσσα labels και locale numbers, διακριτό null/zero, χωρίς παλιά metrics σε νέο run ή clear. Tests καλύπτουν rendering και lifecycle visibility.
+
+## Issue #8 — DFS
+
+Προστέθηκε iterative DFS και πραγματικό BFS/DFS registry, controlled selector και ενημέρωση UI state χωρίς ανάμειξη αποτελεσμάτων. DFS δεν υπόσχεται shortest path. Tests καλύπτουν depth-first order, longer-path example, walls/no-path/same-cell/reversed endpoints, repeated-run isolation, 10.000-node route και exhaustive reachability σε 11.520 layouts/endpoints.
+
+## Pathfinding comparison (#9)
+
+Ενεργό Compare για τους διαθέσιμους BFS/DFS, κοινό immutable input, search-only timing, el/en table και ανεξάρτητα error rows. Καθαρισμός παλιών αποτελεσμάτων σε αλλαγές grid/algorithm ή νέο run. Tests καλύπτουν πραγματικές implementations, no-path/zero-length/zero-time και failure rendering.
+
+## Dijkstra foundation (#90)
+
+Pure deterministic min-heap Dijkstra σε non-negative costs, κοινό result/evaluation/playback contract και immutable weighted snapshots. 57 frontend tests, με weighted detour, zero/fractional costs, independent all-pairs oracle σε 80 deterministic grids, no-path/same-cell, 10.000 cells, isolation και invalid costs. BFS/DFS και UI registry παραμένουν συμβατά. Επόμενα #91 A* και #92 terrain/UI integration.

@@ -350,7 +350,7 @@ test('pathfinding renders localized BFS controls and keeps future algorithms una
     const html = render(Pathfinding, { language });
     assert.ok(html.includes(translations[language].pathfinding.idle));
     assert.ok(html.includes(translations[language].pathfinding.description));
-    assert.match(html, /value="dfs" disabled/);
+    assert.match(html, /value="dfs">DFS/);
     assert.match(html, /value="dijkstra" disabled/);
     assert.match(html, /value="astar" disabled/);
     assert.match(html, /role="status"/);
@@ -364,12 +364,104 @@ test('pathfinding toolbar and grid disable every editable control while running'
   for (const language of ['el', 'en']) for (const disabled of [false, true]) {
     const texts = translations[language];
     const toolbar = render(Toolbar, { texts: texts.toolbar, algorithms: texts.algorithms, speed: texts.speed,
-      selectedSpeed: 'normal', onSpeedChange() {}, onVisualize() {}, onResetGrid() {}, onClearWalls() {}, disabled });
+      selectedAlgorithm: 'bfs', onAlgorithmChange() {}, selectedSpeed: 'normal', onSpeedChange() {}, onVisualize() {}, onCompare() {}, onResetGrid() {}, onClearWalls() {}, onClearPath() {}, disabled });
     const controls = toolbar.match(/<(?:button|select)\b[^>]*>/g);
-    assert.equal(controls.length, 6);
-    assert.equal(controls.filter(tag => tag.includes('disabled')).length, disabled ? 6 : 1);
+    assert.equal(controls.length, 7);
+    assert.equal(controls.filter(tag => tag.includes('disabled')).length, disabled ? 7 : 0);
     const html = render(Grid, { grid: [[{ row: 0, col: 0, type: 'start' }, { row: 0, col: 1, type: 'empty' }]],
       texts: texts.grid, onNodeClick() {}, disabled });
     assert.equal((html.match(/disabled=""/g) || []).length, disabled ? 2 : 0);
+  }
+});
+
+test('path statistics show measured results after playback in both languages', async () => {
+  const { PathfindingStatistics } = await import('../src/components/Pathfinding/PathfindingStatistics.tsx');
+  const result = { algorithm: 'bfs', status: 'completed', found: true, visitedNodeCount: 4,
+    pathLength: 3, executionTimeMs: 1.234567, visited: [0, 1, 2, 3], path: [0, 1, 2, 3] };
+  for (const language of ['el', 'en']) {
+    const texts = translations[language].pathfinding.statistics;
+    const html = render(PathfindingStatistics, { status: 'completed', result, language });
+    assert.ok(html.includes(texts.title));
+    assert.ok(html.includes(texts.note));
+    assert.ok(html.includes(texts.yes));
+    assert.match(html, /<dd>BFS<\/dd>/);
+    assert.match(html, /<dd>4<\/dd>/);
+    assert.match(html, /<dd>3<\/dd>/);
+    assert.ok(html.includes(language === 'el' ? '1,234567 ms' : '1.234567 ms'));
+  }
+  assert.equal(result.executionTimeMs, 1.234567);
+});
+
+test('path statistics distinguish no-path from zero-length and zero-time results', async () => {
+  const { PathfindingStatistics } = await import('../src/components/Pathfinding/PathfindingStatistics.tsx');
+  for (const language of ['el', 'en']) {
+    const result = { algorithm: 'bfs', status: 'completed', found: false, visitedNodeCount: 1,
+      pathLength: null, executionTimeMs: 0, visited: [0], path: [] };
+    const html = render(PathfindingStatistics, { status: 'completed', result, language });
+    assert.ok(html.includes(translations[language].pathfinding.statistics.no));
+    assert.match(html, /<dd>—<\/dd>/);
+    assert.match(html, /0 ms/);
+    const sameCell = render(PathfindingStatistics, { status: 'completed', result: { ...result, found: true, pathLength: 0, path: [0] }, language });
+    assert.match(sameCell, /<dd>0<\/dd>/);
+    assert.doesNotMatch(sameCell, /<dd>—<\/dd>/);
+  }
+});
+
+test('statistics remain hidden before completion and after clear or errors', async () => {
+  const { PathfindingStatistics } = await import('../src/components/Pathfinding/PathfindingStatistics.tsx');
+  const result = { algorithm: 'bfs', status: 'completed', found: true, visitedNodeCount: 1,
+    pathLength: 0, executionTimeMs: 2, visited: [0], path: [0] };
+  for (const status of ['idle', 'running', 'error']) {
+    assert.equal(render(PathfindingStatistics, { status, result, language: 'el' }), '');
+  }
+  assert.equal(render(PathfindingStatistics, { status: 'completed', result: null, language: 'el' }), '');
+});
+
+test('DFS selection and statistics retain their identity in both languages', async () => {
+  const { Toolbar } = await import('../src/components/Toolbar/Toolbar.tsx');
+  const { PathfindingStatistics } = await import('../src/components/Pathfinding/PathfindingStatistics.tsx');
+  for (const language of ['el', 'en']) {
+    const texts = translations[language];
+    const html = render(Toolbar, { texts: texts.toolbar, algorithms: texts.algorithms, speed: texts.speed,
+      selectedAlgorithm: 'dfs', onAlgorithmChange() {}, selectedSpeed: 'fast', onSpeedChange() {},
+      onVisualize() {}, onCompare() {}, onClearPath() {}, onClearWalls() {}, onResetGrid() {} });
+    assert.match(html, /value="dfs" selected=""/);
+    const stats = render(PathfindingStatistics, { language, status: 'completed', result: {
+      algorithm: 'dfs', status: 'completed', found: true, visitedNodeCount: 8, pathLength: 7,
+      executionTimeMs: 1, visited: [0,1,2,5,8,7,4,3], path: [0,1,2,5,8,7,4,3],
+    } });
+    assert.match(stats, /<dd>DFS<\/dd>/);
+    assert.match(stats, /<dd>7<\/dd>/);
+  }
+});
+
+test('path comparison renders both algorithms, no-path, zero metrics and failures in el/en', async () => {
+  const { PathfindingComparison } = await import('../src/components/Pathfinding/PathfindingComparison.tsx');
+  const { compareAvailablePathfinding } = await import('../src/pathfinding/registry.ts');
+  const input = { rows: 3, cols: 3, start: 0, end: 3, walls: Array(9).fill(false) };
+  const results = compareAvailablePathfinding(input, () => 0);
+  for (const language of ['el', 'en']) {
+    const texts = translations[language].pathfinding;
+    const html = render(PathfindingComparison, { results, language });
+    assert.ok(html.includes(texts.comparison.title));
+    assert.ok(html.includes(texts.comparison.note));
+    assert.ok(html.includes(texts.statistics.note));
+    assert.match(html, /<th scope="row">BFS<\/th>/);
+    assert.match(html, /<th scope="row">DFS<\/th>/);
+    assert.match(html, /<td>1<\/td>/);
+    assert.match(html, /<td>7<\/td>/);
+    assert.equal((html.match(/0 ms/g) || []).length, 2);
+    assert.equal(render(PathfindingComparison, { results: null, language }), '');
+    const noPath = render(PathfindingComparison, { language, results: [{ ...results[0], found: false, pathLength: null }] });
+    assert.ok(noPath.includes(texts.statistics.no));
+    assert.match(noPath, /<td>—<\/td>/);
+    const zero = render(PathfindingComparison, { language, results: [{ ...results[0], pathLength: 0 }] });
+    assert.match(zero, /<td>0<\/td>/);
+    for (const error of ['runner_error', 'invalid_result', 'invalid_clock']) {
+      const failed = render(PathfindingComparison, { language, results: [{ algorithm: 'bfs', status: 'error', error }, results[1]] });
+      assert.ok(failed.includes(texts.comparison.errors[error]));
+      assert.match(failed, /colSpan="4"/i);
+      assert.equal((failed.match(/0 ms/g) || []).length, 1);
+    }
   }
 });
