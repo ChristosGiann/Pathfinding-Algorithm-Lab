@@ -3,7 +3,7 @@
 Το sorting evaluation είναι διαθέσιμο στο dev. Η επόμενη οικογένεια ξεκινά με
 καθαρό TypeScript domain στο `src/pathfinding/evaluation.ts`, χωρίς DOM dependency.
 Ο BFS (#1) είναι διαθέσιμος ως καθαρό search function και το #4 τον συνδέει με
-visited/path animation στο UI. Ο DFS (#8) χρησιμοποιεί το ίδιο playback/statistics flow. Dijkstra/A* παραμένουν μελλοντικά. Το #2 καλύπτεται από το υπάρχον `neighbours` και
+visited/path animation στο UI. Ο DFS (#8) χρησιμοποιεί το ίδιο playback/statistics flow. Ο Dijkstra (#90) είναι διαθέσιμος ως pure weighted search· η UI ένταξή του και ο A* ακολουθούν. Το #2 καλύπτεται από το υπάρχον `neighbours` και
 ξεχωριστό regression suite· τα υπόλοιπα pathfinding issues ακολουθούν σταδιακά.
 
 ## Input και algorithm contract
@@ -17,6 +17,7 @@ interface GridInput {
   readonly start: number;
   readonly end: number;
   readonly walls: readonly boolean[];
+  readonly costs?: readonly number[];
 }
 type Search = (input: GridInput) => {
   found: boolean;
@@ -33,10 +34,8 @@ Visited/path UI colors αγνοούνται ως animation state και γίνο
 σημερινό UI node type δεν αναπαριστά δύο markers στο ίδιο cell.
 
 `neighbours` επιστρέφει walkable cardinal neighbours σε σταθερή σειρά
-up/right/down/left, χωρίς wrapping ή diagonals. Edge cost είναι 1· weighted
-grids θα χρειαστούν ρητή επέκταση. Οι τέσσερις identities ταιριάζουν στο Toolbar:
-`bfs`, `dfs`, `dijkstra`, `astar`. BFS/DFS δουλεύουν με την ίδια είσοδο, Dijkstra
-με unit costs και A* μπορεί αργότερα να χρησιμοποιεί Manhattan heuristic.
+up/right/down/left, χωρίς wrapping ή diagonals. Χωρίς costs, κάθε βήμα κοστίζει 1. Με costs, το κόστος ενός βήματος είναι το cost του cell προορισμού· το start δεν χρεώνεται. Οι τέσσερις identities ταιριάζουν στο Toolbar:
+`bfs`, `dfs`, `dijkstra`, `astar`. BFS/DFS αγνοούν costs και διατηρούν step-based semantics (μόνο ο BFS εγγυάται ελάχιστα βήματα). Ο Dijkstra ελαχιστοποιεί συνολικό κόστος. Ο A* ακολουθεί στο #91.
 
 Το #2 επαληθεύεται στο `tests/pathfinding.test.mjs` με `npm test`: κέντρο,
 γωνίες/άκρες χωρίς row wrapping, walls, invalid origins, single cell/row/column
@@ -108,3 +107,13 @@ invalid/no-path/same-cell inputs, walls, neighbour ordering και copy isolatio
 Το Compare τρέχει όλους τους διαθέσιμους algorithms του registry (BFS/DFS) μέσω comparePathfinding σε ανεξάρτητα immutable copies του ίδιου grid. Δεν δημιουργεί playback frames: καθαρίζει προηγούμενο trace και single-run statistics, διατηρώντας walls/endpoints/selector/speed. Ο πίνακας εμφανίζει algorithm, found, path length σε βήματα, visited count και execution time σε ms. Error rows έχουν μεταφρασμένο μήνυμα χωρίς επινοημένα metrics· οι υπόλοιπες εκτελέσεις συνεχίζουν.
 
 Grid edits, clear/reset, αλλαγή algorithm ή νέο visualization καθαρίζουν τη σύγκριση. Αλλαγή γλώσσας μεταφράζει το ίδιο αποτέλεσμα χωρίς rerun· αλλαγή speed δεν αλλάζει metrics. Ο χρόνος αφορά μόνο το search, χωρίς αντιγραφές, validation, animation ή rendering. Πρόκειται για μία μέτρηση ανά algorithm, χωρίς ισχυρισμό γενικής υπεροχής ή persistence.
+
+## Dijkstra και costs (#90)
+
+Το `dijkstra.ts` υλοποιεί το ίδιο Search contract πάνω σε validated input, χωρίς React/DOM/timers. Binary min-heap επιλέγει το μικρότερο tentative cost, με insertion order για deterministic ties και up/right/down/left neighbours. Τα visited καταγράφονται μόνο στο settlement. Strict improvement αποφεύγει parent cycles σε zero-cost περιοχές και stale entries παραλείπονται. Previous references χρησιμοποιούν το κοινό reconstructPath. Complexity O((V+E) log V) χρόνου και O(V+E) χώρου· στο cardinal grid E≤4V.
+
+Το optional `costs` έχει ακριβώς rows×cols numbers, finite και μη αρνητικά (επιτρέπονται 0 και fractions). Κάθε τιμή περιορίζεται σε Number.MAX_SAFE_INTEGER / (rows×cols), ώστε τα αθροίσματα απλών paths να μένουν σε πεπερασμένο ασφαλές εύρος. Όλες οι θέσεις, ακόμη και walls, ελέγχονται· walls παραμένουν μη προσβάσιμα ανεξάρτητα από cost. Sparse arrays, strings, NaN, infinity, αρνητικά ή υπερβολικά costs απορρίπτονται με invalid_costs πριν από timing/search. Οι αριθμητικές συγκρίσεις ακολουθούν JavaScript Number semantics, χωρίς υπόσχεση ακριβούς decimal arithmetic.
+
+Το snapshot αντιγράφει και παγώνει τα costs· κάθε comparison entry παίρνει νέο snapshot. Χωρίς costs διατηρείται ακριβώς το παλιό input shape/default unit cost. Ο gridToInput εξακολουθεί να παράγει uniform-cost input: δεν προσθέτει terrain αυτόματα. Ο Dijkstra μπορεί να δοθεί ως injected search σε evaluatePathfinding/comparePathfinding και το result του γίνεται δεκτό από το ίδιο playback. Το UI registry/selector παραμένει BFS/DFS μέχρι τη σύνδεση του weighted terrain (#92).
+
+Το pathLength εξακολουθεί να μετρά βήματα, όχι weighted cost. Για το returned path, το κόστος υπολογίζεται αθροίζοντας costs στα IDs μετά το start (ή 1 ανά βήμα όταν λείπουν). Το start=end δίνει κόστος/μήκος 0. Οι υπάρχουσες timing/result/error semantics δεν αλλάζουν. Το #91 ακολουθεί για A*, και το #92 για terrain editor και παρουσίαση costs.
