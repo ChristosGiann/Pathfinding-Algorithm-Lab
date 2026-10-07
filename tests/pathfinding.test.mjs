@@ -27,6 +27,7 @@ registerHooks({
 const { neighbours, snapshotInput } = await import('../src/pathfinding/evaluation.ts');
 const { reconstructPath } = await import('../src/pathfinding/reconstructPath.ts');
 const { bfs } = await import('../src/pathfinding/bfs.ts');
+const { dfs } = await import('../src/pathfinding/dfs.ts');
 const grid = (rows, cols, walls = [], start = 0, end = rows * cols - 1) => snapshotInput({
   rows, cols, start, end,
   walls: Array.from({ length: rows * cols }, (_, id) => walls.includes(id)),
@@ -157,6 +158,12 @@ test('BFS matches independent all-pairs distances for every 3x3 wall layout', ()
         assert.deepEqual([...result.visited].sort((a, b) => a - b),
           distance[start].flatMap((value, id) => Number.isFinite(value) ? [id] : []), label);
       }
+      const depth = dfs(input);
+      assert.equal(depth.found, result.found, label);
+      assert.equal(new Set(depth.visited).size, depth.visited.length, label);
+      const evaluated = evaluatePathfinding('dfs', input, dfs, () => 0);
+      assert.equal(evaluated.status, 'completed', label);
+      if (!depth.found) assert.deepEqual([...depth.visited].sort((a,b) => a-b), [...result.visited].sort((a,b) => a-b), label);
       cases++;
     }
   }
@@ -230,4 +237,26 @@ test('clearPath removes only trace marks, preserves the layout and resets playba
   assert.deepEqual(grid[0].map(node => node.type), ['start', 'visited', 'path', 'wall', 'end', 'empty']);
   assert.deepEqual(clearPath(clean), clean);
   assert.deepEqual(idlePlayback(grid), { grid: clean, frames: [], cursor: 0, status: 'idle', result: null });
+});
+
+test('DFS follows depth-first priority and can return a longer path than BFS', () => {
+  const input = grid(3, 3, [], 0, 3);
+  const depth = dfs(input);
+  assert.deepEqual(depth.visited, [0,1,2,5,8,7,4,3]);
+  assert.deepEqual(depth.path, [0,1,2,5,8,7,4,3]);
+  assert.equal(bfs(input).path.length, 2);
+  assert.deepEqual(dfs(input), depth);
+  depth.path.reverse();
+  assert.deepEqual(dfs(input).path, [0,1,2,5,8,7,4,3]);
+  assert.deepEqual(input, grid(3, 3, [], 0, 3));
+});
+
+test('DFS avoids walls, handles no-path and same-cell, and needs no recursive stack', () => {
+  assert.deepEqual(dfs(grid(3,3,[1,3])), { found:false, visited:[0], path:[] });
+  assert.deepEqual(dfs(grid(1,1)), { found:true, visited:[0], path:[0] });
+  assert.deepEqual(dfs(grid(1,4,[],3,0)).path, [3,2,1,0]);
+  assert.deepEqual(dfs(grid(3,3,[1,4])).path, [0,3,6,7,8]);
+  const long = dfs(grid(1,10000));
+  assert.equal(long.path.length, 10000);
+  assert.equal(long.visited.length, 10000);
 });

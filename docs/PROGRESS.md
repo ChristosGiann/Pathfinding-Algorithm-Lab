@@ -9,7 +9,8 @@ comparison, αποθήκευση/ιστορικό, statistics/baseline, Big-O co
 Library, visualization, trusted local custom execution και CI. Το #65 προσθέτει
 το pathfinding input/result/evaluation foundation. Τα #2/#3/#1 παρέχουν neighbours,
 reconstruction και pure BFS. Το #4 προσθέτει την UI σύνδεση και το animation του BFS. Τα #5/#6/#7 καλύπτουν
-control locking, clear path και panel στατιστικών μετά το animation.
+control locking, clear path και panel στατιστικών μετά το animation. Το #8 προσθέτει
+DFS στον κοινό selector και στο ίδιο result/playback flow.
 Η προώθηση από dev σε main γίνεται μόνο με ρητή εντολή· τα δύο branches παραμένουν μόνιμα.
 
 Οι επόμενες ενότητες διατηρούν το ιστορικό ανά issue· οι παλιότερες test counts
@@ -285,3 +286,7 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 ## Issue #7 — Pathfinding statistics
 
 Panel μετά το τέλος του animation με BFS identity, found/no-path, visited count, μήκος σε βήματα και χρόνο μόνο του search. Δίγλωσσα labels και locale numbers, διακριτό null/zero, χωρίς παλιά metrics σε νέο run ή clear. Tests καλύπτουν rendering και lifecycle visibility.
+
+## Issue #8 — DFS
+
+Προστέθηκε iterative DFS και πραγματικό BFS/DFS registry, controlled selector και ενημέρωση UI state χωρίς ανάμειξη αποτελεσμάτων. DFS δεν υπόσχεται shortest path. Tests καλύπτουν depth-first order, longer-path example, walls/no-path/same-cell/reversed endpoints, repeated-run isolation, 10.000-node route και exhaustive reachability σε 11.520 layouts/endpoints.

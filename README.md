@@ -19,7 +19,7 @@
 | Experiment API | Δημιουργία draft definitions, bounded execution και ανάκτηση persisted results μέσω API. |
 | Implementation reviews | Προσωπικές βαθμολογίες και σημειώσεις ανά implementation, με αποθήκευση και επεξεργασία. |
 | Custom Python validation | Static validation και opt-in trusted local benchmark/comparison σε ξεχωριστό process με timeout 2 s. Disabled by default· δεν αποτελεί δημόσιο sandbox. |
-| Pathfinding foundation | Grid, walls και clear/reset controls. BFS execution και visited/path animation, control locking, clear path και στατιστικά εκτέλεσης. |
+| Pathfinding foundation | Grid, walls και clear/reset controls. BFS/DFS execution και visited/path animation, control locking, clear path και στατιστικά εκτέλεσης. |
 
 Το παρόν snapshot περιλαμβάνει τα ολοκληρωμένα #11, #12, #16–#22 και #41/#43/#45/#47: δίγλωσσο UI, custom Python validation, πέντε trusted sorters και πλήρη ροή saved experiments με ιστορικό. Τα σχετικά PR #38–#48 αποτελούν προηγούμενο στάδιο της υλοποίησης.
 

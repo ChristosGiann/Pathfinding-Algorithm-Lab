@@ -350,7 +350,7 @@ test('pathfinding renders localized BFS controls and keeps future algorithms una
     const html = render(Pathfinding, { language });
     assert.ok(html.includes(translations[language].pathfinding.idle));
     assert.ok(html.includes(translations[language].pathfinding.description));
-    assert.match(html, /value="dfs" disabled/);
+    assert.match(html, /value="dfs">DFS/);
     assert.match(html, /value="dijkstra" disabled/);
     assert.match(html, /value="astar" disabled/);
     assert.match(html, /role="status"/);
@@ -364,7 +364,7 @@ test('pathfinding toolbar and grid disable every editable control while running'
   for (const language of ['el', 'en']) for (const disabled of [false, true]) {
     const texts = translations[language];
     const toolbar = render(Toolbar, { texts: texts.toolbar, algorithms: texts.algorithms, speed: texts.speed,
-      selectedSpeed: 'normal', onSpeedChange() {}, onVisualize() {}, onResetGrid() {}, onClearWalls() {}, onClearPath() {}, disabled });
+      selectedAlgorithm: 'bfs', onAlgorithmChange() {}, selectedSpeed: 'normal', onSpeedChange() {}, onVisualize() {}, onResetGrid() {}, onClearWalls() {}, onClearPath() {}, disabled });
     const controls = toolbar.match(/<(?:button|select)\b[^>]*>/g);
     assert.equal(controls.length, 7);
     assert.equal(controls.filter(tag => tag.includes('disabled')).length, disabled ? 7 : 1);
@@ -415,4 +415,22 @@ test('statistics remain hidden before completion and after clear or errors', asy
     assert.equal(render(PathfindingStatistics, { status, result, language: 'el' }), '');
   }
   assert.equal(render(PathfindingStatistics, { status: 'completed', result: null, language: 'el' }), '');
+});
+
+test('DFS selection and statistics retain their identity in both languages', async () => {
+  const { Toolbar } = await import('../src/components/Toolbar/Toolbar.tsx');
+  const { PathfindingStatistics } = await import('../src/components/Pathfinding/PathfindingStatistics.tsx');
+  for (const language of ['el', 'en']) {
+    const texts = translations[language];
+    const html = render(Toolbar, { texts: texts.toolbar, algorithms: texts.algorithms, speed: texts.speed,
+      selectedAlgorithm: 'dfs', onAlgorithmChange() {}, selectedSpeed: 'fast', onSpeedChange() {},
+      onVisualize() {}, onClearPath() {}, onClearWalls() {}, onResetGrid() {} });
+    assert.match(html, /value="dfs" selected=""/);
+    const stats = render(PathfindingStatistics, { language, status: 'completed', result: {
+      algorithm: 'dfs', status: 'completed', found: true, visitedNodeCount: 8, pathLength: 7,
+      executionTimeMs: 1, visited: [0,1,2,5,8,7,4,3], path: [0,1,2,5,8,7,4,3],
+    } });
+    assert.match(stats, /<dd>DFS<\/dd>/);
+    assert.match(stats, /<dd>7<\/dd>/);
+  }
 });
