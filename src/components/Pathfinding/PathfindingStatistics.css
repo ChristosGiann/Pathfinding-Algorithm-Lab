@@ -13,3 +13,9 @@
 }
 .pathfinding-statistics dt, .pathfinding-statistics p { color: #cbd5e1; }
 .pathfinding-statistics dd { margin: 6px 0 0; font-size: 1.2rem; font-weight: 600; }
+.pathfinding-comparison-scroll { overflow-x: auto; }
+.pathfinding-comparison { width: 100%; border-collapse: collapse; }
+.pathfinding-comparison caption { text-align: left; margin-bottom: 12px; color: #cbd5e1; }
+.pathfinding-comparison th, .pathfinding-comparison td {
+  padding: 12px; text-align: left; border-bottom: 1px solid #334155;
+}

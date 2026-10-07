@@ -13,6 +13,12 @@ export const translations = {
       searchNote: "Ο BFS βρίσκει τη συντομότερη διαδρομή σε αυτό το grid. Ο DFS εξερευνά πρώτα σε βάθος και δεν εγγυάται τη συντομότερη διαδρομή.",
       running: "Η αναζήτηση οπτικοποιείται…", found: "Βρέθηκε διαδρομή.",
       noPath: "Δεν υπάρχει διαδρομή.", error: "Δεν ήταν δυνατή η εκτέλεση. Έλεγξε το grid και δοκίμασε ξανά.",
+      comparison: {
+        title: "Σύγκριση διαδρομών", ready: "Η σύγκριση ολοκληρώθηκε. Δες τα αποτελέσματα στον πίνακα.",
+        caption: "Αποτελέσματα BFS / DFS στο ίδιο grid",
+        note: "Τρέχουν όλοι οι διαθέσιμοι αλγόριθμοι στο ίδιο grid, χωρίς animation. Ο BFS βρίσκει συντομότερη διαδρομή· ο DFS δεν το εγγυάται.",
+        errors: { runner_error: "Η εκτέλεση απέτυχε.", invalid_result: "Ο αλγόριθμος επέστρεψε μη έγκυρο αποτέλεσμα.", invalid_clock: "Δεν ήταν δυνατή η μέτρηση χρόνου." },
+      },
       statistics: {
         title: "Στατιστικά διαδρομής", algorithm: "Αλγόριθμος", found: "Βρέθηκε διαδρομή",
         yes: "Ναι", no: "Όχι", visited: "Visited nodes", length: "Μήκος διαδρομής (βήματα)", time: "Χρόνος εκτέλεσης",
@@ -86,6 +92,12 @@ export const translations = {
       searchNote: "BFS finds a shortest path on this grid. DFS explores depth first and does not guarantee a shortest path.",
       running: "Animating the search…", found: "Path found.",
       noPath: "No path exists.", error: "The search could not run. Check the grid and try again.",
+      comparison: {
+        title: "Path comparison", ready: "Comparison completed. See the results in the table.",
+        caption: "BFS / DFS results on the same grid",
+        note: "All available algorithms run on the same grid without animation. BFS finds a shortest path; DFS does not guarantee one.",
+        errors: { runner_error: "Execution failed.", invalid_result: "The algorithm returned an invalid result.", invalid_clock: "Execution time could not be measured." },
+      },
       statistics: {
         title: "Path statistics", algorithm: "Algorithm", found: "Path found",
         yes: "Yes", no: "No", visited: "Visited nodes", length: "Path length (steps)", time: "Execution time",

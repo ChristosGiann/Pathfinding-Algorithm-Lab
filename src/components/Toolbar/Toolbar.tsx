@@ -11,6 +11,7 @@ type ToolbarProps = {
   onClearWalls: () => void;
   onClearPath: () => void;
   onVisualize: () => void;
+  onCompare: () => void;
   selectedSpeed: AnimationSpeed;
   selectedAlgorithm: AvailablePathfindingAlgorithm;
   onAlgorithmChange: (algorithm: AvailablePathfindingAlgorithm) => void;
@@ -26,6 +27,7 @@ export function Toolbar({
   onClearWalls,
   onClearPath,
   onVisualize,
+  onCompare,
   selectedSpeed,
   selectedAlgorithm,
   onAlgorithmChange,
@@ -79,7 +81,7 @@ export function Toolbar({
           {texts.visualize}
         </button>
 
-        <button className="toolbar-button" type="button" disabled>
+        <button className="toolbar-button" type="button" onClick={onCompare} disabled={disabled}>
           {texts.compare}
         </button>
 

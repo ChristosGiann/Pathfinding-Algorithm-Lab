@@ -87,7 +87,7 @@ invalid/no-path/same-cell inputs, walls, neighbour ordering και copy isolatio
 
 ## BFS animation (#4)
 
-Το Pathfinding component κατέχει το grid και το playback state. Ο BFS/evaluation εκτελείται μία φορά πριν από timers· κατόπιν τα visited και path IDs γίνονται frames, με αυτή τη σειρά. Slow/normal/fast: 80/25/5 ms ανά frame (όχι εγγύηση wall-clock διάρκειας). Το advancePlayback αλλάζει μόνο React state, διατηρώντας start/end/walls. Idle/running/found/no-path/error μηνύματα είναι el/en. Νέο run καθαρίζει παλιό trace· reset/edit ακυρώνει playback και stale callbacks αγνοούνται με state identity. Effect cleanup ακυρώνει timer σε αλλαγή state/unmount. Το #5 κλειδώνει cells, toolbar buttons και selects όσο status=running. Native disabled props και handler guards προστατεύουν το grid· σε completion/no-path/error ενεργοποιούνται ξανά. Το comparison και οι μη υλοποιημένοι algorithms παραμένουν disabled ανεξάρτητα από playback. Dijkstra/A* επιλογές και comparison παραμένουν disabled.
+Το Pathfinding component κατέχει το grid και το playback state. Ο BFS/evaluation εκτελείται μία φορά πριν από timers· κατόπιν τα visited και path IDs γίνονται frames, με αυτή τη σειρά. Slow/normal/fast: 80/25/5 ms ανά frame (όχι εγγύηση wall-clock διάρκειας). Το advancePlayback αλλάζει μόνο React state, διατηρώντας start/end/walls. Idle/running/found/no-path/error μηνύματα είναι el/en. Νέο run καθαρίζει παλιό trace· reset/edit ακυρώνει playback και stale callbacks αγνοούνται με state identity. Effect cleanup ακυρώνει timer σε αλλαγή state/unmount. Το #5 κλειδώνει cells, toolbar buttons και selects όσο status=running. Native disabled props και handler guards προστατεύουν το grid· σε completion/no-path/error ενεργοποιούνται ξανά. Οι Dijkstra/A* επιλογές παραμένουν disabled. Το comparison (#9) είναι διαθέσιμο εκτός animation.
 
 ## Clear path (#6)
 
@@ -102,3 +102,9 @@ invalid/no-path/same-cell inputs, walls, neighbour ordering και copy isolatio
 Το dfs.ts υλοποιεί το ίδιο Search contract με BFS: validated immutable GridInput → found/visited/path. Iterative LIFO stack, processed set στο pop, reverse neighbour pushes για σταθερή up/right/down/left προτεραιότητα. Duplicate pending entries παραλείπονται όταν έχουν ήδη processed το ίδιο ID. Previous references ανακατασκευάζουν την πραγματική DFS route. O(V+E) χρόνος/χώρος· στο cardinal grid E≤4V, άρα O(V) χώρος. Δεν εγγυάται shortest path και δεν χρησιμοποιεί recursion.
 
 Το UI διαθέτει controlled BFS/DFS selector και dispatch μέσω typed registry. Η αλλαγή algorithm εκτός animation διατηρεί walls/endpoints/speed αλλά καθαρίζει trace/result ώστε να μη φαίνονται metrics άλλου algorithm. Κατά το animation ο selector κλειδώνει. Animation, statistics, clear path και el/en λειτουργούν κοινά, χωρίς algorithm-specific rendering.
+
+## Σύγκριση στο UI (#9)
+
+Το Compare τρέχει όλους τους διαθέσιμους algorithms του registry (BFS/DFS) μέσω comparePathfinding σε ανεξάρτητα immutable copies του ίδιου grid. Δεν δημιουργεί playback frames: καθαρίζει προηγούμενο trace και single-run statistics, διατηρώντας walls/endpoints/selector/speed. Ο πίνακας εμφανίζει algorithm, found, path length σε βήματα, visited count και execution time σε ms. Error rows έχουν μεταφρασμένο μήνυμα χωρίς επινοημένα metrics· οι υπόλοιπες εκτελέσεις συνεχίζουν.
+
+Grid edits, clear/reset, αλλαγή algorithm ή νέο visualization καθαρίζουν τη σύγκριση. Αλλαγή γλώσσας μεταφράζει το ίδιο αποτέλεσμα χωρίς rerun· αλλαγή speed δεν αλλάζει metrics. Ο χρόνος αφορά μόνο το search, χωρίς αντιγραφές, validation, animation ή rendering. Πρόκειται για μία μέτρηση ανά algorithm, χωρίς ισχυρισμό γενικής υπεροχής ή persistence.

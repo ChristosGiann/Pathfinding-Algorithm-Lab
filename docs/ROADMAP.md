@@ -396,3 +396,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #7 προσθέτει statistics panel. Επόμενα pathfinding βήματα: DFS (#8) και same-grid comparison (#9).
 
 Το #8 ενεργοποιεί DFS με το ίδιο UI/result contract. Επόμενο το comparison (#9).
+
+Το #9 ολοκληρώνει τη σύγκριση BFS/DFS στο ίδιο grid χωρίς animation. Το αρχικό pathfinding scope #1–#10 έχει καλυφθεί· Dijkstra/A* και persistence παραμένουν εκτός αυτού του scope.
