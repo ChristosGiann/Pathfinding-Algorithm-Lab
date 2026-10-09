@@ -1,6 +1,6 @@
 # Project Progress
 
-Last verified: **2026-10-07**
+Last verified: **2026-10-09**
 
 ## Current phase
 
@@ -10,7 +10,7 @@ Library, visualization, trusted local custom execution και CI. Το #65 πρ�
 το pathfinding input/result/evaluation foundation. Τα #2/#3/#1 παρέχουν neighbours,
 reconstruction και pure BFS. Το #4 προσθέτει την UI σύνδεση και το animation του BFS. Τα #5/#6/#7 καλύπτουν
 control locking, clear path και panel στατιστικών μετά το animation. Το #8 προσθέτει
-DFS στον κοινό selector και στο ίδιο result/playback flow. Το #9 προσθέτει πίνακα σύγκρισης BFS/DFS στο ίδιο grid χωρίς animation. Τα #90/#91 προσθέτουν pure Dijkstra/A* και optional validated costs στο domain, χωρίς αλλαγή του UI.
+DFS στον κοινό selector και στο ίδιο result/playback flow. Το #9 προσθέτει πίνακα σύγκρισης BFS/DFS στο ίδιο grid χωρίς animation. Τα #90/#91 προσθέτουν pure Dijkstra/A* και optional validated costs στο domain, και το #92 συνδέει τους τέσσερις algorithms με weighted terrain στο UI.
 Η προώθηση από dev σε main γίνεται μόνο με ρητή εντολή· τα δύο branches παραμένουν μόνιμα.
 
 Οι επόμενες ενότητες διατηρούν το ιστορικό ανά issue· οι παλιότερες test counts
@@ -302,3 +302,7 @@ Pure deterministic min-heap Dijkstra σε non-negative costs, κοινό result/
 ## A* foundation (#91)
 
 Pure A* με admissible/consistent scaled Manhattan, shared min-heap με Dijkstra, deterministic ordering και το ίδιο result/timing/playback contract. 60 frontend tests: independent weighted oracle, heuristic bounds/consistency, fractions/zero costs, walls/no-path/start=end, isolation και 10.000-cell path. Επόμενο #92 weighted terrain και UI integration και των τεσσάρων algorithms.
+
+## Weighted terrain (#92)
+
+Terrain plain/mud/water (1/3/5), ανεξάρτητο από wall/animation state, ασφαλές input mapping, four-algorithm UI/compare και pathCost metric. Σαφή clear/reset semantics και el/en κόστος/labels. 63 frontend tests, συμπεριλαμβανομένων weighted detours, input validation, preservation κατά το playback και comparison metrics. Επόμενο #93 educational content.

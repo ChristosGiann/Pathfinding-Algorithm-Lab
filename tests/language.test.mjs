@@ -70,7 +70,7 @@ test('header labels the selector and reflects each selected language', () => {
 test('grid accessible labels and titles follow language while cell identity stays unchanged', () => {
   for (const language of ['el', 'en']) {
     const html = render(GridNode, { node: { row: 2, col: 3, type: 'wall' }, texts: translations[language].grid, onNodeClick() {} });
-    assert.ok(html.includes(`aria-label="${translations[language].grid.cell(2, 3)}"`));
+    assert.ok(html.includes(`aria-label="${translations[language].grid.cell(2, 3)} · ${translations[language].grid.wall}"`));
     assert.match(html, /grid-node--wall/);
   }
 });
@@ -344,15 +344,15 @@ test('same-grid comparison isolates mutation and continues after failure',async(
  assert.throws(()=>comparePathfinding(input,[{algorithm:'bfs',search:success},{algorithm:'bfs',search:success}]));
 });
 
-test('pathfinding renders localized BFS controls and keeps future algorithms unavailable', async () => {
+test('pathfinding renders all four algorithm options', async () => {
   const { Pathfinding } = await import('../src/components/Pathfinding/Pathfinding.tsx');
   for (const language of ['el', 'en']) {
     const html = render(Pathfinding, { language });
     assert.ok(html.includes(translations[language].pathfinding.idle));
     assert.ok(html.includes(translations[language].pathfinding.description));
     assert.match(html, /value="dfs">DFS/);
-    assert.match(html, /value="dijkstra" disabled/);
-    assert.match(html, /value="astar" disabled/);
+    assert.match(html, /value="dijkstra">Dijkstra/);
+    assert.match(html, /value="astar">A\*/);
     assert.match(html, /role="status"/);
     assert.equal((html.match(/class="grid-node /g) || []).length, 600);
   }
@@ -396,12 +396,12 @@ test('path statistics distinguish no-path from zero-length and zero-time results
   const { PathfindingStatistics } = await import('../src/components/Pathfinding/PathfindingStatistics.tsx');
   for (const language of ['el', 'en']) {
     const result = { algorithm: 'bfs', status: 'completed', found: false, visitedNodeCount: 1,
-      pathLength: null, executionTimeMs: 0, visited: [0], path: [] };
+      pathLength: null, pathCost: null, executionTimeMs: 0, visited: [0], path: [] };
     const html = render(PathfindingStatistics, { status: 'completed', result, language });
     assert.ok(html.includes(translations[language].pathfinding.statistics.no));
     assert.match(html, /<dd>—<\/dd>/);
     assert.match(html, /0 ms/);
-    const sameCell = render(PathfindingStatistics, { status: 'completed', result: { ...result, found: true, pathLength: 0, path: [0] }, language });
+    const sameCell = render(PathfindingStatistics, { status: 'completed', result: { ...result, found: true, pathLength: 0, pathCost: 0, path: [0] }, language });
     assert.match(sameCell, /<dd>0<\/dd>/);
     assert.doesNotMatch(sameCell, /<dd>—<\/dd>/);
   }
@@ -435,7 +435,7 @@ test('DFS selection and statistics retain their identity in both languages', asy
   }
 });
 
-test('path comparison renders both algorithms, no-path, zero metrics and failures in el/en', async () => {
+test('path comparison renders all four algorithms, no-path, zero metrics and failures in el/en', async () => {
   const { PathfindingComparison } = await import('../src/components/Pathfinding/PathfindingComparison.tsx');
   const { compareAvailablePathfinding } = await import('../src/pathfinding/registry.ts');
   const input = { rows: 3, cols: 3, start: 0, end: 3, walls: Array(9).fill(false) };
@@ -448,9 +448,11 @@ test('path comparison renders both algorithms, no-path, zero metrics and failure
     assert.ok(html.includes(texts.statistics.note));
     assert.match(html, /<th scope="row">BFS<\/th>/);
     assert.match(html, /<th scope="row">DFS<\/th>/);
+    assert.match(html, /<th scope="row">Dijkstra<\/th>/);
+    assert.match(html, /<th scope="row">A\*<\/th>/);
     assert.match(html, /<td>1<\/td>/);
     assert.match(html, /<td>7<\/td>/);
-    assert.equal((html.match(/0 ms/g) || []).length, 2);
+    assert.equal((html.match(/0 ms/g) || []).length, 4);
     assert.equal(render(PathfindingComparison, { results: null, language }), '');
     const noPath = render(PathfindingComparison, { language, results: [{ ...results[0], found: false, pathLength: null }] });
     assert.ok(noPath.includes(texts.statistics.no));
@@ -460,8 +462,35 @@ test('path comparison renders both algorithms, no-path, zero metrics and failure
     for (const error of ['runner_error', 'invalid_result', 'invalid_clock']) {
       const failed = render(PathfindingComparison, { language, results: [{ algorithm: 'bfs', status: 'error', error }, results[1]] });
       assert.ok(failed.includes(texts.comparison.errors[error]));
-      assert.match(failed, /colSpan="4"/i);
+      assert.match(failed, /colSpan="5"/i);
       assert.equal((failed.match(/0 ms/g) || []).length, 1);
     }
+  }
+});
+
+
+test('terrain controls, visible costs and weighted results render in both languages', async () => {
+  const { TerrainControls } = await import('../src/components/Pathfinding/TerrainControls.tsx');
+  const { GridNode } = await import('../src/components/Grid/GridNode.tsx');
+  const { PathfindingComparison } = await import('../src/components/Pathfinding/PathfindingComparison.tsx');
+  const { compareAvailablePathfinding } = await import('../src/pathfinding/registry.ts');
+  const results = compareAvailablePathfinding({rows:2,cols:3,start:0,end:2,walls:Array(6).fill(false),costs:[1,5,1,1,1,1]},()=>0);
+  for(const language of ['el','en']) {
+    const texts=translations[language];
+    const controls=render(TerrainControls,{texts:texts.terrain,tool:'water',disabled:true,onChange(){},onClear(){}});
+    assert.match(controls,/<fieldset disabled=""/);
+    assert.ok(controls.includes(texts.terrain.note));
+    assert.match(controls,/value="water" selected=""/);
+    const cell=render(GridNode,{node:{row:0,col:1,type:'path',terrain:'water'},texts:texts.grid,onNodeClick(){}});
+    assert.ok(cell.includes(texts.grid.water));
+    assert.ok(cell.includes(texts.grid.cost+': 5'));
+    assert.match(cell,/>5<\/button>/);
+    const wall=render(GridNode,{node:{row:0,col:1,type:'wall',terrain:'water'},texts:texts.grid,onNodeClick(){}});
+    assert.ok(wall.includes(texts.grid.wall));
+    assert.doesNotMatch(wall,/>5<\/button>/);
+    const table=render(PathfindingComparison,{language,results});
+    assert.ok(table.includes(texts.pathfinding.statistics.cost));
+    assert.match(table,/<td>6<\/td>/);
+    assert.match(table,/<td>4<\/td>/);
   }
 });

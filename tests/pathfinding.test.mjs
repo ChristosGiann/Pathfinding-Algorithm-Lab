@@ -263,15 +263,15 @@ test('DFS avoids walls, handles no-path and same-cell, and needs no recursive st
   assert.equal(long.visited.length, 10000);
 });
 
-test('available comparison runs BFS and DFS on the same immutable layout with search-only timing', async () => {
+test('available comparison runs all four algorithms on the same immutable layout with search-only timing', async () => {
   const { compareAvailablePathfinding } = await import('../src/pathfinding/registry.ts');
   for (const input of [grid(3,3,[],0,3), grid(3,3,[1,3]), grid(1,1)]) {
     const before = structuredClone(input);
-    const ticks = [10,12,20,23];
+    const ticks = [10,12,20,23,30,34,40,45];
     const results = compareAvailablePathfinding(input, () => ticks.shift());
-    assert.deepEqual(results.map(r => r.algorithm), ['bfs','dfs']);
-    assert.deepEqual(results.map(r => r.executionTimeMs), [2,3]);
-    for (const [i, search] of [bfs,dfs].entries()) {
+    assert.deepEqual(results.map(r => r.algorithm), ['bfs','dfs','dijkstra','astar']);
+    assert.deepEqual(results.map(r => r.executionTimeMs), [2,3,4,5]);
+    for (const [i, search] of [bfs,dfs,dijkstra,astar].entries()) {
       const trace = search(input);
       assert.equal(results[i].status, 'completed');
       assert.deepEqual(results[i].path, trace.path);
@@ -431,4 +431,45 @@ test('A* uses the common comparison, timing and playback contracts', async () =>
     assert.throws(()=>evaluatePathfinding('astar',{...grid(1,2),costs},()=>{called=true;},()=>{called=true;}),/invalid_costs/);
     assert.equal(called,false);
   }
+});
+
+
+test('terrain painting, clear actions and playback preserve independent costs and walls', async () => {
+  const { paintTerrain, clearTerrain } = await import('../src/pathfinding/terrain.ts');
+  const { clearWalls } = await import('../src/utils/clearWalls.ts');
+  const { createGrid } = await import('../src/utils/createGrid.ts');
+  const base=[[{row:0,col:0,type:'start'},{row:0,col:1,type:'empty'},{row:0,col:2,type:'end'}]];
+  const painted=paintTerrain(base,0,1,'water');
+  assert.deepEqual(gridToInput(painted).costs,[1,5,1]);
+  assert.deepEqual(gridToInput(base).costs,[1,1,1]);
+  const wall=paintTerrain(painted,0,1,'wall');
+  assert.equal(wall[0][1].type,'wall');
+  assert.equal(wall[0][1].terrain,'water');
+  assert.equal(evaluatePathfinding('dijkstra',gridToInput(wall),dijkstra,()=>0).pathCost,null);
+  assert.equal(clearWalls(wall)[0][1].terrain,'water');
+  assert.equal(clearTerrain(wall)[0][1].type,'wall');
+  assert.deepEqual(gridToInput(clearTerrain(wall)).costs,[1,1,1]);
+  assert.equal(paintTerrain(wall,0,1,'mud')[0][1].type,'empty');
+  assert.equal(paintTerrain(base,0,0,'wall')[0][0].type,'start');
+  const endpoints=paintTerrain(paintTerrain(base,0,0,'water'),0,2,'mud');
+  const result=evaluatePathfinding('dijkstra',gridToInput(endpoints),dijkstra,()=>0);
+  assert.equal(result.pathCost,4); // Start cost is excluded, end cost included.
+  let playback=startPlayback(painted,evaluatePathfinding('astar',gridToInput(painted),astar,()=>0));
+  while(playback.status==='running')playback=advancePlayback(playback);
+  assert.equal(playback.grid[0][1].terrain,'water');
+  assert.deepEqual(gridToInput(idlePlayback(playback.grid).grid).costs,[1,5,1]);
+  assert.ok(gridToInput(createGrid(20,30)).costs.every(cost=>cost===1));
+  for(const terrain of ['lava','__proto__',null,5])assert.throws(()=>gridToInput([[{...base[0][0],terrain},base[0][1],base[0][2]]]),/invalid_terrain/);
+});
+
+test('weighted UI mapping makes Dijkstra and A* prefer a cheaper longer path', async () => {
+  const { compareAvailablePathfinding } = await import('../src/pathfinding/registry.ts');
+  const ui=Array.from({length:2},(_,row)=>Array.from({length:3},(_,col)=>({row,col,type:row===0&&col===0?'start':row===0&&col===2?'end':'empty',terrain:row===0&&col===1?'water':'plain'})));
+  const input=gridToInput(ui);
+  const results=compareAvailablePathfinding(input,()=>0);
+  assert.deepEqual(results.map(r=>r.algorithm),['bfs','dfs','dijkstra','astar']);
+  assert.equal(results[0].pathLength,2); assert.equal(results[0].pathCost,6);
+  for(const result of results.slice(2)) { assert.equal(result.pathLength,4); assert.equal(result.pathCost,4); }
+  assert.equal(evaluatePathfinding('astar',grid(1,1),astar,()=>0).pathCost,0);
+  assert.equal(evaluatePathfinding('astar',grid(1,3,[1]),astar,()=>0).pathCost,null);
 });

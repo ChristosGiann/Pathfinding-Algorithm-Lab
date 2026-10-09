@@ -13,7 +13,9 @@ import { advancePlayback, ANIMATION_DELAYS, idlePlayback, startPlayback } from "
 import type { AnimationSpeed } from "../../pathfinding/playback";
 import { createGrid } from "../../utils/createGrid";
 import { clearWalls } from "../../utils/clearWalls";
-import { toggleWall } from "../../utils/toggleWall";
+import { clearTerrain, paintTerrain } from "../../pathfinding/terrain";
+import type { PaintTool } from "../../pathfinding/terrain";
+import { TerrainControls } from "./TerrainControls";
 import type { Grid as GridType } from "../../types/grid";
 
 export function Pathfinding({ language }: { language: Language }) {
@@ -22,6 +24,7 @@ export function Pathfinding({ language }: { language: Language }) {
   const [speed, setSpeed] = useState<AnimationSpeed>("normal");
   const [algorithm, setAlgorithm] = useState<AvailablePathfindingAlgorithm>("bfs");
   const [comparison, setComparison] = useState<PathfindingResult[] | null>(null);
+  const [tool, setTool] = useState<PaintTool>("wall");
   const running = state.status === "running";
 
   useEffect(() => {
@@ -82,9 +85,11 @@ export function Pathfinding({ language }: { language: Language }) {
       onClearPath={() => editGrid(grid => grid)}
       onClearWalls={() => editGrid(clearWalls)} />
     <p role="status">{comparison ? texts.pathfinding.comparison.ready : message}</p>
+    <TerrainControls texts={texts.terrain} tool={tool} disabled={running}
+      onChange={value => { if (!running) setTool(value); }} onClear={() => editGrid(clearTerrain)} />
     <PathfindingStatistics status={state.status} result={state.result} language={language} />
     <PathfindingComparison results={comparison} language={language} />
     <Grid grid={state.grid} texts={texts.grid} disabled={running}
-      onNodeClick={(row, col) => editGrid(grid => toggleWall(grid, row, col))} />
+      onNodeClick={(row, col) => editGrid(grid => paintTerrain(grid, row, col, tool))} />
   </section>;
 }
