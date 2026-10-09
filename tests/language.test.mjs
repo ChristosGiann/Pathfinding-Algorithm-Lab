@@ -494,3 +494,32 @@ test('terrain controls, visible costs and weighted results render in both langua
     assert.match(table,/<td>4<\/td>/);
   }
 });
+
+
+test('Library includes localized pathfinding education while API catalogue is loading', async () => {
+  const { AlgorithmLibrary } = await import('../src/components/AlgorithmLibrary/AlgorithmLibrary.tsx');
+  for (const language of ['el', 'en']) {
+    const html = render(AlgorithmLibrary, {language, texts: translations[language].algorithmLibrary});
+    for (const name of ['BFS', 'DFS', 'Dijkstra', 'A*']) assert.ok(html.includes(name));
+    assert.ok(html.includes(language === 'el' ? 'Πληρότητα' : 'Completeness'));
+    assert.ok(html.includes(language === 'el' ? 'Βέλτιστη διαδρομή' : 'Optimality'));
+    assert.ok(html.includes('0 → 3 → 4 → 5 → 2'));
+    assert.ok(html.includes(translations[language].algorithmLibrary.loading));
+    assert.ok(!html.includes('In-place'));
+    assert.ok(!html.includes('Stable'));
+  }
+});
+
+test('education omits unavailable optional pathfinding fields without inventing guarantees', async () => {
+  const { EducationalContent } = await import('../src/components/AlgorithmLibrary/EducationalContent.tsx');
+  for (const language of ['el', 'en']) {
+    const html = render(EducationalContent, {language, algorithm: {education: {[language]: {what: 'Partial content'}}}});
+    assert.ok(html.includes('Partial content'));
+    assert.ok(!html.includes('undefined'));
+    assert.ok(!html.includes('O('));
+    assert.ok(!html.includes(language === 'el' ? 'Βέλτιστη διαδρομή' : 'Optimality'));
+    const missing = render(EducationalContent, {language, algorithm: {education: {[language === 'el' ? 'en' : 'el']: {what: 'OTHER_LANGUAGE'}}}});
+    assert.ok(!missing.includes('OTHER_LANGUAGE'));
+    assert.ok(missing.includes(language === 'el' ? 'μη διαθέσιμο' : 'unavailable'));
+  }
+});

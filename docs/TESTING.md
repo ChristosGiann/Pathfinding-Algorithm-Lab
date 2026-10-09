@@ -454,3 +454,9 @@ A* (#91): 60 frontend tests συνολικά. Κοινό independent Floyd–War
 Weighted terrain (#92): 63 frontend tests. Paint/wall/clear/reset input mapping, start exclusion/end inclusion στο cost, no-path null/start=end zero, invalid terrain rejection, preservation κατά το animation και ανεξάρτητα snapshots. Weighted detour: BFS 2 βήματα/cost 6, Dijkstra/A* 4 βήματα/cost 4. Registry εκτελεί και τους τέσσερις με ξεχωριστά timings, el/en cells εμφανίζουν terrain/cost και ο πίνακας διαχωρίζει βήματα από cost.
 
 Validation #92 (2026-10-09): 63 tests, lint και production build επιτυχή. Το interactive browser smoke δεν ολοκληρώθηκε: ο browser automation process δεν εκκινεί λόγω environment setup error, ακόμη και μετά από reset. Τα component rendering/domain/playback tests πέρασαν· η οπτική επιβεβαίωση παραμένει μη επαληθευμένη σε αυτό το session.
+
+## Pathfinding education (#93)
+
+`npm test`: 66 tests. Νέα coverage: metadata keys = executable registry, πλήρες el/en περιεχόμενο, πραγματικά paths/costs των walkthroughs, συμφωνία παραδειγμάτων με εμφανιζόμενα κείμενα, Library rendering ενώ το API φορτώνει και ασφαλές fallback για missing language/optional fields. Existing sorting education tests παραμένουν πράσινα. `npm run lint` και `npm run build` περνούν.
+
+Manual smoke προς επαλήθευση: άνοιγμα Library, expand κάθε card, αλλαγή el/en, narrow viewport και διαθέσιμα pathfinding cards με backend offline. Δεν δηλώνεται ως επιτυχές: στις 2026-10-09 η browser automation απέτυχε πριν συνδεθεί με tab (kernel startup error).

@@ -473,3 +473,27 @@ test('weighted UI mapping makes Dijkstra and A* prefer a cheaper longer path', a
   assert.equal(evaluatePathfinding('astar',grid(1,1),astar,()=>0).pathCost,0);
   assert.equal(evaluatePathfinding('astar',grid(1,3,[1]),astar,()=>0).pathCost,null);
 });
+
+
+test('educational walkthroughs match the real registry paths and costs', async () => {
+  const { PATHFINDING_EDUCATION } = await import('../src/pathfinding/education.ts');
+  const { PATHFINDING_SEARCHES } = await import('../src/pathfinding/registry.ts');
+  assert.deepEqual(Object.keys(PATHFINDING_EDUCATION).sort(), Object.keys(PATHFINDING_SEARCHES).sort());
+  for (const [slug, entry] of Object.entries(PATHFINDING_EDUCATION)) {
+    const { input, path, cost } = entry.walkthrough;
+    const result = PATHFINDING_SEARCHES[slug](snapshotInput(input));
+    assert.equal(result.found, true, slug);
+    assert.deepEqual(result.path, path, slug);
+    assert.equal(result.path.slice(1).reduce((sum, id) => sum + (input.costs?.[id] ?? 1), 0), cost, slug);
+    for (const language of ['el', 'en']) {
+      const content = entry.education[language];
+      for (const key of ['what','intuition','strengths','weaknesses','uses','pitfalls','complexity','completeness','optimality','weights']) {
+        assert.ok(content[key]?.trim(), `${slug}/${language}/${key}`);
+      }
+      assert.equal(content.how.length, 3);
+      assert.equal(content.example.length, 3);
+      assert.ok(content.example.join(' ').includes(path.join(' → ')), `${slug}/${language} displayed route`);
+      assert.ok(content.example.join(' ').includes(`${language === 'el' ? 'κόστος' : 'cost'} ${cost}`));
+    }
+  }
+});
