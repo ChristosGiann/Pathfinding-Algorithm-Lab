@@ -402,3 +402,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #90 προσθέτει weighted Dijkstra στο καθαρό domain. Ακολουθούν #91 A* → #92 terrain/UI integration → #93 education → #94 persistence. Τα νέα costs είναι opt-in στο input, όχι αυτόματη αλλαγή του UI grid.
 
 Το #91 ολοκληρώνει pure A* και scaled Manhattan heuristic. Επόμενο #92: weighted terrain, cost presentation και UI integration Dijkstra/A* με BFS/DFS. Ακολουθούν education (#93) και persistence (#94).
+
+Το #92 ολοκληρώνει weighted terrain και UI integration BFS/DFS/Dijkstra/A*, μαζί με ξεχωριστό total path cost. Επόμενα #93 pathfinding education και #94 persistence.

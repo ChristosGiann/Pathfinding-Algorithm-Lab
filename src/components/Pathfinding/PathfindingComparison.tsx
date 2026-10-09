@@ -18,16 +18,17 @@ export function PathfindingComparison({ results, language }: {
     <div className="pathfinding-comparison-scroll" role="region" aria-label={comparison.caption} tabIndex={0}>
       <table className="pathfinding-comparison">
         <caption>{comparison.caption}</caption>
-        <thead><tr>{[stats.algorithm, stats.found, stats.length, stats.visited, stats.time].map(label =>
+        <thead><tr>{[stats.algorithm, stats.found, stats.length, stats.cost, stats.visited, stats.time].map(label =>
           <th key={label} scope="col">{label}</th>)}</tr></thead>
         <tbody>{results.map(result => <tr key={result.algorithm}>
           <th scope="row">{texts.algorithms[result.algorithm]}</th>
           {result.status === "completed" ? <>
             <td>{result.found ? stats.yes : stats.no}</td>
             <td>{result.pathLength === null ? "—" : number.format(result.pathLength)}</td>
+            <td>{result.pathCost == null ? "—" : number.format(result.pathCost)}</td>
             <td>{number.format(result.visitedNodeCount)}</td>
             <td>{number.format(result.executionTimeMs)} ms</td>
-          </> : <td colSpan={4}>{comparison.errors[result.error]}</td>}
+          </> : <td colSpan={5}>{comparison.errors[result.error]}</td>}
         </tr>)}</tbody>
       </table>
     </div>
