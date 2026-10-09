@@ -404,3 +404,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #91 ολοκληρώνει pure A* και scaled Manhattan heuristic. Επόμενο #92: weighted terrain, cost presentation και UI integration Dijkstra/A* με BFS/DFS. Ακολουθούν education (#93) και persistence (#94).
 
 Το #92 ολοκληρώνει weighted terrain και UI integration BFS/DFS/Dijkstra/A*, μαζί με ξεχωριστό total path cost. Επόμενα #93 pathfinding education και #94 persistence.
+
+Το #93 ολοκληρώνει curated el/en pathfinding education στη Library: theory, guarantees, weighted prerequisites και tested walkthroughs για τους τέσσερις algorithms. Επόμενο #94 pathfinding persistence.

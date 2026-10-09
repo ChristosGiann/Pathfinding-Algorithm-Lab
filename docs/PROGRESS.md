@@ -306,3 +306,7 @@ Pure A* με admissible/consistent scaled Manhattan, shared min-heap με Dijkst
 ## Weighted terrain (#92)
 
 Terrain plain/mud/water (1/3/5), ανεξάρτητο από wall/animation state, ασφαλές input mapping, four-algorithm UI/compare και pathCost metric. Σαφή clear/reset semantics και el/en κόστος/labels. 63 frontend tests, συμπεριλαμβανομένων weighted detours, input validation, preservation κατά το playback και comparison metrics. Επόμενο #93 educational content.
+
+## Pathfinding education (#93)
+
+Bilingual Library cards για BFS/DFS/Dijkstra/A* με intuition, βήματα, complexity, completeness, optimality, weighted suitability και deterministic walkthroughs. Domain metadata δεμένα με το registry, reusable renderer και optional fallback. 66 frontend tests, lint και production build περνούν. Browser smoke παραμένει μη επαληθευμένο: το browser automation αποτυγχάνει κατά την εκκίνηση του kernel. Επόμενο #94 persistence.
