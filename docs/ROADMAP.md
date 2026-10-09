@@ -400,3 +400,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #9 ολοκληρώνει τη σύγκριση BFS/DFS στο ίδιο grid χωρίς animation. Το αρχικό pathfinding scope #1–#10 έχει καλυφθεί· Dijkstra/A* και persistence παραμένουν εκτός αυτού του scope.
 
 Το #90 προσθέτει weighted Dijkstra στο καθαρό domain. Ακολουθούν #91 A* → #92 terrain/UI integration → #93 education → #94 persistence. Τα νέα costs είναι opt-in στο input, όχι αυτόματη αλλαγή του UI grid.
+
+Το #91 ολοκληρώνει pure A* και scaled Manhattan heuristic. Επόμενο #92: weighted terrain, cost presentation και UI integration Dijkstra/A* με BFS/DFS. Ακολουθούν education (#93) και persistence (#94).

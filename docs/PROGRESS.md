@@ -10,7 +10,7 @@ Library, visualization, trusted local custom execution και CI. Το #65 πρ�
 το pathfinding input/result/evaluation foundation. Τα #2/#3/#1 παρέχουν neighbours,
 reconstruction και pure BFS. Το #4 προσθέτει την UI σύνδεση και το animation του BFS. Τα #5/#6/#7 καλύπτουν
 control locking, clear path και panel στατιστικών μετά το animation. Το #8 προσθέτει
-DFS στον κοινό selector και στο ίδιο result/playback flow. Το #9 προσθέτει πίνακα σύγκρισης BFS/DFS στο ίδιο grid χωρίς animation. Το #90 προσθέτει pure Dijkstra και optional validated costs στο domain, χωρίς αλλαγή του UI.
+DFS στον κοινό selector και στο ίδιο result/playback flow. Το #9 προσθέτει πίνακα σύγκρισης BFS/DFS στο ίδιο grid χωρίς animation. Τα #90/#91 προσθέτουν pure Dijkstra/A* και optional validated costs στο domain, χωρίς αλλαγή του UI.
 Η προώθηση από dev σε main γίνεται μόνο με ρητή εντολή· τα δύο branches παραμένουν μόνιμα.
 
 Οι επόμενες ενότητες διατηρούν το ιστορικό ανά issue· οι παλιότερες test counts
@@ -298,3 +298,7 @@ Panel μετά το τέλος του animation με BFS identity, found/no-path
 ## Dijkstra foundation (#90)
 
 Pure deterministic min-heap Dijkstra σε non-negative costs, κοινό result/evaluation/playback contract και immutable weighted snapshots. 57 frontend tests, με weighted detour, zero/fractional costs, independent all-pairs oracle σε 80 deterministic grids, no-path/same-cell, 10.000 cells, isolation και invalid costs. BFS/DFS και UI registry παραμένουν συμβατά. Επόμενα #91 A* και #92 terrain/UI integration.
+
+## A* foundation (#91)
+
+Pure A* με admissible/consistent scaled Manhattan, shared min-heap με Dijkstra, deterministic ordering και το ίδιο result/timing/playback contract. 60 frontend tests: independent weighted oracle, heuristic bounds/consistency, fractions/zero costs, walls/no-path/start=end, isolation και 10.000-cell path. Επόμενο #92 weighted terrain και UI integration και των τεσσάρων algorithms.
