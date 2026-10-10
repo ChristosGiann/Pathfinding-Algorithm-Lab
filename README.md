@@ -222,3 +222,5 @@ implementation×dataset pairs και 1–1000 στοιχεία. Το GET detail 
 results. Προηγήσου με `python backend/manage.py migrate` (migration 0004).
 Το standalone benchmark κρατά session-only history. Η ενότητα Αποθηκευμένα experiments δημιουργεί/εκτελεί drafts και ανακτά persisted results από το ιστορικό ή με ID.
 Βλ. [Experiments](docs/EXPERIMENTS.md) για όρια και αποτυχίες.
+
+Τα ολοκληρωμένα pathfinding runs/comparisons αποθηκεύονται πλέον με grid και measurements στο κοινό history (#94). Εφάρμοσε `python backend/manage.py migrate` για τη migration 0005. Το reopen μετά από refresh δεν εκτελεί νέο search.

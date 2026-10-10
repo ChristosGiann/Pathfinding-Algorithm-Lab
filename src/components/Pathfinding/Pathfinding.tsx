@@ -1,3 +1,6 @@
+import { SavePathfinding } from "./SavePathfinding";
+import { capturePathfinding } from "../../pathfinding/persistence";
+import type { PathfindingSnapshot } from "../../pathfinding/persistence";
 import { useEffect, useState } from "react";
 import { Grid } from "../Grid/Grid";
 import { Toolbar } from "../Toolbar/Toolbar";
@@ -24,6 +27,8 @@ export function Pathfinding({ language }: { language: Language }) {
   const [speed, setSpeed] = useState<AnimationSpeed>("normal");
   const [algorithm, setAlgorithm] = useState<AvailablePathfindingAlgorithm>("bfs");
   const [comparison, setComparison] = useState<PathfindingResult[] | null>(null);
+  const [snapshot, setSnapshot] = useState<PathfindingSnapshot | null>(null);
+  const [runId, setRunId] = useState(0);
   const [tool, setTool] = useState<PaintTool>("wall");
   const running = state.status === "running";
 
@@ -39,8 +44,12 @@ export function Pathfinding({ language }: { language: Language }) {
   function visualize() {
     if (running) return;
     setComparison(null);
+    setSnapshot(null);
     try {
-      const result = evaluatePathfinding(algorithm, gridToInput(state.grid), PATHFINDING_SEARCHES[algorithm]);
+      const input = gridToInput(state.grid);
+      const result = evaluatePathfinding(algorithm, input, PATHFINDING_SEARCHES[algorithm]);
+      setSnapshot(capturePathfinding(input, [result]));
+      setRunId(value => value + 1);
       setState(startPlayback(state.grid, result));
     } catch {
       setState({ ...idlePlayback(state.grid), status: "error" });
@@ -50,14 +59,19 @@ export function Pathfinding({ language }: { language: Language }) {
   function editGrid(transform: (grid: GridType) => GridType) {
     if (running) return;
     setComparison(null);
+    setSnapshot(null);
     setState(current => current.status === "running" ? current : idlePlayback(transform(current.grid)));
   }
 
   function compare() {
     if (running) return;
     setComparison(null);
+    setSnapshot(null);
     try {
-      const results = compareAvailablePathfinding(gridToInput(state.grid));
+      const input = gridToInput(state.grid);
+      const results = compareAvailablePathfinding(input);
+      setSnapshot(capturePathfinding(input, results));
+      setRunId(value => value + 1);
       setState(idlePlayback(state.grid));
       setComparison(results);
     } catch {
@@ -89,6 +103,7 @@ export function Pathfinding({ language }: { language: Language }) {
       onChange={value => { if (!running) setTool(value); }} onClear={() => editGrid(clearTerrain)} />
     <PathfindingStatistics status={state.status} result={state.result} language={language} />
     <PathfindingComparison results={comparison} language={language} />
+    {snapshot && (comparison || state.status === "completed") && <SavePathfinding key={runId} snapshot={snapshot} language={language} />}
     <Grid grid={state.grid} texts={texts.grid} disabled={running}
       onNodeClick={(row, col) => editGrid(grid => paintTerrain(grid, row, col, tool))} />
   </section>;

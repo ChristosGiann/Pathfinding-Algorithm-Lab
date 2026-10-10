@@ -497,3 +497,25 @@ test('educational walkthroughs match the real registry paths and costs', async (
     }
   }
 });
+
+
+test('persistence captures independent frozen input and result snapshots', async () => {
+  const { capturePathfinding } = await import('../src/pathfinding/persistence.ts');
+  const { evaluatePathfinding } = await import('../src/pathfinding/evaluation.ts');
+  const input = {rows:1, cols:2, start:0, end:1, walls:[false,false]};
+  const result = evaluatePathfinding('bfs', input, bfs, () => 0);
+  const mutable = {...result, path:[...result.path], visited:[...result.visited]};
+  const saved = capturePathfinding(input, [mutable]);
+  input.walls[1] = true;
+  mutable.path[1] = 0;
+  mutable.visited.pop();
+  assert.deepEqual(saved.input.walls, [false,false]);
+  assert.deepEqual(saved.input.costs, [1,1]);
+  assert.deepEqual(saved.results[0].path, [0,1]);
+  assert.deepEqual(saved.results[0].visited, [0,1]);
+  assert.equal(saved.results[0].executionTimeMs, 0);
+  assert.ok(Object.isFrozen(saved.results[0].path));
+  assert.ok(Object.isFrozen(saved.input.costs));
+  assert.equal(capturePathfinding(input, []), null);
+  assert.equal(capturePathfinding(input, [{algorithm:'bfs',status:'error',error:'runner_error'}]), null);
+});

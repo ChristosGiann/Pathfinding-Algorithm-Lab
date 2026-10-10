@@ -523,3 +523,54 @@ test('education omits unavailable optional pathfinding fields without inventing 
     assert.ok(missing.includes(language === 'el' ? 'μη διαθέσιμο' : 'unavailable'));
   }
 });
+
+
+test('pathfinding save, list and reopen use snapshots without invoking search', async () => {
+  const { savePathfinding, listExperiments, getExperiment } = await import('../src/services/apiClient.ts');
+  const { PATHFINDING_SEARCHES } = await import('../src/pathfinding/registry.ts');
+  const { capturePathfinding } = await import('../src/pathfinding/persistence.ts');
+  const { evaluatePathfinding } = await import('../src/pathfinding/evaluation.ts');
+  const { SavePathfinding } = await import('../src/components/Pathfinding/SavePathfinding.tsx');
+  const input = {rows:1,cols:2,start:0,end:1,walls:[false,false],costs:[1,3]};
+  const snapshot = capturePathfinding(input, [evaluatePathfinding('bfs', input, PATHFINDING_SEARCHES.bfs, () => 0)]);
+  const originalFetch = globalThis.fetch;
+  const originalSearches = {...PATHFINDING_SEARCHES};
+  const requests = [];
+  let stored;
+  globalThis.fetch = async (url, options) => {
+    requests.push([url, options?.method ?? 'GET']);
+    if (options?.method === 'POST') {
+      const body = JSON.parse(options.body);
+      assert.equal(body.name, 'Saved route');
+      assert.deepEqual(body.input, snapshot.input);
+      assert.deepEqual(body.results, snapshot.results);
+      stored = {id:94,name:body.name,family:'pathfinding',status:'completed',execution_error:'',implementations:[],datasets:[],
+        input_snapshot:{version:1,source:'browser',grid:body.input,algorithms:['bfs'],movement:'cardinal',costRule:'enter-cell-exclude-start'},
+        results:body.results.map((measurement,index)=>({id:index+1,measurement,implementation_snapshot:{algorithm:measurement.algorithm,name:'BFS',language:'typescript',version:1}}))};
+      return Response.json(stored, {status:201});
+    }
+    if (url.endsWith('/94/')) return Response.json(stored);
+    return Response.json({results:[{id:94,name:'Saved route',family:'pathfinding',status:'completed',created_at:'2026-10-10T00:00:00Z',updated_at:'2026-10-10T00:00:00Z'}],next_before:null});
+  };
+  try {
+    for (const key of Object.keys(PATHFINDING_SEARCHES)) PATHFINDING_SEARCHES[key] = () => {throw new Error('Unexpected rerun');};
+    const signal = new AbortController().signal;
+    await savePathfinding('Saved route', snapshot, signal);
+    const page = await listExperiments(null, signal);
+    const reopened = await getExperiment(94, signal);
+    for (const language of ['el','en']) {
+      const html = render(ExperimentDetails,{experiment:reopened,language});
+      assert.ok(html.includes('Pathfinding'));
+      assert.ok(html.includes('0 → 1'));
+      assert.ok(!html.includes(translations[language].pathfinding.comparison.note));
+      assert.ok(html.includes('0 ms'));
+      assert.ok(html.includes('E(3)'));
+      assert.ok(!html.includes('NaN'));
+      assert.ok(html.includes(language === 'el' ? 'χωρίς νέο run' : 'does not rerun'));
+      assert.ok(render(HistoryPage,{data:page,language,busy:false,onOpen:()=>{}}).includes('Pathfinding'));
+      assert.ok(render(SavePathfinding,{snapshot,language}).includes(language === 'el' ? 'Αποθήκευση αποτελέσματος' : 'Save result'));
+    }
+    assert.deepEqual(requests.map(row=>row[1]),['POST','GET','GET']);
+    assert.ok(requests.every(([url])=>!url.includes('/run/')));
+  } finally {globalThis.fetch=originalFetch;Object.assign(PATHFINDING_SEARCHES,originalSearches);}
+});

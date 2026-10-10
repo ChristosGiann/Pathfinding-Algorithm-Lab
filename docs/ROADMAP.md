@@ -406,3 +406,5 @@ solve(values) επιστρέφει list ή None για in-place. Δέκα fresh 
 Το #92 ολοκληρώνει weighted terrain και UI integration BFS/DFS/Dijkstra/A*, μαζί με ξεχωριστό total path cost. Επόμενα #93 pathfinding education και #94 persistence.
 
 Το #93 ολοκληρώνει curated el/en pathfinding education στη Library: theory, guarantees, weighted prerequisites και tested walkthroughs για τους τέσσερις algorithms. Επόμενο #94 pathfinding persistence.
+
+Το #94 προσθέτει persistence για ολοκληρωμένα pathfinding runs/comparisons στο κοινό Experiment history, με input/result snapshots και reopen χωρίς rerun.
