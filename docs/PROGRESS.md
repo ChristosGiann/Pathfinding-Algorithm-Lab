@@ -310,3 +310,7 @@ Terrain plain/mud/water (1/3/5), ανεξάρτητο από wall/animation stat
 ## Pathfinding education (#93)
 
 Bilingual Library cards για BFS/DFS/Dijkstra/A* με intuition, βήματα, complexity, completeness, optimality, weighted suitability και deterministic walkthroughs. Domain metadata δεμένα με το registry, reusable renderer και optional fallback. 66 frontend tests, lint και production build περνούν. Browser smoke παραμένει μη επαληθευμένο: το browser automation αποτυγχάνει κατά την εκκίνηση του kernel. Επόμενο #94 persistence.
+
+## Pathfinding persistence (#94)
+
+Κοινό Experiment/Result subsystem με family και versioned input snapshot, atomic browser-result save endpoint, readonly reopen και family labels στο history. 114 backend / 68 frontend tests, lint/build/check/migration checks επιτυχή. Migration 0005 εφαρμόστηκε τοπικά. Browser smoke 2026-10-10: weighted four-algorithm comparison αποθηκεύτηκε ως #14, refresh/history reopen κράτησε ίδιες μετρήσεις και costs, el/en και disabled rerun επαληθεύτηκαν.

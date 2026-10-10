@@ -460,3 +460,9 @@ Validation #92 (2026-10-09): 63 tests, lint και production build επιτυχ
 `npm test`: 66 tests. Νέα coverage: metadata keys = executable registry, πλήρες el/en περιεχόμενο, πραγματικά paths/costs των walkthroughs, συμφωνία παραδειγμάτων με εμφανιζόμενα κείμενα, Library rendering ενώ το API φορτώνει και ασφαλές fallback για missing language/optional fields. Existing sorting education tests παραμένουν πράσινα. `npm run lint` και `npm run build` περνούν.
 
 Manual smoke προς επαλήθευση: άνοιγμα Library, expand κάθε card, αλλαγή el/en, narrow viewport και διαθέσιμα pathfinding cards με backend offline. Δεν δηλώνεται ως επιτυχές: στις 2026-10-09 η browser automation απέτυχε πριν συνδεθεί με tab (kernel startup error).
+
+## Pathfinding persistence (#94)
+
+114 backend tests: save/list/detail, catalogue independence, no-rerun, null/zero semantics, malformed/bounded payloads, transaction rollback και sorting compatibility. 68 frontend tests: frozen independent capture, save/list/get API contract, πραγματικό result → persisted view, el/en history/rendering με searches που πετούν exception αν κληθούν κατά το reopen. Lint/build και Django check/makemigrations --check περνούν.
+
+Browser smoke 2026-10-10 στο production preview: νερό cost 5 στο (0,0), Compare BFS/DFS/Dijkstra/A*, Save ως “Smoke #94 — weighted comparison” (#14), refresh, κοινό history → reopen. Οι χρόνοι 1.4/0.6/1.9/0.8 ms και paths/costs παρέμειναν ίδια. Το αποθηκευμένο grid είχε το cost 5, ενώ το νέο live grid επέστρεψε στα defaults. El/en και disabled run στο αποθηκευμένο record επαληθεύτηκαν. Αρχικό Vite dev timeout αντιμετωπίστηκε με production preview.
